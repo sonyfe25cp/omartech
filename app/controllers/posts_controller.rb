@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-class User::PostsController < User::BaseController
+class PostsController < ApplicationController
   def index
     @posts = Post.all(:order => [:id.desc]).page(params[:page]).per(params[:limit])
     respond_to do |format|

@@ -1,21 +1,19 @@
-TrueLoser::Application.routes.draw do
+Omartech::Application.routes.draw do
   devise_for :admins, :class_name => "Admin::Admin"
 
-  devise_for :users, :class_name => "User::User", :controllers => {
-    :registrations => "registrations"#,
-   # :omniauth_callbacks => "user/omniauth_callbacks"
-  }
-
-  scope :module => 'user' do
+  namespace :admin do
     resources :posts
     resources :comments
   end
+
+  resources :posts
+  resources :comments
 
   match 'contact' => 'common#contact'
   match 'about' => 'common#about'
   match 'test' => 'common#test'
 
-  root :to => 'user/posts#index'
+  root :to => 'common#index'
 
 
 

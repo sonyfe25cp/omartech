@@ -170,8 +170,6 @@ GEM
     factory_girl_rails (4.2.1)
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
-    faraday (0.8.6)
-      multipart-post (~> 1.1)
     fastercsv (1.5.5)
     ffaker (1.15.0)
     ffi (1.5.0)
@@ -180,7 +178,6 @@ GEM
       bootstrap-sass (= 2.2.2)
       railties (>= 3.1)
       sass-rails (>= 3.2.0)
-    gravtastic (3.2.6)
     haml (4.0.1)
       tilt
     haml-rails (0.4)
@@ -188,9 +185,7 @@ GEM
       activesupport (>= 3.1, < 4.1)
       haml (>= 3.1, < 4.1)
       railties (>= 3.1, < 4.1)
-    hashie (1.2.0)
     hike (1.2.1)
-    httpauth (0.2.0)
     i18n (0.6.4)
     journey (1.0.4)
     jquery-fileupload-rails (0.4.1)
@@ -204,8 +199,6 @@ GEM
     json_spec (1.1.1)
       multi_json (~> 1.0)
       rspec (~> 2.0)
-    jwt (0.1.8)
-      multi_json (>= 1.5)
     kaminari (0.14.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -222,25 +215,8 @@ GEM
     method_source (0.8.1)
     mime-types (1.21)
     multi_json (1.7.2)
-    multipart-post (1.2.0)
-    newrelic_rpm (3.6.0.78)
     nokogiri (1.5.9)
-    oauth2 (0.8.1)
-      faraday (~> 0.8)
-      httpauth (~> 0.1)
-      jwt (~> 0.1.4)
-      multi_json (~> 1.0)
-      rack (~> 1.2)
     oj (2.0.10)
-    omniauth (1.0.3)
-      hashie (~> 1.2)
-      rack
-    omniauth-oauth2 (1.0.3)
-      oauth2 (~> 0.8.0)
-      omniauth (~> 1.0)
-    omniauth-weibo-oauth2 (0.2.0)
-      omniauth (~> 1.0)
-      omniauth-oauth2 (~> 1.0)
     orm_adapter (0.4.0)
     polyglot (0.3.3)
     pry (0.9.12)
@@ -367,17 +343,13 @@ DEPENDENCIES
   ffaker
   fivemat
   flatui-rails
-  gravtastic
   haml-rails
   jquery-fileupload-rails
   jquery-rails
   json_spec
   kaminari
   less-rails
-  newrelic_rpm
   oj
-  omniauth
-  omniauth-weibo-oauth2
   pry
   quiet_assets
   rails (= 3.2.9)

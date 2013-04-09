@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-TrueLoser::Application.load_tasks
+Omartech::Application.load_tasks

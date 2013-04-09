@@ -1,17 +1,17 @@
 defaults: &defaults
   adapter: mysql
-  user: root
+  username: root
   password: 
   host: localhost
 
 test:
-  database: true_loser_test
+  database: omartech_test
   <<: *defaults
 
 development:
-  database: true_loser_development
+  database: omartech_development
   <<: *defaults
 
 production:
-  database: true_loser_production
+  database: omartech_production
   <<: *defaults

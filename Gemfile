@@ -53,14 +53,6 @@ gem 'dm-tags', :git => 'https://github.com/towerhe/dm-tags.git', :branch => 'sup
 gem 'dm-searcher'
 gem 'dm-devise'
 
-#weibo_oauth
-gem 'omniauth'
-gem 'omniauth-weibo-oauth2'
-#gem 'weibo_2'
-
-#renren_oauth
-#gem 'omniauth-renren'
-
 gem 'carrierwave-datamapper',     :require => 'carrierwave/datamapper' #上传插件
 gem 'seedbank'
 gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
@@ -70,11 +62,9 @@ gem 'kaminari'
 gem 'cells'
 gem 'jquery-fileupload-rails'
 gem 'exception_notification'
-gem 'gravtastic'
 gem 'oj'
 gem 'settingslogic'
 gem 'devise-encryptable'
-gem 'newrelic_rpm'
 gem 'less-rails'
 gem 'flatui-rails'
 
