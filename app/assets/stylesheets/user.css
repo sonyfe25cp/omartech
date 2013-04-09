@@ -8,6 +8,9 @@ body{
   /*
    * background-color: #00B088;
    */
-  background-color: #1ABC9C;
+  background-color: #ffffff;
 }
 
+.copyright{
+  text-align: center;
+}

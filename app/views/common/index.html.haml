@@ -1,0 +1,38 @@
+#myCarousel.carousel.slide
+  .carousel-inner
+    .item.active
+      =image_tag 'slide-01.jpg'
+      .container
+        .carousel-caption
+          %h1 Example headline.
+          %p.leadCras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+          %a.btn.btn-large.btn-primary{:href => "#Sign up today"} Sign up today
+    .item
+      =image_tag "slide-02.jpg"
+      .container
+        .carousel-caption
+          %h1 Another example headline.
+          %p.leadCras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+          %a.btn.btn-large.btn-primary{:href => "#Learn more"} Learn more
+    .item
+      =image_tag "slide-03.jpg"
+      .container
+        .carousel-caption
+          %h1 One more for good measure.
+          %p.leadCras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+          %a.btn.btn-large.btn-primary{:href => "#Browse gallery"} Browse gallery
+  %a.left.carousel-control{:href => "#myCarousel", "data-slide" =>  "prev"} &lsaquo;
+  %a.right.carousel-control{:href => "#myCarousel", "data-slide" => "next"} &rsaquo;
+
+
+- content_for :javascript do 
+  :javascript
+    $(document).ready(
+      function(){
+        // carousel demo
+        $('#myCarousel').carousel();
+    })
+
+
+
+                                                                      

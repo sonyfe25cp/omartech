@@ -1,0 +1,28 @@
+.navbar-wrapper
+  .container
+    .navbar.navbar-inverse
+      .navbar-inner
+        %a.brand OmarTech
+        .nav-collapse.collapse
+        %ul.nav
+          %li{:id => 'home'}
+            =link_to '主页', root_path
+          %li{:id => 'customers'}
+            =link_to '客户案例', contact_path
+          %li{:id => 'shopers'}
+            =link_to '合作商家', contact_path
+          %li{:id => 'about'}
+            =link_to '关于我们', about_path
+          %li{:id => 'contact'}
+            =link_to '联系我们', contact_path
+
+  :javascript
+    $(document).ready(function(){
+      var url = window.loaction.href;
+      var path = url.substr(url.lastIndexOf('/')+1)
+      if(path ==''){
+        path = 'home';
+      }
+      $("#"+path).addClass('active');
+    });
+
