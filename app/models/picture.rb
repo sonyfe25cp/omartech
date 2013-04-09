@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-class Post
+class Picture
   include DataMapper::Resource
   include DataMapper::Searcher
 
@@ -8,6 +8,8 @@ class Post
   property :created_at, DateTime #时间
   property :desc, String #图片描述
   property :image_url, String
+
+  mount_uploader :source, ImageUploader
 
   belongs_to :case
 
