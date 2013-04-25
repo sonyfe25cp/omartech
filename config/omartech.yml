@@ -1,0 +1,27 @@
+defaults: &defaults
+  images:
+    accepted_files:
+      - png
+      - bmp
+      - jpg
+      - jpeg
+  attachments:
+    accepted_files:
+      - png
+      - bmp
+      - jpg
+      - jpeg
+      - doc
+      - docx
+      - pdf
+      - xls
+      - xlsx
+
+development:
+  <<: *defaults
+ 
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
