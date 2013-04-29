@@ -1,0 +1,15 @@
+.navbar-wrapper
+  .container
+    .navbar.navbar-inverse
+      .navbar-inner
+        %a.brand OmarTech
+        .nav-collapse.collapse
+        %ul.nav
+          %li{:id => 'home'}
+            =link_to '主页轮转图', admin_pictures_path
+          %li{:id => 'home'}
+            =link_to '公司新闻', admin_posts_path
+          %li{:id => 'customers'}
+            =link_to '客户案例', admin_cases_path
+          %li{:id => 'shopers'}
+            =link_to '合作商家', admin_friends_path

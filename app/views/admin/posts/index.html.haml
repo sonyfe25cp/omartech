@@ -1,0 +1,29 @@
+%table.table
+  %thead
+    %th
+      \#
+    %th
+      标题
+    %th
+      日期
+    %th
+      状态
+    %th
+      操作
+  %tbody
+    -@posts.each do |post|
+      %tr
+        %td
+          =post.id
+        %td
+          =link_to post.title, admin_post_path(post.id)
+        %td
+          =l post.created_at
+        %td
+          =post.status
+        %td
+          =link_to '修改', edit_admin_post_path(post.id)
+          =link_to '删除', admin_post_path(post.id), :method => 'delete', data:{confirm: '确定要删除这条新闻么?'}
+
+    
+=link_to '增加一条新闻', new_admin_post_path

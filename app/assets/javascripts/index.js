@@ -1,6 +1,6 @@
 !function ($) {
-          $(function(){
-                        // carousel demo
-                        $('#myCarousel').carousel()
-                                })
-                }(window.jQuery)
+  $(function(){
+  // carousel demo
+    $('#myCarousel').carousel()
+  })
+}(window.jQuery)

@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
-class Tag
-
+class Friend
   include DataMapper::Resource
   include DataMapper::Searcher
 
   property :id, Serial
-  property :content, String
+  property :name, String
+  property :link, String
+  property :description, String
 
-  has n, :taggings
-  has n, :posts, :through => :taggings
+  has 1, :attachment
 
 end

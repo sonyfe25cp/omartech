@@ -14,8 +14,7 @@
     = render_cell :header, :show, :current_resource => nil
 
     %div.container
-      %div
-        =yield
+      =yield
 
-      = render_cell :footer, :show
+    = render_cell :footer, :show
     = yield(:javascript) if content_for?(:javascript)

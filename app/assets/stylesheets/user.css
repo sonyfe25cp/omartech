@@ -10,7 +10,19 @@ body{
    */
   background-color: #ffffff;
 }
+a.active{
+  color: white !important;
+}
 
 .copyright{
   text-align: center;
+}
+h3 {
+  display: block;
+  border-left: 10px solid #08C;
+  height: 40px;
+  line-height: 40px;
+  padding-left: 20px;
+  font-size: 24px;
+  background: #FAFAFA;
 }

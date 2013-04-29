@@ -4,10 +4,16 @@ Omartech::Application.routes.draw do
   namespace :admin do
     resources :posts
     resources :comments
+    resources :friends
+    resources :pictures
+    resources :cases
   end
 
+  resources :pictures
   resources :posts
   resources :comments
+  resources :cases
+  resources :friends
 
   match 'contact' => 'common#contact'
   match 'about' => 'common#about'

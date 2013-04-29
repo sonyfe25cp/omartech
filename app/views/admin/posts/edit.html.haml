@@ -1,0 +1,13 @@
+=simple_form_for(@post, url: admin_post_path) do |f|
+  .post-form
+    .new-control-group
+      =f.text_field :title, :value => @post.title
+    .new-control-group
+      =f.kindeditor :content, :window_onload => true, :simple_mode => true, :value => @post.content
+    .new-control-group
+      =f.input :status, collection: [:new, :ok, :delete]
+
+    .new-control-group
+      %button.btn.btn-large.btn-post{:type => 'submit'} 提交
+
+

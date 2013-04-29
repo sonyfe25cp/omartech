@@ -1,5 +1,5 @@
 require 'carrierwave/datamapper'
 
-class ImageUploader < CarrierWave::Uploader::Base
+class Admin::ImageUploader < CarrierWave::Uploader::Base
     include CarrierWave::MiniMagick
 end

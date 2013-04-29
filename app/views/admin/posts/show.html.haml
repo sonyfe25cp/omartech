@@ -1,8 +1,7 @@
 .post
   .post-title
     =@post.title
-  .post-date
-    =l @post.created_at
   .post-content
     =raw @post.content
-
+  .post-date
+    =@post.created_at

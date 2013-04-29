@@ -1,9 +1,12 @@
 # -*- encoding: utf-8 -*-
-class PostsController < ApplicationController
+class PostsController < BaseController
+
   def index
-    @posts = Post.all(:order => [:id.desc]).page(params[:page]).per(params[:limit])
+    #@posts = Post.all(:order => [:id.desc]).page(params[:page]).per(params[:limit])
+    @posts = Post.all
     respond_to do |format|
       format.html
+      format.json {render json: @posts}
     end
   end
 

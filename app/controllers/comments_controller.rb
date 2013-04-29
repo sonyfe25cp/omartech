@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-class User::CommentsController < User::BaseController
+class CommentsController < BaseController
   
   def index
     post_id = params[:post_id]
