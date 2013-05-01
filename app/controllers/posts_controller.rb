@@ -2,8 +2,7 @@
 class PostsController < BaseController
 
   def index
-    #@posts = Post.all(:order => [:id.desc]).page(params[:page]).per(params[:limit])
-    @posts = Post.all
+    @posts = Post.all(:order => [:id.desc]).page(params[:page]).per(params[:limit])
     respond_to do |format|
       format.html
       format.json {render json: @posts}

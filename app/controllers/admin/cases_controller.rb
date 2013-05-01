@@ -1,3 +1,3 @@
-class Admin::CasesController < BaseController
+class Admin::CasesController < Admin::BaseController
 
 end
