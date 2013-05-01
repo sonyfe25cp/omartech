@@ -32,7 +32,7 @@ task :environment do
   # invoke :'rbenv:load'
 
   # For those using RVM, use this to load an RVM version@gemset.
-  invoke :'rvm:use[ruby-2.0.0-p0@omartech]'
+  invoke :'rvm:use[ruby-1.9.3@omartech]'
 end
 
 # Put any custom mkdir's in here for when `mina setup` is ran.
@@ -53,6 +53,7 @@ task :setup => :environment do
 
   queue! %[touch "#{deploy_to}/shared/.rvmrc"]
   queue  %[echo "-----> Be sure to edit '.rvmrc'."]
+
 end
 
 desc "Deploys the current version to the server."

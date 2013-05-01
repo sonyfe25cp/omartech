@@ -46,7 +46,17 @@ Omartech::Application.configure do
   # config.action_controller.asset_host = "http://assets.example.com"
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  # config.assets.precompile += %w( search.js )
+  config.assets.precompile += %w( user.css application.css
+                                  user/friends.css
+                                  user/index.css
+                                  user/posts.css
+                                  shared/bootstrap_and_overrides.css
+                                  common.css
+                                  index.js
+                                  nav_bar.js
+                                  user.js
+                                  new_posts.js
+  )
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
@@ -64,4 +74,17 @@ Omartech::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+  config.middleware.use ExceptionNotifier,
+    :email_prefix         => "[OmarTech] ",
+    :sender_address       => %{"Dev" <dev@omartech.com>},
+    :exception_recipients => %w{sonyfe25cp@gmail.com},
+    :smtp_settings => {
+      :address => "mail.omartech.cn",
+      :port => 25,
+      :domain => "omartech.com",
+      :user_name => "dev@omartech.com",
+      :password => "omartech@406",
+      :authentication => :plain,
+      :enable_starttls_auto => false
+    }
 end
