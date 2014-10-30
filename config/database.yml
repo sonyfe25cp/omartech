@@ -1,0 +1,17 @@
+defaults: &defaults
+  adapter: mysql
+  user: root
+  password: 
+  host: localhost
+
+test:
+  database: true_loser_test
+  <<: *defaults
+
+development:
+  database: true_loser_development
+  <<: *defaults
+
+production:
+  database: true_loser_production
+  <<: *defaults
