@@ -36,9 +36,10 @@ public class BITUnionRobot {
     }
 
 
-    public static void publishPost(String title, String content, int moduleId){
+    public static String publishPost(String title, String content, int moduleId){
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setDefaultCookieStore(new BasicCookieStore()).build();// 可以帮助记录cookie
+        String threadPage = "";
         try {
 
             HttpPost loginPost = new HttpPost(
@@ -67,16 +68,17 @@ public class BITUnionRobot {
                         .getContent(), "GBK");
             }
             response2.close();
-            createPost(httpclient, title, content, moduleId);
+            threadPage = createPost(httpclient, title, content, moduleId);
             httpclient.close();
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return threadPage;
     }
 
-    static void createPost(CloseableHttpClient httpclient, String title, String content, int moduleId){
+    static String createPost(CloseableHttpClient httpclient, String title, String content, int moduleId){
         Map<String, String> map = new HashMap<>();
         map.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
         map.put("Accept-Encoding", "gzip,deflate");
@@ -112,21 +114,23 @@ public class BITUnionRobot {
         } catch (UnsupportedEncodingException e1) {
             e1.printStackTrace();
         }
+        String threadPage = "http://out.bitunion.org/";
         try {
             HttpResponse res = httpclient.execute(post);
             int code = res.getStatusLine().getStatusCode();
             String html = EntityUtils.toString(res.getEntity(), "gbk");
             logger.info("html: {}", html);
             Header[] t = res.getHeaders("Location");
-
+            threadPage += t[0].getValue();
             logger.info("code: {}, {}", code, t[0]);
+            logger.info("threadpage：{}", threadPage);
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
+        return threadPage;
     }
 
     static List<NameValuePair> constructParameters(Map<String, String> map){
@@ -137,4 +141,8 @@ public class BITUnionRobot {
         return lists;
     }
 
+    //todo
+    static void replayPost(String url, String content){
+
+    }
 }

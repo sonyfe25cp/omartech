@@ -44,7 +44,7 @@ public class AutoPoster {
 
         String title = "【"+today+"】【今日校招信息汇总】按照来源排序";
 
-//        BITUnionRobot.publishPost(title, listHtml, 92);
+        BITUnionRobot.publishPost(title, listHtml, 92);
 		
 	}
 
