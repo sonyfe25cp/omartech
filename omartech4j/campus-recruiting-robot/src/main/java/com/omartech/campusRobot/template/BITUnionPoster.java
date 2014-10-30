@@ -9,17 +9,27 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.techwolf.campusrecruiting.model.JD;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BITUnionPoster {
-	
-	
-	public static String create(List<JD> jds){
+    static Logger logger = LoggerFactory.getLogger(BITUnionPoster.class);
+
+    public static String create(List<JD> jds){
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, List<JD>> groupMap = new HashMap<>();
 		for(JD jd : jds){
-			String site = jd.getSiteName();
-			List<JD> tmpList = groupMap.get(site);
+
+            String site = jd.getSiteName();
+            if(!(site.contains("北京") || site.contains("首都") || site.contains("中央") || site.contains("中国") || site.contains("大学"))){
+                logger.error("{} passed ", site);
+                continue;
+            }
+            if(jd.getUrl().contains("job.njtu.edu.cn") || jd.getUrl().contains("job.ncss.org.cn")){
+                continue;
+            }
+            List<JD> tmpList = groupMap.get(site);
 			if(tmpList == null){
 				tmpList = new ArrayList<>();
 			}
@@ -41,6 +51,9 @@ public class BITUnionPoster {
 		for(Entry<String, List<JD>> entry : sortList){
 			String siteName = entry.getKey();
 			List<JD> tmpJds = entry.getValue();
+            if(tmpJds.size() < 10){
+                continue;
+            }
 			
 			sb.append("[size=6]"+siteName+"[/size]");
 			sb.append("[list=1]");
@@ -49,15 +62,18 @@ public class BITUnionPoster {
 				StringBuilder lineBuilder = new StringBuilder();
 				lineBuilder.append("[*]");
 				lineBuilder.append("[url=");//[url=bbbbbbb]aaaaaa[/url]
-				lineBuilder.append(jd.getUrl());
+				lineBuilder.append(jd.getUrl().replaceAll("jsessionid=.*", ""));
 				lineBuilder.append("]");
 				lineBuilder.append(jd.getTitle());
+                if(jd.getCompany() != null) {
+                    lineBuilder.append("\t公司: " + jd.getCompany());
+                }
 				lineBuilder.append("[/url]");
 				sb.append(lineBuilder.toString()+"\n");
 			}
+		    sb.append("[/list]");
 		}
-		sb.append("[/list]");
-		
+
 		return sb.toString();
 	}
 	
