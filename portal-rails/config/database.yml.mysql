@@ -1,0 +1,17 @@
+defaults: &defaults
+  adapter: mysql
+  username: root
+  password: 
+  host: localhost
+
+test:
+  database: omartech_test
+  <<: *defaults
+
+development:
+  database: omartech_development
+  <<: *defaults
+
+production:
+  database: omartech_production
+  <<: *defaults

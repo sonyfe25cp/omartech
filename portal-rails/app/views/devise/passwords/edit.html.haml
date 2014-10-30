@@ -1,0 +1,14 @@
+= simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :class => 'form-horizontal' }) do |f|
+  %div.legend 请重新设置您的密码
+
+  = f.error_notification
+  %p.text-error= f.error :reset_password_token, class: 'text-error'
+
+  = f.input :reset_password_token, :as => :hidden
+
+  .form-inputs
+    = f.input :password, :label => "请输入新密码", :required => true
+    = f.input :password_confirmation, :label => "请再次确认您的密码", :required => true
+
+  .form-actions
+    = f.button :submit, "确认修改", class: 'btn btn-primary'

@@ -1,0 +1,9 @@
+= simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :class => 'form-horizontal' }) do |f|
+  %div.legend 找回密码
+  = f.error_notification
+
+  .form-inputs
+    = f.input :email, :required => true
+
+  .form-actions
+    = f.button :submit, "发送密码重置指令到我的邮箱", class: 'btn btn-primary'

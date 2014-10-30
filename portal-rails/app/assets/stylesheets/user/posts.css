@@ -1,0 +1,60 @@
+.post{
+  border: 1px solid #fff;
+  border-left-style: none;
+  border-right-style: none;
+  border-top-style: none;
+  margin-bottom: 30px;
+}
+.post img{
+  width: 30px;
+  height: 30px;
+}
+.post .user{
+  margin-left: 20px;
+  font-size: 10px;
+  font-color: #D4996D;
+}
+.post .content{
+  margin-left: 20px;
+  font-size: 18px;
+  font-color: #ffffff;
+}
+.post .options{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.post .options .momo{
+  
+}
+.post .options .pk{
+ margin-left: 30px; 
+}
+.post .options .comment{
+  float:right;
+}
+li {
+  list-style: none;
+}
+
+/*
+ * for new post
+ */
+.new_post .post_form{
+  background-color: #ECEFFF;
+  border-radius: 6px;
+  padding: 24px 23px 20px;
+  position: relative;
+}
+.new_post .post_form .new-control-group{
+  margin-bottom: 6px;
+  position: relative;
+}
+.new_post .post_form .post-content{
+  border-color: transparent;
+  font-size: 17px;
+  padding-bottom: 11px;
+  padding-top: 11px;
+  text-indent: 3px;
+  width: 900px;
+  height: 500px;
+}

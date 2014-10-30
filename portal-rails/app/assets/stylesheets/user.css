@@ -1,0 +1,28 @@
+/*
+ *= require bootstrap_and_overrides
+ *= require_tree ./user
+ *= require_self
+ */
+body{
+  padding-top: 50px;
+  /*
+   * background-color: #00B088;
+   */
+  background-color: #ffffff;
+}
+a.active{
+  color: white !important;
+}
+
+.copyright{
+  text-align: center;
+}
+h3 {
+  display: block;
+  border-left: 10px solid #08C;
+  height: 40px;
+  line-height: 40px;
+  padding-left: 20px;
+  font-size: 24px;
+  background: #FAFAFA;
+}

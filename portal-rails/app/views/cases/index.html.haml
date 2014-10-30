@@ -1,0 +1,16 @@
+%table.table.table-bordered
+  %thead
+    %th
+      案例名称
+    %th
+      案例描述
+  %tbody
+    -@cases.each do |sample|
+      %tr
+        %td
+          =link_to image_tag('noprinter.png'), sample.customer_address, :target => '_blank'
+        %td{:rowspan => 2}
+          =sample.description
+      %tr
+        %td
+          =link_to sample.customer_name, sample.customer_address, :target => '_blank'

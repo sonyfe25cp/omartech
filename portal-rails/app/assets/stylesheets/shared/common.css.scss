@@ -1,0 +1,98 @@
+/*
+ *= require_self
+ */
+
+.alert {
+  h4 { margin-bottom: 20px; }
+}
+
+div.legend {
+  -webkit-border-image: none;
+  background-color: transparent;
+  border-bottom-color: #E5E5E5;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  color: #333;
+  display: block;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 21px;
+  height: 40px;
+  line-height: 40px;
+  margin: 0px 0px 20px 0px;
+  padding: 0px;
+  clear: both;
+}
+
+body {
+  position: relative;
+  padding-top: 40px;
+}
+
+.container {
+  .carousel {
+    margin-left: 15px;
+    width: 917px;
+  }
+}
+
+footer {
+  margin: 24px auto;
+  width: 1060px;
+  padding-bottom: 50px;
+
+  .follow {
+    color: white;
+    margin-bottom: 16px;
+  }
+
+  .nav {
+    clear: both;
+    border-top: 1px dotted white;
+    padding-top: 12px;
+    .links {
+      float: left;
+      color: white;
+      a { color: white; }
+      a:hover { color: #ccc; }
+    }
+    .copyright {
+      color: white;
+      padding-left: 50px;
+    }
+  }
+}
+
+.form-actions * {
+  margin-right: 20px;
+}
+
+.clear {
+  clear: both;
+}
+/* padding for in-page bookmarks and fixed navbar */
+section {
+  padding-top: 30px;
+}
+section > .page-header,
+section > .lead {
+  color: #5a5a5a;
+}
+
+h3 {
+  display: block;
+  border-left: 10px solid #0088CC;
+  height: 40px;
+  line-height: 40px;
+  padding-left: 20px;
+  font-size: 24px;
+  background: #FAFAFA;
+}
+section > ul li {
+  margin-bottom: 5px;
+}
+input .num_error{
+  border: #ff0000 2px solid, !important;
+}
+p .important{
+  color:red;
+}

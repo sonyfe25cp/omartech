@@ -1,0 +1,26 @@
+!!! 5
+%html(lang='en')
+  %head
+    %meta(charset='utf8')
+    %meta(http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1")
+    %meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    %title= content_for?(:title) ? yield(:title) : "不要以为你是这个世界上最悲惨的人，鼓起生活的勇气吧！欢迎来比惨网！"
+    = csrf_meta_tags
+    / Le HTML5 shim, for IE6-8 support of HTML elements
+    /[if lt IE 9]
+      = javascript_include_tag "http://html5shim.googlecode.com/svn/trunk/html5.js"
+    = stylesheet_link_tag "user" , :media => "all"
+  %body{ 'data-spy' => 'scroll', 'data-target' => '.price-sidebar' }
+
+    = render_cell :header, :show, current_resource: current_user
+
+    /%div.container-fluid
+    %div.container.main
+      %div.row-fluid
+        %div.span10
+          =yield
+        %idv.span2
+          ad
+
+      = render_cell :footer, :show
+      = yield(:javascript) if content_for?(:javascript)

@@ -1,0 +1,1 @@
+a portal to a company with basic users mangagement, news management, pictures management.

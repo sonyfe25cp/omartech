@@ -1,0 +1,15 @@
+#myCarousel.carousel.slide
+  %ol.carousel.inner
+    %div.item
+      %img{:src => 'http://twitter.github.com/bootstrap/assets/img/bootstrap-mdo-sfmoma-03.jpg'}
+    %div.item
+      %img{:src => 'http://twitter.github.com/bootstrap/assets/img/bootstrap-mdo-sfmoma-02.jpg'}
+    %div.item
+      %img{:src => 'http://twitter.github.com/bootstrap/assets/img/bootstrap-mdo-sfmoma-01.jpg'}
+  %a.carousel.left{:href => '#myCarousel', 'data-side' => 'prev'} &lsauqo;
+  %a.carousel.right{:href => '#myCarousel', 'data-side' => 'next'} &rsauqo;
+- content_for :javascript do 
+  :javascript
+    $(document).ready(function(){
+      $('#myCarousel').carousel();
+    });

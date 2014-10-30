@@ -1,0 +1,19 @@
+.navbar-wrapper
+  .container
+    .navbar.navbar-inverse
+      .navbar-inner
+        %a.brand{:id => 'home', :href => root_path} OmarTech
+        .nav-collapse.collapse
+        %ul.nav
+          /%li{:id => 'home'}
+          /  =link_to '主页', root_path
+          %li{:id => 'posts'}
+            =link_to '公司新闻', posts_path
+          %li{:id => 'cases'}
+            =link_to '客户案例', cases_path
+          %li{:id => 'friends'}
+            =link_to '合作商家', friends_path
+          %li{:id => 'contact'}
+            =link_to '联系我们', contact_path
+          %li{:id => 'about'}
+            =link_to '关于我们', about_path
