@@ -23,7 +23,7 @@ public class BITUnionPoster {
 		for(JD jd : jds){
 
             String site = jd.getSiteName();
-            if(!(site.contains("北京") || site.contains("首都") || site.contains("中央") || site.contains("中国") || site.contains("大学"))){
+            if(!(site.contains("北京") || site.contains("首都") || site.contains("中央") || site.contains("中国") || site.contains("大学") ||site.contains("BBS") || site.contains("bbs"))){
                 logger.error("{} passed ", site);
                 continue;
             }

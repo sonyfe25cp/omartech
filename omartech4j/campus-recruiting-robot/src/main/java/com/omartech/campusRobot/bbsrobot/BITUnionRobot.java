@@ -53,7 +53,7 @@ public class BITUnionRobot {
                 String lz = pieces.get(0);
                 logger.info("*********************************************************");
                 logger.info(lz);
-                lz = lz+"<br/>共 "+ pieces.size() +" 楼，麻烦不要抢哦~~";
+                lz = lz+"共 "+ pieces.size() +" 楼，麻烦不要抢哦~~";
                 threadPage = createPost(httpclient, title, lz, moduleId);
                 int threadId = findTid(threadPage);
                 for(int i = 1; i < pieces.size(); i ++){
