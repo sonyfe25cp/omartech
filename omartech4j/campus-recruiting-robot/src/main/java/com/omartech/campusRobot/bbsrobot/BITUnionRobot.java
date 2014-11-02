@@ -211,7 +211,7 @@ public class BITUnionRobot {
         map.put("fpage", "1");
         map.put("viewperm", "");
         map.put("font", "");
-        map.put("tag", "0");
+        map.put("tag", "469");
         map.put("subject", title);
         map.put("posticon", "0");//积分
         map.put("mode", "2");
