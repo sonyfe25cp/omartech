@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class BITUnionRobot {
     static Logger logger = LoggerFactory.getLogger(BITUnionRobot.class);
-    static int theta = 10000/5;
+    static int theta = 10000/4;
     public static void main(String[] args){
 //        BITUnionRobot.publishPost("这里可以发表格类型内容么？??", "没找到如何发表格样子的东西。。。\n" +
 //                "\n" +
@@ -52,24 +52,24 @@ public class BITUnionRobot {
             if(pieces.size() > 1){
                 String lz = pieces.get(0);
                 logger.info("*********************************************************");
-                logger.info(lz);
                 lz = lz+"共 "+ pieces.size() +" 楼，麻烦不要抢哦~~";
-                threadPage = createPost(httpclient, title, lz, moduleId);
+                logger.info(lz);
+//                threadPage = createPost(httpclient, title, lz, moduleId);
                 int threadId = findTid(threadPage);
                 for(int i = 1; i < pieces.size(); i ++){
-                    try {
-                        Thread.sleep(1000 * 11);
-                        logger.info("休息11s，然后回帖:{}", threadPage);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        Thread.sleep(1000 * 11);
+//                        logger.info("休息11s，然后回帖:{}", threadPage);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
                     String other = pieces.get(i);
                     logger.info("*********************************************************");
                     logger.info(other);
-                    replayPost(httpclient, title, other, moduleId, threadId, threadPage);
+//                    replayPost(httpclient, title, other, moduleId, threadId, threadPage);
                 }
             }else{
-                threadPage = createPost(httpclient, title, content, moduleId);
+//                threadPage = createPost(httpclient, title, content, moduleId);
             }
             httpclient.close();
         } catch (ClientProtocolException e) {
@@ -97,58 +97,52 @@ public class BITUnionRobot {
     private static List<String> cutContentIntoPiecesNew(String content) {
         List<String> list = new ArrayList<>();
         String[] splits = content.split("\\[size=6\\]");
+        StringBuilder sb = new StringBuilder();
         for(String split : splits ){
             if(split.length() == 0){
                 continue;
             }
             split = "[size=6]" +split;
-            list.add(split);
+
+            int current = split.length();
+            int already = sb.toString().length();
+            if(current + already > theta){
+                if(already > 0){
+                    list.add(sb.toString());
+                    sb = new StringBuilder();
+                }
+                if(current > theta){
+
+                    int tt = current/theta;
+
+                    String[] lis = split.split("\\[\\*\\]");
+
+                    int batch = lis.length/tt;
+
+                    for(int t = 0; t < tt ; t ++){
+                        StringBuilder tm = new StringBuilder();
+                        tm.append("[list=1]");
+                        for(int i = t * batch; i < (t+1) * batch; i ++){
+                            if(i >= lis.length){
+                                break;
+                            }
+                            String li = lis[i];
+                            li = "[*]" + li;
+                            tm.append(li);
+                        }
+                        tm.append("[/list]");
+                        list.add(tm.toString());
+                    }
+                }else {
+                    list.add(split);
+                }
+            }else {
+                sb.append(split);
+            }
         }
+        list.add(sb.toString());
 
         return list;
-    }
-
-    private static List<String> cutContentIntoPieces(String content) {
-        String[] split = content.split("\\[/size\\]");
-        logger.info("split size : {}", split.length);
-        List<String> array = new ArrayList<>();
-
-        int currCount = 0;
-        StringBuilder sb = new StringBuilder();
-        for(String block : split){
-            block = block +"[/size]";
-            int length = block.length();
-            logger.info("this block length : {}", length);
-
-            if(length > theta) {
-                String[] lis = block.split("\\[\\*\\]");
-                StringBuilder tmp = new StringBuilder();
-                for(String li : lis){
-                    li = li +"[*]";
-                    if(tmp.length() > theta){
-                        array.add(tmp.toString());
-                        tmp = new StringBuilder();
-                    }
-                    tmp.append(li);
-                }
-                length = tmp.toString().length();
-                sb.append(tmp.toString());
-
-            }
-
-            int tmp = currCount + length;
-            if(tmp > theta){
-                array.add(sb.toString());
-                sb = new StringBuilder();
-                currCount = 0;
-            }
-            sb.append(block);
-            currCount+=block.length();
-        }
-        array.add(sb.toString());
-
-        logger.info("list size : {}", array.size());
-        return array;
     }
 
     static CloseableHttpClient createLoginClient(){

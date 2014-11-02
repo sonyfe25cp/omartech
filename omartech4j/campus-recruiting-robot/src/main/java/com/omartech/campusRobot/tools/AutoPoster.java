@@ -24,7 +24,7 @@ public class AutoPoster {
 	
 	public void gogogo(){
 		String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd 截止HH点");
-//		today = "2014-10-30";
+		today = "2014-10-30";
 		
 		logger.info(today);
 		
