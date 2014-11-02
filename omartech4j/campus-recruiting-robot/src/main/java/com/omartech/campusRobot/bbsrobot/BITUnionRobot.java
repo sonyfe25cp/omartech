@@ -54,22 +54,22 @@ public class BITUnionRobot {
                 logger.info("*********************************************************");
                 lz = lz+"共 "+ pieces.size() +" 楼，麻烦不要抢哦~~";
                 logger.info(lz);
-//                threadPage = createPost(httpclient, title, lz, moduleId);
+                threadPage = createPost(httpclient, title, lz, moduleId);
                 int threadId = findTid(threadPage);
                 for(int i = 1; i < pieces.size(); i ++){
-//                    try {
-//                        Thread.sleep(1000 * 11);
-//                        logger.info("休息11s，然后回帖:{}", threadPage);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
+                    try {
+                        Thread.sleep(1000 * 11);
+                        logger.info("休息11s，然后回帖:{}", threadPage);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     String other = pieces.get(i);
                     logger.info("*********************************************************");
                     logger.info(other);
-//                    replayPost(httpclient, title, other, moduleId, threadId, threadPage);
+                    replayPost(httpclient, title, other, moduleId, threadId, threadPage);
                 }
             }else{
-//                threadPage = createPost(httpclient, title, content, moduleId);
+                threadPage = createPost(httpclient, title, content, moduleId);
             }
             httpclient.close();
         } catch (ClientProtocolException e) {
