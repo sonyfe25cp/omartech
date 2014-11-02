@@ -54,7 +54,7 @@ public class BITUnionRobot {
                 logger.info("*********************************************************");
                 logger.info(lz);
                 lz = lz+"<br/>共 "+ pieces.size() +" 楼，麻烦不要抢哦~~";
-//                threadPage = createPost(httpclient, title, lz, moduleId);
+                threadPage = createPost(httpclient, title, lz, moduleId);
                 int threadId = findTid(threadPage);
                 for(int i = 1; i < pieces.size(); i ++){
                     try {
@@ -66,7 +66,7 @@ public class BITUnionRobot {
                     String other = pieces.get(i);
                     logger.info("*********************************************************");
                     logger.info(other);
-//                    replayPost(httpclient, title, other, moduleId, threadId, threadPage);
+                    replayPost(httpclient, title, other, moduleId, threadId, threadPage);
                 }
             }else{
                 threadPage = createPost(httpclient, title, content, moduleId);
