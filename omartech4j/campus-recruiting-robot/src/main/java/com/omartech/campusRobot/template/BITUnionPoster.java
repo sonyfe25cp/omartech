@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.omartech.campusRobot.tools.ShortUrl;
 import com.techwolf.campusrecruiting.model.JD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,11 @@ public class BITUnionPoster {
             if(jd.getUrl().contains("job.njtu.edu.cn") || jd.getUrl().contains("job.ncss.org.cn")){
                 continue;
             }
+
+//            String url = jd.getUrl();
+//            String shortIt = ShortUrl.shortIt(url);
+//            jd.setUrl(shortIt);
+
             List<JD> tmpList = groupMap.get(site);
 			if(tmpList == null){
 				tmpList = new ArrayList<>();

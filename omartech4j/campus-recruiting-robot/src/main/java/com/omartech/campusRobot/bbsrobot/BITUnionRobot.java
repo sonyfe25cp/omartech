@@ -28,18 +28,133 @@ import java.util.Map;
  */
 public class BITUnionRobot {
     static Logger logger = LoggerFactory.getLogger(BITUnionRobot.class);
-
+    static int theta = 10000/5;
     public static void main(String[] args){
-        BITUnionRobot.publishPost("这里可以发表格类型内容么？??", "没找到如何发表格样子的东西。。。\n" +
-                "\n" +
-                "只看到有列表内容。。。?", 92);
+//        BITUnionRobot.publishPost("这里可以发表格类型内容么？??", "没找到如何发表格样子的东西。。。\n" +
+//                "\n" +
+//                "只看到有列表内容。。。?", 92);
+
+        String page = "http://out.bitunion.org/viewthread.php?tid=10581177&fpage=1";
+        findTid(page);
     }
 
 
     public static String publishPost(String title, String content, int moduleId){
+        CloseableHttpClient httpclient = createLoginClient();
+        String threadPage = "";
+        try{
+
+
+            logger.info("--------------------------------------------------------------------------");
+            logger.info(content);
+            logger.info("--------------------------------------------------------------------------");
+            List<String> pieces = cutContentIntoPiecesNew(content);
+            if(pieces.size() > 1){
+                String lz = pieces.get(0);
+                logger.info("*********************************************************");
+                logger.info(lz);
+                lz = lz+"<br/>共 "+ pieces.size() +" 楼，麻烦不要抢哦~~";
+//                threadPage = createPost(httpclient, title, lz, moduleId);
+                int threadId = findTid(threadPage);
+                for(int i = 1; i < pieces.size(); i ++){
+                    try {
+                        Thread.sleep(1000 * 11);
+                        logger.info("休息11s，然后回帖:{}", threadPage);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    String other = pieces.get(i);
+                    logger.info("*********************************************************");
+                    logger.info(other);
+//                    replayPost(httpclient, title, other, moduleId, threadId, threadPage);
+                }
+            }else{
+                threadPage = createPost(httpclient, title, content, moduleId);
+            }
+            httpclient.close();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return threadPage;
+    }
+
+    private static int findTid(String threadPage) {
+        String[] splits = threadPage.substring(threadPage.indexOf("?")+1).split("&");
+        int tid = 0;
+        for(String split : splits){
+            if(split.contains("tid=")){
+                String tidstr = split.replace("tid=", "");
+                tid = Integer.parseInt(tidstr);
+            }
+        }
+        logger.info("tid : {}, from {}", tid, threadPage);
+        return tid;
+    }
+
+
+    private static List<String> cutContentIntoPiecesNew(String content) {
+        List<String> list = new ArrayList<>();
+        String[] splits = content.split("\\[size=6\\]");
+        for(String split : splits ){
+            if(split.length() == 0){
+                continue;
+            }
+            split = "[size=6]" +split;
+            list.add(split);
+        }
+
+        return list;
+    }
+
+    private static List<String> cutContentIntoPieces(String content) {
+        String[] split = content.split("\\[/size\\]");
+        logger.info("split size : {}", split.length);
+        List<String> array = new ArrayList<>();
+
+        int currCount = 0;
+        StringBuilder sb = new StringBuilder();
+        for(String block : split){
+            block = block +"[/size]";
+            int length = block.length();
+            logger.info("this block length : {}", length);
+
+            if(length > theta) {
+                String[] lis = block.split("\\[\\*\\]");
+                StringBuilder tmp = new StringBuilder();
+                for(String li : lis){
+                    li = li +"[*]";
+                    if(tmp.length() > theta){
+                        array.add(tmp.toString());
+                        tmp = new StringBuilder();
+                    }
+                    tmp.append(li);
+                }
+                length = tmp.toString().length();
+                sb.append(tmp.toString());
+
+            }
+
+            int tmp = currCount + length;
+            if(tmp > theta){
+                array.add(sb.toString());
+                sb = new StringBuilder();
+                currCount = 0;
+            }
+            sb.append(block);
+            currCount+=block.length();
+        }
+        array.add(sb.toString());
+
+        logger.info("list size : {}", array.size());
+        return array;
+    }
+
+    static CloseableHttpClient createLoginClient(){
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setDefaultCookieStore(new BasicCookieStore()).build();// 可以帮助记录cookie
-        String threadPage = "";
+
         try {
 
             HttpPost loginPost = new HttpPost(
@@ -68,17 +183,17 @@ public class BITUnionRobot {
                         .getContent(), "GBK");
             }
             response2.close();
-            threadPage = createPost(httpclient, title, content, moduleId);
-            httpclient.close();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return threadPage;
+        return httpclient;
     }
 
     static String createPost(CloseableHttpClient httpclient, String title, String content, int moduleId){
+        if(content == null || content.length() < 10){
+            return null;
+        }
+
         Map<String, String> map = new HashMap<>();
         map.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
         map.put("Accept-Encoding", "gzip,deflate");
@@ -98,7 +213,7 @@ public class BITUnionRobot {
         map.put("font", "");
         map.put("tag", "0");
         map.put("subject", title);
-        map.put("posticon", "0");
+        map.put("posticon", "0");//积分
         map.put("mode", "2");
         map.put("font", "Verdana");
         map.put("size", "3");
@@ -141,8 +256,58 @@ public class BITUnionRobot {
         return lists;
     }
 
-    //todo
-    static void replayPost(String url, String content){
+    static String replayPost(CloseableHttpClient httpclient, String title, String content, int moduleId, int threadId, String refer){
+        if(threadId == 0 || moduleId == 0){
+            return null;
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        map.put("Accept-Encoding", "gzip,deflate");
+        map.put("Cache-Control", "max-age=0");
+        map.put("Connection", "keep-alive");
+        map.put("Content-Length", content.length()+"");//todo verify how to compute
+        map.put("Content-Type", "multipart/form-data; boundary=----WebKitFormBoundary8zDNXrYEVqhoQCRe");
+        map.put("Host", "out.bitunion.org");
+        map.put("Origin", "http://out.bitunion.org");
+        map.put("Referer", refer);
+        map.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36");
+        map.put("action", "reply");
+        map.put("fid", ""+moduleId);
+        map.put("tid", ""+ threadId);
+        map.put("replysubmit", "submit");
+        map.put("fpage", "1");
+        map.put("viewperm", "");
+        map.put("font", "");
+        map.put("tag", "0");
+        map.put("subject", title);
+        map.put("usesig", "1");
+        map.put("message", content);
+        map.put("usesig", "1");
 
+        List<NameValuePair> nameValuePairs = constructParameters(map);
+        HttpPost post = new HttpPost(
+                "http://out.bitunion.org/post.php?action=reply&fid="+moduleId+"&tid="+threadId);
+        try {
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs, "gbk"));
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+        String threadPage = "http://out.bitunion.org/";
+        try {
+            HttpResponse res = httpclient.execute(post);
+            int code = res.getStatusLine().getStatusCode();
+            String html = EntityUtils.toString(res.getEntity(), "gbk");
+            logger.info("html: {}", html);
+            Header[] t = res.getHeaders("Location");
+            threadPage += t[0].getValue();
+            logger.info("code: {}, {}", code, t[0]);
+            logger.info("threadpage：{}", threadPage);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return threadPage;
     }
 }
