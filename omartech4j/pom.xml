@@ -13,6 +13,7 @@
 	<modules>
 		<module>campus-recruiting-robot</module>
 		<module>laibican-robot</module>
+		<module>proxy-spider</module>
 	</modules>
 
 	<properties>
