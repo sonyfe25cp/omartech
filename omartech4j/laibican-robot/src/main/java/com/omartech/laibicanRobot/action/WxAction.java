@@ -27,20 +27,45 @@ public class WxAction {
     @ResponseBody
     public String verifyWx(@RequestParam String signature, @RequestParam String timestamp, @RequestParam String nonce, @RequestParam String echostr) {
         logger.info("signature, timestamp, nonce, echostr: {}, {}, {}, {}", new String[]{signature, timestamp, nonce, echostr});
+
+        String echo = compute(timestamp, nonce);
+
+        if (echo.equals(signature)) {
+            logger.info("verify success");
+            return echostr;
+        } else {
+            logger.info("verify error");
+            return null;
+        }
+    }
+
+    static String compute(String timestamp, String nonce) {
         String[] list = new String[]{token, timestamp, nonce};
         Arrays.sort(list);
         String str = "";
         for (int i = 0; i < list.length; i++) {
             str += list[i];
         }
-        String echo = new SHA1().getDigestOfString(str.getBytes());//SHA1加密
+        logger.info("list : {}", str);
 
-        if (echo.equals(signature)) {
-            logger.info("verify success");
-            return echostr;
+        String echo = new SHA1().getDigestOfString(str.getBytes()).toLowerCase();//SHA1加密
+        logger.info("echo : {}", echo);
+        return echo;
+    }
+
+    public static void main(String[] args) {
+        String timestamp = "1415722779";
+        String nonce = "1968723484";
+
+        String compute = compute(timestamp, nonce);
+
+        String res = "d93d5f45bd1b6e55c62ec621df1b2f7fdab98641";
+        if (compute.equals(res)) {
+            logger.info("true");
         } else {
-            return null;
+            logger.info("false");
         }
+
     }
 
 
