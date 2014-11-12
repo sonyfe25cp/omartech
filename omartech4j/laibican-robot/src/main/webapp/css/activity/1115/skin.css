@@ -1,0 +1,188 @@
+﻿/*-----------------------------全局样式-------------------------------------*/
+dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,span,a,input,textarea,p,blockquote,th,td,header,nav,footer,article,section,aside,time,figure{margin:0;padding:0;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+h1,h2,h3,h4,h5,h6{font-size:14px;font-weight:normal}
+ul{list-style:none}
+legend{display:none}
+fieldset,img{border:none;vertical-align:middle}
+em,cite,i{font-style:normal}
+input,button,textarea{outline:none;border:0;vertical-align:middle;border:0;font-family:Microsoft YaHei}
+input[type="submit"],input[type="reset"],input[type="button"],button {-webkit-appearance:none;border-radius:0}
+select{-webkit-appearance:none;-moz-appearance:none;appearance:none}
+textarea{resize:none}
+html{height:100%;-webkit-text-size-adjust:none;overflow:hidden}
+body{font:12px/18px Microsoft YaHei;position:relative;margin:auto;color:#000;min-width:320px;word-break:break-all;height:100%;overflow:hidden;max-width:640px;background:#000 url(/images/activity/1115/loading.jpg);background-size:100%}
+body a{color:#000;text-decoration:none;cursor:pointer}
+body a:hover,body a:active,body a:focus{text-decoration:none;outline:none}
+@font-face{font-family:'Broadway';src:url("Broadway.eot");src:local(☺), url("Broadway.woff") format("woff"), url("Broadway.ttf") format("truetype"), url("Broadway.svg") format("svg");font-weight:400;font-style:normal}
+.auto-x{position:absolute;left:0;right:0;margin:auto}
+.auto-y{position:absolute;top:0;bottom:0;margin:auto}
+.animate{opacity:0}
+.shares{background:rgba(0,0,0,0.8) url(/images/activity/1115/shares.png) no-repeat;position:absolute;left:0;right:0;top:0;bottom:0;margin:auto;z-index:1000;background-size:100%;display:none}
+.pages{width:24px;height:32px;position:absolute;left:0;right:0;margin:auto;bottom:2px;z-index:8;animation:page 1.5s linear infinite;-webkit-animation:page 1.5s linear infinite;display:none}
+@keyframes page{0%{transform:translate(0,0);opacity:0}50%{transform:translate(0,-15px);opacity:1}100%{transform:translate(0,-30px);opacity:0}}
+@-webkit-keyframes page{0%{-webkit-transform:translate(0,0);opacity:0}50%{-webkit-transform:translate(0,-15px);opacity:1}100%{-webkit-transform:translate(0,-30px);opacity:0}}
+.animate{opacity:0}
+/*-----------------------------loading-------------------------------------*/
+.loading{width:100%;left:0;top:0;height:100%;position:absolute;z-index:20;overflow:hidden}
+.luo{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0}
+.ship{width:100%;height:110px}
+.light{width:100%;height:254px;top:82px;overflow:hidden;opacity:0}
+.light-animate{animation:light-animate 1.2s linear;-webkit-animation:light-animate 1.2s linear}
+@keyframes light-animate{0%{height:0}100%{height:254px}}
+@-webkit-keyframes light-animate{0%{height:0}100%{height:254px}}
+.fire{width:52px;height:181px;top:100px;transform-origin:center top;-webkit-transform-origin:center top}
+.fire-animate{animation:fire-animate 1s linear infinite;-webkit-animation:fire-animate 1s linear infinite}
+@keyframes fire-animate{0%{transform:scale(1,1)}25%{transform:scale(1,0.6)}50%{transform:scale(1,1)}75%{transform:scale(1,0.4)}100%{transform:scale(1,1)}}
+@-webkit-keyframes fire-animate{0%{-webkit-transform:scale(1,1)}25%{-webkit-transform:scale(1,0.6)}50%{-webkit-transform:scale(1,1)}75%{-webkit-transform:scale(1,0.4)}100%{-webkit-transform:scale(1,1)}}
+.pan{width:100%;height:110px;top:300px;opacity:0}
+.text{width:126px;height:66px;top:300px;opacity:0}
+.percent{position:absolute;color:#fff;right:10px;bottom:10px;font-family:'Broadway'}
+/*-----------------------------入口-------------------------------------*/
+.enter{width:100%;left:0;top:100%;height:100%;position:absolute;z-index:20;overflow:hidden}
+.rotate{bottom:50px}
+.shadow{width:318px;height:378px;position:absolute;left:-58px;right:-58px;top:-88px;bottom:-88px;margin:auto;opacity:0}
+.shadow>div{position:absolute;opacity:0}
+.d-1{width:18px;height:18px;left:42px;top:100px}
+.d-2{width:20px;height:20px;left:226px;top:78px}
+.d-3{width:22px;height:22px;left:276px;top:177px}
+.d-4{width:20px;height:20px;left:73px;top:256px}
+.d-5{width:20px;height:20px;left:29px;top:207px}
+.d-6{width:19px;height:19px;left:226px;top:284px}
+.d-7{width:19px;height:19px;left:94px;top:320px}
+.d-8{width:19px;height:19px;left:226px;top:106px}
+.d-9{width:19px;height:19px;left:258px;top:263px}
+.rotate{width:203px;height:203px}
+.saomiao{width:72px;height:72px;border-radius:36px;-webkit-border-radius:36px;overflow:hidden}
+.saomiao-div{width:100%;height:100%;border-radius:36px;overflow:hidden}
+.saoing{width:72px;height:63px;margin-top:-63px}
+.saoing-animate{animation:saoing-animate 2s linear infinite;-webkit-animation:saoing-animate 2s linear infinite}
+@keyframes saoing-animate{0%{margin-top:-63px}100%{margin-top:57px}}
+@-webkit-keyframes saoing-animate{0%{margin-top:-63px}100%{margin-top:57px}}
+/*-----------------------------动画-------------------------------------*/
+.swiper-container{overflow:hidden;width:100%;height:100%;position:absolute;left:0;top:100%;-webkit-perspective:1200px;-moz-perspective:1200px;-ms-perspective:1200px;perspective:1200px;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;backface-visibility:hidden;z-index:1}
+.swiper-wrapper{-webkit-transition-property:-webkit-transform,left,top;-webkit-transition-duration:0s;-webkit-transform:translate3d(0px,0,0);-webkit-transition-timing-function:ease;-moz-transition-property:-moz-transform,left,top;-moz-transition-duration:0s;-moz-transform:translate3d(0px,0,0);-moz-transition-timing-function:ease;transition-property:transform,left,top;transition-duration:0s;transform:translate3d(0px,0,0);transition-timing-function:ease;-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;transform-style:preserve-3d}
+.swiper-slide{width:100%;height:100%;overflow:hidden;position:relative;transform-origin:50% 0;-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;transform-style:preserve-3d}
+img{display:block;width:100%}
+/*-----------------------------分享-------------------------------------*/
+#mySwiper .luo,#mySwiper .light{opacity:1}
+.title{width:125px;height:68px;top:160px}
+.share-button{width:100px;height:100px;top:290px}
+.share-title{width:132px;height:33px;top:390px}
+.logo{width:54px;height:15px;top:430px}
+.rotate-1{animation:rotate 2s linear infinite;-webkit-animation:rotate 2s linear infinite}
+@keyframes rotate{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@-webkit-keyframes rotate{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}
+.view{text-align:center;font-size:14px;color:#fff;bottom:50px}
+.copy{bottom:2px;font-size:10px;color:#999;text-align:center;line-height:11px}
+/*-----------------------------地图-------------------------------------*/
+.map-title{width:240px;height:124px;top:20px;color:#00edff;text-align:center;text-shadow:rgba(17,230,255,0.5) 0 0 5px}
+.map-title h1{font-weight:bold;top:25px}
+.pub{font-weight:bold;top:55px}
+.maps{width:320px;height:233px;top:130px}
+.maps>div,.map-line>div{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0}
+.maps+.share-button{top:330px}
+.maps+.share-button+.share-title{top:420px}
+.maps+.share-button+.share-title+.logo{top:460px}
+/*-----------------------------人物-------------------------------------*/
+.head{width:291px;height:56px}
+.head-list{top:4px;width:200px;height:32px}
+.head-list li{float:left;width:30px;height:30px;border:#01bdcf 1px solid;border-radius:50%;margin:0 4px;box-shadow:#01bdcf 0 0 6px;overflow:hidden}
+.head-list img{border-radius:50%}
+.head-list li.on{border-color:#86fffe;box-shadow:#86fffe 0 0 5px}
+.msg{width:84px;height:32px;bottom:48px}
+.msgs{position:absolute;right:0;top:0;bottom:0;margin:auto;width:48px;height:18px}
+.msg-head{width:30px;height:30px;border:#00d6e9 1px solid;border-radius:50%;margin:0 4px;box-shadow:#00d6e9 0 0 10px;overflow:hidden}
+.msg-head-animate{animation:msg-head-animate 1s linear infinite alternate;-webkit-animation:msg-head-animate 1s linear infinite alternate}
+@keyframes msg-head-animate{0%{transform:scale(1)}100%{transform:scale(1.2)}}
+@-webkit-keyframes msg-head-animate{0%{-webkit-transform:scale(1)}100%{-webkit-transform:scale(1.2)}}
+.msgs h3{text-align:center;position:absolute;right:0;top:0;bottom:2px;margin:auto;height:18px;width:48px;color:#00edff;font-size:12px;text-shadow:#00edff 0 0 8px}
+.head-big{position:absolute}
+.saos{position:absolute;overflow:hidden}
+.saosing{position:absolute;margin:auto;left:-100px;right:-100px;width:197px;height:209px;top:-209px}
+.saosing-animate{animation:saosing-animate 2s linear infinite;-webkit-animation:saosing-animate 2s linear infinite}
+@keyframes saosing-animate{0%{transform:translate(0,0)}100%{transform:translate(0,320px)}}
+@-webkit-keyframes saosing-animate{0%{-webkit-transform:translate(0,0)}100%{-webkit-transform:translate(0,320px)}}
+.re{position:absolute}
+.re-text{color:#00edff;font-size:13px;line-height:22px;font-weight:bold;top:15px}
+.d{font-size:20px;position:relative;top:-4px;vertical-align:middle;font-weight:bold;color:red}
+.name{position:absolute;font-size:24px;left:131px;top:21px;line-height:35px;height:35px;font-weight:bold;text-align:center;right:20px;color:#00edff;text-shadow:#00edff 0 0 8px;letter-spacing:3px}
+.talk{position:absolute;color:#00edff;text-shadow:#00edff 0 0 8px;left:140px;top:100px}
+/*------------------都敏俊-----------------------*/
+.du{width:303px;height:325px;overflow:hidden}
+.du .head-big{left:20px;top:22px;width:105px;height:127px}
+.du .saos{left:20px;top:22px;width:105px;height:127px}
+.du .re{width:231px;height:125px;left:33px;top:148px}
+.du .re-text{text-align:center;height:22px}
+/*------------------锤锤-----------------------*/
+.chui{width:294px;height:308px;overflow:hidden}
+.chui .head-big{width:108px;height:127px;left:25px;top:14px}
+.chui .saos{width:108px;height:127px;left:25px;top:14px}
+.chui .re{width:245px;height:138px;left:30px;top:140px}
+.chui .re-text{left:30px;height:66px;right:auto;top:5px}
+.chui .name{left:144px;top:18px}
+.chui .talk{font-size:12px;left:144px;top:72px}
+/*------------------黄渤-----------------------*/
+.bo{width:297px;height:311px;overflow:hidden}
+.bo .head-big{width:108px;height:118px;right:27px;top:15px}
+.bo .saos{width:108px;height:118px;right:27px;top:15px}
+.bo .re{width:244px;height:126px;left:27px;top:138px}
+.bo .re-text{left:0;right:0;text-align:center;height:22px;top:15px}
+.bo .name{left:16px;right:140px;top:20px}
+.bo .talk{font-size:12px;left:25px;top:82px;line-height:20px}
+/*------------------韩寒-----------------------*/
+.han{width:297px;height:306px;overflow:hidden}
+.han .head-big{width:110px;height:119px;right:17px;top:17px}
+.han .saos{width:110px;height:119px;right:17px;top:17px}
+.han .re{width:253px;height:126px;left:26px;top:140px}
+.han .re-text{left:0;right:0;text-align:center;height:22px;top:15px}
+.han .name{left:25px;right:140px;top:18px}
+.han .talk{font-size:12px;left:25px;top:82px;line-height:20px}
+/*------------------吴妈-----------------------*/
+.wu{width:297px;height:306px;overflow:hidden}
+.wu .head-big{width:109px;height:118px;right:15px;top:25px}
+.wu .saos{width:109px;height:118px;right:15px;top:25px}
+.wu .re{width:253px;height:133px;left:23px;top:152px}
+.wu .re-text{left:0;right:0;text-align:center;height:22px;top:30px}
+.wu .name{left:25px;right:140px;top:30px}
+.wu .talk{font-size:12px;left:40px;top:82px;line-height:20px}
+/*-----------------------------音乐-------------------------------------*/
+#music{position:absolute;width:24px;height:24px;right:8px;bottom:-35px;z-index:10;opacity:0.5}
+.music{width:100%;height:100%;background:url(/images/activity/1115/music.png) no-repeat center center;background-size:100%}
+.play{animation:rotate 1.2s linear infinite;-webkit-animation:rotate 1.2s linear infinite}
+#music>span{color:#fff;position:absolute;left:-56px;top:0;line-height:36px;font-size:14px;opacity:0;-webkit-transition:all 0.3s linear;transition:all 0.3s linear}
+#music>span.zshow{left:-36px;opacity:1}
+@keyframes rotate{0%{transform:rotate(0)}100%{transform:rotate(-360deg)}}
+@-webkit-keyframes rotate{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(-360deg)}}
+/*-----------------------------屏幕补充-------------------------------------*/
+/*for iphone4 weixin*/
+@media screen and (max-height:420px){
+/*-----------------------------分享-------------------------------------*/
+.title{top:150px}
+.share-button{top:230px}
+.share-title{top:330px}
+.logo{top:370px}
+.copy{bottom:2px}
+/*-----------------------------地图-------------------------------------*/
+.map-title{top:10px}
+.maps{top:80px;transform:scale(0.8,0.8);-webkit-transform:scale(0.8,0.8)}
+.maps+.share-button{top:250px}
+.maps+.share-button+.share-title{top:340px}
+.maps+.share-button+.share-title+.logo{top:374px}
+/*-----------------------------人物-------------------------------------*/
+.msg{bottom:18px}
+}
+/*for android-720 weixin*/
+@media screen and (min-width:360px){
+/*-----------------------------loading-------------------------------------*/
+.ship{height:124px}
+.light{height:286px;top:92px}
+.fire{top:110px}
+.pan{top:350px}
+.text{top:360px}
+/*-----------------------------分享-------------------------------------*/
+.title{top:190px}
+.share-button{top:320px}
+.share-title{top:420px}
+.logo{top:460px}
+/*-----------------------------人物-------------------------------------*/
+}

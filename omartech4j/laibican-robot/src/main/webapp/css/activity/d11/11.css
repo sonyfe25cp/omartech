@@ -629,7 +629,7 @@ html {
   display: inline-block;
   width: 20px;
   height: 15px;
-  background: url("/images/activity/ele/up.png") no-repeat;
+  background: url("/images/activity/d11/up.png") no-repeat;
   background-size: 20px;
   -webkit-animation: arrowsUp 1s infinite linear;
 }

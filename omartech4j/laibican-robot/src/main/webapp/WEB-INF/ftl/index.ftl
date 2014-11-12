@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Cover Template for Bootstrap</title>
+    <title>天天比惨，活力四射</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
@@ -39,7 +39,7 @@
             </div>
 
             <div class="inner cover">
-                <h1 class="cover-heading">关注比惨公众号</h1>
+                <h1 class="cover-heading">关注<strong class="color:red">比惨</strong> 公众号</h1>
                 <p class="lead">不要以为你是这个世界上最悲惨的人，来看看这些小伙伴们的吐槽、悲惨境遇，缓解自己的悲惨情绪，感慨生活之美好！如果你觉得自己的境遇很惨，请发上来跟别人PK吧，相信你不会是最惨的那个，鼓起勇气，继续前行！</p>
                 <p class="lead">
                     <img src="/images/bican_logo.png">
