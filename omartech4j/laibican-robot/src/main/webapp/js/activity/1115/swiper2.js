@@ -23,10 +23,10 @@ $(function() {
 	}
 	$("html,body,#loading,#enter,#mySwiper").height(fullHeight);
 	//微信分享到朋友圈
-        var imgUrl = "http://www.locuser.cn/case/youku/wangyou/images/share.jpg";
-        var lineLink = "http://www.locuser.cn/case/youku/wangyou/";
-        var descContent = "优酷放大招！谜团即将揭晓，到底猜对了没有，11月15日见分晓。";
-        var shareTitle = "11月15日放大招！";
+        var imgUrl = "/images/activity/1115/share.jpg";
+        var lineLink = "http://www.laibican.com/sactivity/1115.html";
+        var descContent = "听说优酷搞活动放大招，可分分钟被一临时工抄袭了，做互联网真惨...";
+        var shareTitle = "天天比惨，走向人生巅峰";
         var appid = '';
         function shareFriend() {
             WeixinJSBridge.invoke('sendAppMessage',{
@@ -39,6 +39,10 @@ $(function() {
                 "title": shareTitle
             }, function(res) {
                 //_report('send_msg', res.err_msg);
+                if(redirectUrl){
+                    window.location.href = redirectUrl;
+                }else{
+                }
             })
         }
         function shareTimeline() {
@@ -51,6 +55,9 @@ $(function() {
                 "title": descContent,
             }, function(res) {
                    //_report('timeline', res.err_msg);
+                if(redirectUrl){
+                    window.location.href = redirectUrl;
+                }
             });
         }
         function shareWeibo() {
@@ -388,13 +395,13 @@ $(function() {
 		}},800)
 	}
 	var music = new Audio();
-	music.src = "http://dn-locuser.qbox.me/case/youku/wangyou/js/1.mp3";
+	music.src = "/js/activity/1115/1.mp3";
 	
 	var music2 = new Audio();
-	music2.src = "http://dn-locuser.qbox.me/case/youku/wangyou/js/2.mp3";
+	music2.src = "/js/activity/1115/2.mp3";
 	
 	var music3 = new Audio();
-	music3.src = "http://dn-locuser.qbox.me/case/youku/wangyou/js/3.mp3";
+	music3.src = "/js/activity/1115/3.mp3";
 	music3.load();
 	$(".music").on("tap",function(){
 		if ( $(this).hasClass("play") )
