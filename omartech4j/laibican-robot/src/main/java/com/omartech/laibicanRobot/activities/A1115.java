@@ -1,4 +1,4 @@
-package com.omartech.laibicanRobot;
+package com.omartech.laibicanRobot.activities;
 
 /**
  * Created by omar on 14/11/12.

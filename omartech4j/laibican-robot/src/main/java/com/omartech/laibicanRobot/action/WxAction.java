@@ -1,5 +1,10 @@
 package com.omartech.laibicanRobot.action;
 
+import com.omartech.laibicanRobot.model.message.WeixinMessage;
+import com.omartech.laibicanRobot.model.message.WeixinTextMessage;
+import com.omartech.laibicanRobot.model.reply.ReplyMessage;
+import com.omartech.laibicanRobot.utils.WeixinMessageConvertUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -38,6 +43,71 @@ public class WxAction {
             return null;
         }
     }
+
+
+    @RequestMapping("/receive")
+    @ResponseBody
+    public String reveiveMsg(@RequestParam String signature,
+                             @RequestParam String timestamp,
+                             @RequestParam String nonce,
+                             @RequestParam(required = true) String body) {
+
+        if (!verifyRight(signature, timestamp, nonce, token)) {
+            return "";
+        }
+
+        WeixinMessage message = WeixinMessageConvertUtil.convert2WeixinMessage(body);
+
+        if(message == null){
+            return "";
+        }
+
+        ReplyMessage replyMessage = getReplyMessage(message);
+        if(replyMessage != null){
+            String xml = replyMessage.toXML();
+            logger.info("replayMessage : {}", xml);
+            return xml;
+        }
+        return "";
+    }
+
+    private ReplyMessage getReplyMessage(WeixinMessage message) {
+
+
+        String type = message.getType();
+
+        ReplyMessage replyMessage = null;
+        switch (type){
+            case WeixinMessage.MESSAGE_TYPE_TEXT:
+                WeixinTextMessage textMessage = (WeixinTextMessage)message;
+                replayTextMessage(textMessage);
+                break;
+            default:
+                break;
+        }
+
+        return replyMessage;
+    }
+
+    private void replayTextMessage(WeixinTextMessage textMessage) {
+        String content = textMessage.getContent();
+
+    }
+
+    boolean verifyRight(@RequestParam String signature,
+                        @RequestParam String timestamp,
+                        @RequestParam String nonce,
+                        String token) {
+
+        String echo = compute(timestamp, nonce);
+
+        if (echo.equals(signature)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     static String compute(String timestamp, String nonce) {
         String[] list = new String[]{token, timestamp, nonce};
