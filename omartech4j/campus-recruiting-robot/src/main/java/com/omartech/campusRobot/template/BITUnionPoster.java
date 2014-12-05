@@ -100,7 +100,7 @@ public class BITUnionPoster {
                     lineBuilder.append("]");
                     lineBuilder.append(jd.getTitle());
                     if(jd.getCompany() != null) {
-                        lineBuilder.append("\t公司: " + jd.getCompany());
+                        lineBuilder.append("\n\t公司: " + jd.getCompany());
                     }
                     lineBuilder.append("[/url]");
                     sb.append(lineBuilder.toString()+"\n");

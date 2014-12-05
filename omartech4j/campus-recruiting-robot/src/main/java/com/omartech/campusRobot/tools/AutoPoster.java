@@ -40,7 +40,10 @@ public class AutoPoster {
 //		logger.info(listHtml);
         logger.info("size : {}", listHtml.length());
 
-        listHtml = listHtml+"蛋疼的汇总贴...花了4个多小时整理的代码，如果对大家有帮助，请回帖支持下；若觉得无用，也请回帖吐槽下。将根据意见决定保持每日更新or暂停蛋疼行为。";
+        listHtml = listHtml+"蛋疼的汇总贴..." +
+				"花了4个多小时整理的代码，如果对大家有帮助，请回帖支持下；" +
+				"若觉得无用，也请回帖吐槽下。" +
+				"将根据意见决定保持每日更新or暂停蛋疼行为。";
 
         String title = "【"+today+"】【今日校招信息汇总】按照来源排序";
 

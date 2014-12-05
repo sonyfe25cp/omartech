@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 
 /**
+ * 暂无可用方案，vwz.me的api访问次数受限
  * Created by omar on 14/11/2.
  */
 public class ShortUrl {

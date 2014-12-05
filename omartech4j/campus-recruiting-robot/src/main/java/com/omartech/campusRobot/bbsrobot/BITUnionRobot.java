@@ -5,8 +5,10 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -17,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +39,34 @@ public class BITUnionRobot {
 
         String page = "http://out.bitunion.org/viewthread.php?tid=10581177&fpage=1";
         findTid(page);
+    }
+
+
+    public static String viewPage(HttpClient client, String url){
+        HttpGet get = new HttpGet(url);
+        String html = null;
+        try {
+            HttpResponse httpResponse = client.execute(get);
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+            switch (statusCode){
+                case 200:
+                    InputStream content = httpResponse.getEntity().getContent();
+                    List<String> gb2312 = IOUtils.readLines(content, "gb2312");
+                    for(String line : gb2312){
+                        html += line;
+                    }
+                    break;
+                case 301:
+                    break;
+                case 404:
+                    break;
+                case 500:
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return html;
     }
 
 
@@ -145,7 +176,7 @@ public class BITUnionRobot {
         return list;
     }
 
-    static CloseableHttpClient createLoginClient(){
+    public static CloseableHttpClient createLoginClient(){
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setDefaultCookieStore(new BasicCookieStore()).build();// 可以帮助记录cookie
 
