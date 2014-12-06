@@ -31,8 +31,9 @@ import java.util.Map;
  */
 public class BITUnionRobot {
     static Logger logger = LoggerFactory.getLogger(BITUnionRobot.class);
-    static int theta = 10000/4;
-    public static void main(String[] args){
+    static int theta = 10000 / 4;
+
+    public static void main(String[] args) {
 //        BITUnionRobot.publishPost("这里可以发表格类型内容么？??", "没找到如何发表格样子的东西。。。\n" +
 //                "\n" +
 //                "只看到有列表内容。。。?", 92);
@@ -42,52 +43,50 @@ public class BITUnionRobot {
     }
 
 
-    public static String viewPage(HttpClient client, String url){
+    public static String viewPage(HttpClient client, String url) throws IOException {
         HttpGet get = new HttpGet(url);
         String html = "";
-        try {
-            HttpResponse httpResponse = client.execute(get);
-            int statusCode = httpResponse.getStatusLine().getStatusCode();
-            switch (statusCode){
-                case 200:
-                    InputStream content = httpResponse.getEntity().getContent();
-                    List<String> gb2312 = IOUtils.readLines(content, "gb2312");
-                    for(String line : gb2312){
-                        html += line;
-                    }
-                    break;
-                case 301:
-                    break;
-                case 404:
-                    break;
-                case 500:
-                    break;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        HttpResponse httpResponse = client.execute(get);
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        logger.info("{} -- {}", url, statusCode);
+        switch (statusCode) {
+            case 200:
+                InputStream content = httpResponse.getEntity().getContent();
+                List<String> gb2312 = IOUtils.readLines(content, "gb2312");
+                for (String line : gb2312) {
+                    html += line;
+                }
+                IOUtils.closeQuietly(content);
+                break;
+            case 301:
+                break;
+            case 404:
+                break;
+            case 500:
+                break;
         }
         return html;
     }
 
 
-    public static String publishPost(String title, String content, int moduleId){
+    public static String publishPost(String title, String content, int moduleId) {
         CloseableHttpClient httpclient = createLoginClient();
         String threadPage = "";
-        try{
+        try {
 
 
             logger.info("--------------------------------------------------------------------------");
             logger.info(content);
             logger.info("--------------------------------------------------------------------------");
             List<String> pieces = cutContentIntoPiecesNew(content);
-            if(pieces.size() > 1){
+            if (pieces.size() > 1) {
                 String lz = pieces.get(0);
                 logger.info("*********************************************************");
-                lz = lz+"共 "+ pieces.size() +" 楼，麻烦不要抢哦~~";
+                lz = lz + "共 " + pieces.size() + " 楼，麻烦不要抢哦~~";
                 logger.info(lz);
                 threadPage = createPost(httpclient, title, lz, moduleId);
                 int threadId = findTid(threadPage);
-                for(int i = 1; i < pieces.size(); i ++){
+                for (int i = 1; i < pieces.size(); i++) {
                     try {
                         Thread.sleep(1000 * 11);
                         logger.info("休息11s，然后回帖:{}", threadPage);
@@ -99,7 +98,7 @@ public class BITUnionRobot {
                     logger.info(other);
                     replayPost(httpclient, title, other, moduleId, threadId, threadPage);
                 }
-            }else{
+            } else {
                 threadPage = createPost(httpclient, title, content, moduleId);
             }
             httpclient.close();
@@ -112,10 +111,10 @@ public class BITUnionRobot {
     }
 
     private static int findTid(String threadPage) {
-        String[] splits = threadPage.substring(threadPage.indexOf("?")+1).split("&");
+        String[] splits = threadPage.substring(threadPage.indexOf("?") + 1).split("&");
         int tid = 0;
-        for(String split : splits){
-            if(split.contains("tid=")){
+        for (String split : splits) {
+            if (split.contains("tid=")) {
                 String tidstr = split.replace("tid=", "");
                 tid = Integer.parseInt(tidstr);
             }
@@ -129,32 +128,32 @@ public class BITUnionRobot {
         List<String> list = new ArrayList<>();
         String[] splits = content.split("\\[size=6\\]");
         StringBuilder sb = new StringBuilder();
-        for(String split : splits ){
-            if(split.length() == 0){
+        for (String split : splits) {
+            if (split.length() == 0) {
                 continue;
             }
-            split = "[size=6]" +split;
+            split = "[size=6]" + split;
 
             int current = split.length();
             int already = sb.toString().length();
-            if(current + already > theta){
-                if(already > 0){
+            if (current + already > theta) {
+                if (already > 0) {
                     list.add(sb.toString());
                     sb = new StringBuilder();
                 }
-                if(current > theta){
+                if (current > theta) {
 
-                    int tt = current/theta;
+                    int tt = current / theta;
 
                     String[] lis = split.split("\\[\\*\\]");
 
-                    int batch = lis.length/tt;
+                    int batch = lis.length / tt;
 
-                    for(int t = 0; t < tt ; t ++){
+                    for (int t = 0; t < tt; t++) {
                         StringBuilder tm = new StringBuilder();
                         tm.append("[list=1]");
-                        for(int i = t * batch; i < (t+1) * batch; i ++){
-                            if(i >= lis.length){
+                        for (int i = t * batch; i < (t + 1) * batch; i++) {
+                            if (i >= lis.length) {
                                 break;
                             }
                             String li = lis[i];
@@ -164,10 +163,10 @@ public class BITUnionRobot {
                         tm.append("[/list]");
                         list.add(tm.toString());
                     }
-                }else {
+                } else {
                     list.add(split);
                 }
-            }else {
+            } else {
                 sb.append(split);
             }
         }
@@ -176,7 +175,7 @@ public class BITUnionRobot {
         return list;
     }
 
-    public static CloseableHttpClient createLoginClient(){
+    public static CloseableHttpClient createLoginClient() {
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setDefaultCookieStore(new BasicCookieStore()).build();// 可以帮助记录cookie
 
@@ -214,8 +213,8 @@ public class BITUnionRobot {
         return httpclient;
     }
 
-    static String createPost(CloseableHttpClient httpclient, String title, String content, int moduleId){
-        if(content == null || content.length() < 10){
+    static String createPost(CloseableHttpClient httpclient, String title, String content, int moduleId) {
+        if (content == null || content.length() < 10) {
             return null;
         }
 
@@ -224,14 +223,14 @@ public class BITUnionRobot {
         map.put("Accept-Encoding", "gzip,deflate");
         map.put("Cache-Control", "max-age=0");
         map.put("Connection", "keep-alive");
-        map.put("Content-Length", content.length()+"");
+        map.put("Content-Length", content.length() + "");
         map.put("Content-Type", "multipart/form-data; boundary=----WebKitFormBoundary8zDNXrYEVqhoQCRe");
         map.put("Host", "out.bitunion.org");
         map.put("Origin", "http://out.bitunion.org");
         map.put("Referer", "http://out.bitunion.org/post.php?action=newthread&fid=92&fpage=1");
         map.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36");
         map.put("action", "newthread");
-        map.put("fid", ""+moduleId);
+        map.put("fid", "" + moduleId);
         map.put("topicsubmit", "submit");
         map.put("fpage", "1");
         map.put("viewperm", "");
@@ -248,7 +247,7 @@ public class BITUnionRobot {
 
         List<NameValuePair> nameValuePairs = constructParameters(map);
         HttpPost post = new HttpPost(
-                "http://out.bitunion.org/post.php?action=newthread&fid="+moduleId);
+                "http://out.bitunion.org/post.php?action=newthread&fid=" + moduleId);
         try {
             post.setEntity(new UrlEncodedFormEntity(nameValuePairs, "gbk"));
         } catch (UnsupportedEncodingException e1) {
@@ -273,16 +272,16 @@ public class BITUnionRobot {
         return threadPage;
     }
 
-    static List<NameValuePair> constructParameters(Map<String, String> map){
+    static List<NameValuePair> constructParameters(Map<String, String> map) {
         List<NameValuePair> lists = new ArrayList<>();
-        for(Map.Entry<String, String> entry : map.entrySet()){
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             lists.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
         return lists;
     }
 
-    static String replayPost(CloseableHttpClient httpclient, String title, String content, int moduleId, int threadId, String refer){
-        if(threadId == 0 || moduleId == 0){
+    static String replayPost(CloseableHttpClient httpclient, String title, String content, int moduleId, int threadId, String refer) {
+        if (threadId == 0 || moduleId == 0) {
             return null;
         }
         Map<String, String> map = new HashMap<>();
@@ -290,15 +289,15 @@ public class BITUnionRobot {
         map.put("Accept-Encoding", "gzip,deflate");
         map.put("Cache-Control", "max-age=0");
         map.put("Connection", "keep-alive");
-        map.put("Content-Length", content.length()+"");//todo verify how to compute
+        map.put("Content-Length", content.length() + "");//todo verify how to compute
         map.put("Content-Type", "multipart/form-data; boundary=----WebKitFormBoundary8zDNXrYEVqhoQCRe");
         map.put("Host", "out.bitunion.org");
         map.put("Origin", "http://out.bitunion.org");
         map.put("Referer", refer);
         map.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36");
         map.put("action", "reply");
-        map.put("fid", ""+moduleId);
-        map.put("tid", ""+ threadId);
+        map.put("fid", "" + moduleId);
+        map.put("tid", "" + threadId);
         map.put("replysubmit", "submit");
         map.put("fpage", "1");
         map.put("viewperm", "");
@@ -311,7 +310,7 @@ public class BITUnionRobot {
 
         List<NameValuePair> nameValuePairs = constructParameters(map);
         HttpPost post = new HttpPost(
-                "http://out.bitunion.org/post.php?action=reply&fid="+moduleId+"&tid="+threadId);
+                "http://out.bitunion.org/post.php?action=reply&fid=" + moduleId + "&tid=" + threadId);
         try {
             post.setEntity(new UrlEncodedFormEntity(nameValuePairs, "gbk"));
         } catch (UnsupportedEncodingException e1) {

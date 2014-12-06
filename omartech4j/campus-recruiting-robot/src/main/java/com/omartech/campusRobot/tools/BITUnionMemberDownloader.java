@@ -29,10 +29,12 @@ public class BITUnionMemberDownloader {
             bmd.gogo();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    void gogo() throws InterruptedException {
+    void gogo() throws InterruptedException, IOException {
 
         CloseableHttpClient loginClient = BITUnionRobot.createLoginClient();
 
