@@ -44,7 +44,7 @@ public class BITUnionRobot {
 
     public static String viewPage(HttpClient client, String url){
         HttpGet get = new HttpGet(url);
-        String html = null;
+        String html = "";
         try {
             HttpResponse httpResponse = client.execute(get);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
