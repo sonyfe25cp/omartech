@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * Comments for WeixinMessage.java
- * 
+ *
  * @author <a href="mailto:liujun@techwolf.cn">刘军</a>
  * @createTime 2014年8月14日 上午11:14:55
  */
@@ -211,4 +211,14 @@ public abstract class WeixinMessage {
         return NumberUtils.toInt(DateFormatUtils.format(addTime, "yyyyMMddHH"));
     }
 
+    @Override
+    public String toString() {
+        return "WeixinMessage{" +
+                "id=" + id +
+                ", fromName='" + fromName + '\'' +
+                ", toName='" + toName + '\'' +
+                ", messageId=" + messageId +
+                ", addTime=" + addTime +
+                '}';
+    }
 }

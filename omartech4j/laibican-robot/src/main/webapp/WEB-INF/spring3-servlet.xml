@@ -17,6 +17,7 @@
     <mvc:resources mapping="/css/**" location="/css/"/>
     <mvc:resources mapping="/favicon.ico" location="/images/favicon.ico"/>
     <mvc:resources mapping="/sactivity/**" location="/WEB-INF/sactivity/"/>
+    <mvc:resources mapping="/games/**" location="/WEB-INF/games/"/>
 
     <context:component-scan base-package="com.omartech.laibicanRobot.action"/>
 

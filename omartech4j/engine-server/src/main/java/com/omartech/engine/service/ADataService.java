@@ -1,9 +1,6 @@
 package com.omartech.engine.service;
 
-import cn.techwolf.data.gen.Article;
-import cn.techwolf.data.gen.ArticleRequest;
-import cn.techwolf.data.gen.ArticleResponse;
-import cn.techwolf.data.gen.DataService;
+import cn.techwolf.data.gen.*;
 import org.apache.thrift.TException;
 
 /**
@@ -18,5 +15,10 @@ public class ADataService implements DataService.Iface {
     @Override
     public void insertArticle(Article article) throws TException {
 
+    }
+
+    @Override
+    public QieyexinxiResponse searchQiyexinxi(QiyexinxiRequest req) throws TException {
+        throw new TException();
     }
 }

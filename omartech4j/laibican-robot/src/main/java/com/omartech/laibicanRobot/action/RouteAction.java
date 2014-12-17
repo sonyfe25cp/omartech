@@ -15,14 +15,26 @@ public class RouteAction {
 
     @RequestMapping("/index")
     public String index() {
-
-        logger.info("index");
         return "/index";
     }
 
     @RequestMapping("")
     public String defaultPage() {
-        logger.info("default index");
         return "/index";
+    }
+
+    @RequestMapping("/bican")
+    public String laibican() {
+        return "/homepages/bican";
+    }
+
+    @RequestMapping("/heros")
+    public String heros() {
+        return "/homepages/heros";
+    }
+
+    @RequestMapping("/jobs")
+    public String jobs() {
+        return "/homepages/jobs";
     }
 }

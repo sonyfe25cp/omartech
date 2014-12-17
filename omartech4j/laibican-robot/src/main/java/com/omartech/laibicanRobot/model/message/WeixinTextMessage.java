@@ -90,4 +90,10 @@ public class WeixinTextMessage extends WeixinMessage {
         this.text = text;
     }
 
+    @Override
+    public String toString() {
+        return "WeixinTextMessage{" +
+                "text='" + text + '\'' +
+                '}';
+    }
 }
