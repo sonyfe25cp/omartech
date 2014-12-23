@@ -1,0 +1,90 @@
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, del, dfn, em, img, ins, kbd, q, samp, small, strong, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, table, tbody, tfoot, thead, tr, th, td, article, aside, footer, header, nav, section {
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  font-size:100%;
+  vertical-align:baseline;
+  background:transparent;
+}
+body {
+  -webkit-text-size-adjust:none;
+  font-family:sans-serif;
+  -webkit-user-select:none;
+  background: #faea99;
+}
+html,body{
+  font-size:100%;
+  height: 100%;
+}
+.zqdn-game {position:relative;height:100%;width:100%;min-height:480px;}
+.zqdn-game img{width:100%;height:100%;z-index:10;}
+.step{width:100%;height:100%;}
+.bg{position:absolute;left:0;top:0;z-index:10;}
+.board{position:absolute;left:0;top:0;z-index:20;}
+.start{position:absolute;left:0;top:0;z-index:30;}
+.award{position:absolute;left:0;top:0;z-index:60;}
+.zqdn-game .error{position:absolute;left:0;top:0;z-index:60;}
+.clock{position:absolute;right:3%;top:2%;z-index:30;width:40px;height:48px;display:none;}
+.clock img{width: 100%;height:100%;z-index:10;}
+.time-countdown{position:absolute;width:100%;z-index:40;color:#fff;font-size:18px;left:50%;margin-left:-11px;top:36%;font-weight: bold;}
+.start_btn{cursor:pointer;position:absolute;left:0;top:0;z-index:30;}
+.title{text-align:center;font-size:2em;width:100%;height:100%;color:#38b7b1;padding-top:8%;}
+.title p{margin-top: 8.5%;font-size: 20px;}
+.thegame,.thegame-over{position:absolute;left:15%;;top:29.5%;width:70%;height:40%;z-index:50;text-align:center;}
+.thegame-over{top:32.5%;}
+.thegame table{width:100%;height:100%;}
+.thegame td{border:1px solid #a0ceb1;background:#ffe400;text-align:center;vertical-align:middle;font-size:24px;color:#a0ceb1;}
+.thegame .danao{width:21%;height:20%;margin:2% 0 5%;}
+.overlay{background:#000;filter:alpha(opacity=80);-moz-opacity:0.8;opacity:0.8;position:absolute;left:0;top:0;width:100%;height:100%;z-index:100;}
+.gameover{position:absolute;left:0;top:0;width:100%;height:100%;z-index:110;}
+.share{position:absolute;left:0;top:0;width:100%;height:100%;z-index:110;}
+.chenghao{margin-bottom:7%}
+.chenghao label{font-size:16px;color:#333;margin-bottom:2.5%;display:block;}
+.chenghao h1{font-size:22px;color:#bd3b0d;}
+.rank{color:#808080;}
+.rank p{margin-bottom:3%;}
+.tips{color:#aeaeae;font-size:14px;margin-bottom:5%;padding-bottom:3%}
+.challenge{position:absolute;color:#fff;font-size:14px;border-bottom:1px solid #fff;bottom:18%;width:80%;left:50%;margin-left:-40%;padding-bottom:5px;text-align:center;z-index:50;}
+.challenge p{position:relative;z-index:30;}
+.challenge .ch-arrow{width:5%;height:60%;position:absolute;right:0;top:95%;z-index:50;}
+.game-again-btn{width:45%;height:10%;position:absolute;z-index:100;bottom:6%;left:5%;cursor:pointer;}
+.game-share-btn{width:45%;height:10%;position:absolute;z-index:100;bottom:6%;right:5%;cursor:pointer;}
+@media (min-width:321px) and (max-width:480px) {
+	.time-countdown{font-size:20px;left:50%;margin-left:-11px;top:36%;}
+	.title{font-size:2.4em;}
+	.thegame td{font-size:32px;}
+	.chenghao{margin-bottom:10%}
+	.chenghao label{font-size:20px;margin-bottom:4.5%;}
+	.chenghao h1{font-size:28px;}
+	.challenge,.tips,.rank p{font-size:16px;}
+}
+@media (min-height:560px) and (max-width:600px) { 
+	.title p{margin-top:10%}
+	.time-countdown{top:34%;margin-left:-9px;top:36%;}
+	.chenghao label{font-size:18px;margin-bottom:4.5%;}
+}
+@media (min-height:720px) and (max-width:1024px) { 
+	.clock{width:60px;height:74px;}
+	.title p{margin-top:8.5%}
+	.time-countdown{margin-left:-17px;top:34%;}
+	.chenghao label{font-size:20px;margin-bottom:5.5%;}
+}
+.cutting-btn{width: 40%;height: 11%;position: absolute;z-index: 100;bottom: 9%;right: 30%;cursor: pointer;}
+.clock-animation{-webkit-animation: alarm-2 8ms infinite;animation: alarm-2 8ms infinite;}
+@-webkit-keyframes alarm-2 {
+	from {
+		-webkit-transform: rotate(1.8deg);
+	}
+	to {
+		-webkit-transform: rotate(-1.8deg);
+	}
+}
+@keyframes alarm-2 {
+	from {
+		transform: rotate(1.8deg);
+	}
+	to {
+		transform: rotate(-1.8deg);
+	}
+}

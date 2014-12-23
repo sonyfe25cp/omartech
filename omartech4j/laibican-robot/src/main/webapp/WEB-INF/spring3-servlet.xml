@@ -21,6 +21,16 @@
 
     <context:component-scan base-package="com.omartech.laibicanRobot.action"/>
 
+    <!--
+        <bean id="propertyConfigurer"
+              class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath*:config/*.properties</value>
+                </list>
+            </property>
+        </bean>
+        -->
 
     <bean id="freemarkerConfig"
           class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
@@ -62,12 +72,13 @@
     </bean>
 
 
-    <!-- Handler Mapping -->
+    <!-- Handler Mapping spring3.2.5-->
+    <bean id="handlerMapping"
+          class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="order" value="0"/>
+    </bean>
     <bean
-            class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-
-    <bean
-            class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+            class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <!-- 配置一下对json数据的转换 -->
         <property name="messageConverters">
             <list>
@@ -75,8 +86,21 @@
                         class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
                     <property name="supportedMediaTypes">
                         <list>
-                            <value>application/json</value>
-                            <value>text/json</value>
+                            <!--<value>application/json</value>-->
+                            <!--<value>text/json</value>-->
+                            <value>application/json; charset=UTF-8</value>
+                            <value>application/x-www-form-urlencoded; charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <constructor-arg value="UTF-8"></constructor-arg>
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/html;charset=UTF-8</value>
+                            <value>text/xml;charset=UTF-8</value>
+                            <value>text/plain;charset=UTF-8</value>
+                            <value>text/json;charset=UTF-8</value>
                         </list>
                     </property>
                 </bean>

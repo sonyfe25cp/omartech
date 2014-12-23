@@ -40,9 +40,17 @@
 
             <div class="inner cover">
                 <h1 class="cover-heading">关注 <strong class="color:red">比惨</strong> 公众号</h1>
-                <p class="lead">不要以为你是这个世界上最悲惨的人，来看看这些小伙伴们的吐槽、悲惨境遇，缓解自己的悲惨情绪，感慨生活之美好！如果你觉得自己的境遇很惨，请发上来跟别人PK吧，相信你不会是最惨的那个，鼓起勇气，继续前行！</p>
+                <p class="lead">
+                    这里有很多人发布自己的遭遇，这里负能量满满的。<br/>
+                    但是，看完之后总是觉得自己是幸福的。
+                </p>
+
                 <p class="lead">
                     <img src="/images/bican_logo.png">
+                </p>
+
+                <p class="lead">
+                    如果你认同我们，请把它推荐给你的朋友们~
                 </p>
             </div>
 

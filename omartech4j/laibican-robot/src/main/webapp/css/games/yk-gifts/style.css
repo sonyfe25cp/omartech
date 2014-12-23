@@ -1,0 +1,75 @@
+@charset "utf-8";
+
+/** Reset CSS **/
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,fieldset,legend,button,input,textarea,th,td,form,div,code{margin:0;padding:0;}
+body,button,input,select,textarea{font:12px/1.5 Tahoma,Helvetica,Arial,"\5b8b\4f53",sans-serif;}
+h1{font-size:18px;}
+h2{font-size:16px;}
+h3{font-size:14px;}
+h4,h5,h6{font-size:100%;}
+address,cite,dfn,em,var{font-style:normal;}
+code,kbd,pre,samp,tt{font-family:"Courier New",Courier,monospace;}
+small{font-size:12px;}
+ul,ol{list-style:none;}
+a{text-decoration:none;color:#929292}
+a:hover{text-decoration:underline;}
+abbr[title],acronym[title]{border-bottom:1px dotted;cursor:help;}
+q:before,q:after{content:'';}
+legend{color:#000;}
+fieldset,img{border:none;}
+button,input,select,textarea{font-size:100%;}
+table{border-collapse:collapse;border-spacing:0;}
+hr{border:none;height:1px;}
+html{overflow-y:scroll;}
+html,body{_height:100%}
+
+/** Global CSS **/
+body{color:#666}
+button,input,select,textarea{vertical-align:middle;}
+strong{font-weight:bold;}
+.hide,em{display:none}
+.clearfix:after{content:".";display: block;clear:both;visibility:hidden;line-height:0;height:0;}
+.clearfix{display: inline-block;}
+html[xmlns].clearfix{display: block;}
+* html .clearfix,* html{height: 1%;}
+.clear{border-top:1px solid transparent!important;border-top:0;clear:both;line-height:0;font-size:0;height:0;height:1%;}
+.relative{position:relative;}
+
+
+/** HTML CSS **/
+html,body{
+	color: #333333;
+}
+.bgc{
+	background-color:#000;
+}
+.loadingIco {
+	position:fixed;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	background-image:url(http://r1.ykimg.com/0510000053FC41E86737B35A4A0E1603);
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	background-color:#000;
+}
+.screen{
+	
+}
+
+#gameContainer_InputText{
+	
+}
+#gameContainer_InputTextBox{
+	border:0;
+	font-size:18px;
+	font-weight:bold;
+	color:#FFF;
+}
+
+
+
+
+
+

@@ -55,6 +55,7 @@ public class VideoReply extends ReplyMessage {
     }
 
     @Override
+    @Deprecated
     public void setContent(String content) {
 
     }

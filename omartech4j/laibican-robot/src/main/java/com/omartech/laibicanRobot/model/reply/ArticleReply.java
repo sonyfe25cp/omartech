@@ -6,6 +6,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class ArticleReply extends ReplyMessage {
 
-    private List<ArticleReplyItem> articleReplyItemList;
+    private List<ArticleReplyItem> articleReplyItemList = new ArrayList<>();
 
     private Date createdAt;
 
@@ -32,6 +33,10 @@ public class ArticleReply extends ReplyMessage {
 
     public void setArticleReplyItemList(List<ArticleReplyItem> articleReplyItemList) {
         this.articleReplyItemList = articleReplyItemList;
+    }
+
+    public void addArticleReplyItem(ArticleReplyItem articleReplyItem){
+        articleReplyItemList.add(articleReplyItem);
     }
 
     @Override
@@ -54,6 +59,7 @@ public class ArticleReply extends ReplyMessage {
     }
 
     @Override
+    @Deprecated
     public void setContent(String content) {
 
     }

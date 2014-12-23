@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @RequestMapping("/bican")
 @Controller
-public class BicanAction extends WeixinAction {
+public class BicanAction extends AWeixinAction {
 
     static Logger logger = LoggerFactory.getLogger(BicanAction.class);
 

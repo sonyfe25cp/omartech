@@ -29,6 +29,7 @@ public class WeixinMessageConvertUtil {
     private static final Logger logger = LoggerFactory.getLogger(WeixinMessageConvertUtil.class);
 
     public static WeixinMessage convert2WeixinMessage(String xml) {
+        logger.info("xml in : {}", xml);
         Document doc = null;
         try {
             doc = DocumentHelper.parseText(xml); // 将字符串转为XML

@@ -3,19 +3,24 @@ package com.omartech.laibicanRobot.model.reply;
 /**
  * Created by guo on 14-8-22.
  */
-public class ArticleReplyItem {
+public class ArticleReplyItem extends ReplyMessage{
 
     private int id;
 
-    private String title;
+    private String title = "";
 
-    private String description;
+    private String description = "";
 
-    private String picUrl;
+    private String picUrl = "";
 
-    private String url;
+    private String url = "";
 
     private int articleReplyId;
+
+    @Override
+    public String getType() {
+        return null;
+    }
 
     public int getId() {
         return id;
@@ -23,6 +28,21 @@ public class ArticleReplyItem {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String getContent() {
+        return null;
+    }
+
+    @Override
+    public void setContent(String content) {
+
+    }
+
+    @Override
+    public String toXML() {
+        return null;
     }
 
     public int getArticleReplyId() {

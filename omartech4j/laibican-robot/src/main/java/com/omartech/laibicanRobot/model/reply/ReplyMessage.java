@@ -144,4 +144,14 @@ public abstract class ReplyMessage {
         return NumberUtils.toInt(DateFormatUtils.format(addTime, "yyyyMMddHH"));
     }
 
+    @Override
+    public String toString() {
+        return "ReplyMessage{" +
+                "id=" + id +
+                ", messageId=" + messageId +
+                ", addTime=" + addTime +
+                ", fromName='" + fromName + '\'' +
+                ", toName='" + toName + '\'' +
+                '}';
+    }
 }

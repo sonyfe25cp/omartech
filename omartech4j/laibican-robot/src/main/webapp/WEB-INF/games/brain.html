@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>最强大脑智力游戏</title>
+    <meta charset="utf-8">
+    <meta name="apple-touch-fullscreen" content="YES">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="pragram" content="no-cache" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta content="telephone=no" name="format-detection"/>
+    <link href="/css/games/brain/ykbraingameV2.css?v=1418915444" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div class="zqdn-game yk-grid"></div>
+<div class="clock" id="brain_clock">
+    <img src="http://www.laibican.com/images/games/brain/05100000547C2D526714C06D30072036" alt="" title=""  />
+    <div class="time-countdown" id="time-conut"></div>
+</div>
+<script src="/js/games/brain/require.js" data-main="/js/games/brain/main.js" ></script>
+<script>
+
+    function bindWeixinShare(){
+        if (isWeixinBrowser()) {
+            var currentGamedata = getLocalStorage('currentGamedata');
+            var _resultLevel = '';
+            var _resultTime = '';
+            var imgUrl = "http://www.laibican.com/images/games/brain/05100000548FA9BA6714C06FD10CAEE1";
+            var lineLink = "http://" +window.location.host + window.location.pathname;
+            if (currentGamedata) {
+                currentGamedata = JSON.parse(currentGamedata);
+                var _resultLevel = currentGamedata['level'];
+                var _resultTime = currentGamedata['_time'];
+            }
+            if (_resultLevel > 0) {
+                var descContent = _resultTime+'秒连闯'+_resultLevel+'关,荣获"'+_nickName(_resultLevel)+'称号,速来挑战!';
+                var shareTitle = _resultTime+'秒连闯'+_resultLevel+'关,荣获"'+_nickName(_resultLevel)+'"称号,速来挑战!';
+            } else {
+                var descContent = "挑战记忆力,根本停不下来,试试看!";
+                var shareTitle = "挑战记忆力,根本停不下来,试试看!";
+            }
+
+            var appid = '';
+            function shareFriend() {
+                window.WeixinJSBridge.invoke('sendAppMessage',{
+                    "appid": appid,
+                    "img_url": imgUrl,
+                    "img_width": "640",
+                    "img_height": "640",
+                    "link": lineLink,
+                    "desc": descContent,
+                    "title": shareTitle
+                })
+            }
+            function shareTimeline() {
+                window.WeixinJSBridge.invoke('shareTimeline',{
+                    "appid": appid,
+                    "img_url": imgUrl,
+                    "img_width": "640",
+                    "img_height": "640",
+                    "link": lineLink,
+                    "desc": descContent,
+                    "title": shareTitle
+                }, function(res) {
+                    _report('timeline', res.err_msg);
+                });
+            }
+            function shareWeibo() {
+                window.WeixinJSBridge.invoke('shareWeibo',{
+                    "content": descContent,
+                    "url": lineLink
+                });
+            }
+            // 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。
+            document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+                // 发送给好友
+                WeixinJSBridge.on('menu:share:appmessage', function(argv){
+                    sendStatistic();
+                    shareFriend();
+                });
+                // 分享到朋友圈
+                WeixinJSBridge.on('menu:share:timeline', function(argv){
+                    sendStatistic();
+                    shareTimeline();
+                });
+                // 分享到微博
+                WeixinJSBridge.on('menu:share:weibo', function(argv){
+                    sendStatistic();
+                    shareWeibo();
+                });
+            }, false);
+        }
+    }
+    function _nickName(level) {
+        var _nickname = '';
+        if (level >= 1 && level <= 2) {
+            _nickname = "记忆师学徒";
+        } else if (level >= 3 && level <= 5) {
+            _nickname = "初级记忆师";
+        } else if (level >= 6 && level <= 8) {
+            _nickname = "中级记忆师";
+        } else if (level >= 9 && level <= 11) {
+            _nickname = "高级记忆师";
+        } else if (level >= 12 && level <= 14) {
+            _nickname = "特级记忆师";
+        } else if (level >= 15 && level <= 17) {
+            _nickname = "神级记忆师";
+        } else if (level >= 18 && level <= 20) {
+            _nickname = "无敌记忆王";
+        }
+        return _nickname;
+    }
+    function getLocalStorage(key){
+        if( window.sessionStorage && window.sessionStorage.getItem){
+            return window.sessionStorage.getItem(key);
+        }else{
+            return false;
+        }
+    }
+    function sendStatistic() {
+    }
+    function isWeixinBrowser(){
+        var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    bindWeixinShare();
+
+</script>
+</body>
+</html>

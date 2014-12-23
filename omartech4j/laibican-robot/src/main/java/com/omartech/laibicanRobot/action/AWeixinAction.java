@@ -13,9 +13,9 @@ import java.util.Arrays;
 /**
  * Created by omar on 14-12-17.
  */
-public abstract class WeixinAction {
+public abstract class AWeixinAction {
 
-    static Logger logger = LoggerFactory.getLogger(WeixinAction.class);
+    static Logger logger = LoggerFactory.getLogger(AWeixinAction.class);
 
     protected final static String token = "omartech";
 
@@ -24,22 +24,40 @@ public abstract class WeixinAction {
                              String timestamp,
                              String nonce,
                              String body) {
+
         if (!verifyRight(signature, timestamp, nonce, token)) {
+            logger.error("verify error, return");
             return "";
+        } else {
+            WeixinMessage message = WeixinMessageConvertUtil.convert2WeixinMessage(body);
+            if (message == null) {
+                logger.error("can't receive the message, return");
+                return "";
+            } else {
+                ReplyMessage replyMessage = getReplyMessage(message);
+                logger.info("1");
+                if (replyMessage != null) {
+                    logger.info("here?");
+                    String xml = replyMessage.toXML().trim();
+//                    if (replyMessage instanceof ArticleReply) {
+//                        logger.info("article");
+//                        ArticleReply replyMessage1 = (ArticleReply) replyMessage;
+//                        xml = replyMessage1.toXML();
+//                    } else if (replyMessage instanceof NormalReply) {
+//                        logger.info("normal");
+//                        NormalReply replyMessage1 = (NormalReply) replyMessage;
+//                        xml = replyMessage1.toXML();
+//                    } else {
+//                        logger.info("...");
+//                    }
+                    logger.info("replayMessage : {}", xml);
+                    return xml;
+                } else {
+                    logger.error("replay is null");
+                    return "";
+                }
+            }
         }
-
-        WeixinMessage message = WeixinMessageConvertUtil.convert2WeixinMessage(body);
-
-        if (message == null) {
-            return "";
-        }
-        ReplyMessage replyMessage = getReplyMessage(message);
-        if (replyMessage != null) {
-            String xml = replyMessage.toXML();
-            logger.info("replayMessage : {}", xml);
-            return xml;
-        }
-        return "";
     }
 
 
@@ -66,11 +84,12 @@ public abstract class WeixinAction {
             case WeixinMessage.MESSAGE_TYPE_TEXT:
                 WeixinTextMessage textMessage = (WeixinTextMessage) message;
                 replyMessage = replayTextMessage(textMessage);
+                logger.info("find match");
                 break;
             default:
                 break;
         }
-
+        logger.info("return reply");
         return replyMessage;
     }
 

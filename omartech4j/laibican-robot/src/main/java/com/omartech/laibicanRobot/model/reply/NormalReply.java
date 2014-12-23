@@ -10,16 +10,10 @@ import org.dom4j.Element;
  */
 public class NormalReply extends ReplyMessage {
 
-    private String type;
-
     private String content;
 
     public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+        return MESSAGE_TYPE_TEXT;
     }
 
     public String getContent() {
@@ -43,20 +37,24 @@ public class NormalReply extends ReplyMessage {
         Element timeElement = root.addElement(XML_PROPERTIES_MSG_CREATE_TIME);
         timeElement.addText(String.valueOf(System.currentTimeMillis() / 1000));
 
-        if (StringUtils.equals(MESSAGE_TYPE_TEXT, type)) {
-            Element contentElement = root.addElement(XML_PROPERTIES_MSG_CONTENT);
-            contentElement.addCDATA(content);
-            return doc.asXML();
-        } else if (StringUtils.equals(MESSAGE_TYPE_IMAGE, type)) {
-            Element contentElement = root.addElement(XML_PROPERTIES_MSG_IMAGE);
-            contentElement.addElement(XML_PROPERTIES_MSG_MEDIA_ID).addCDATA(content);
-            return doc.asXML();
-        } else if (StringUtils.equals(MESSAGE_TYPE_VOICE, type)) {
-            Element contentElement = root.addElement(XML_PROPERTIES_MSG_IMAGE);
-            contentElement.addElement(XML_PROPERTIES_MSG_VOICE).addCDATA(content);
-            return doc.asXML();
-        } else {
-            return "";
-        }
+        Element contentElement = root.addElement(XML_PROPERTIES_MSG_CONTENT);
+        contentElement.addCDATA(content);
+        return doc.asXML();
+
+//        if (StringUtils.equals(MESSAGE_TYPE_TEXT, type)) {
+//            Element contentElement = root.addElement(XML_PROPERTIES_MSG_CONTENT);
+//            contentElement.addCDATA(content);
+//            return doc.asXML();
+//        } else if (StringUtils.equals(MESSAGE_TYPE_IMAGE, type)) {
+//            Element contentElement = root.addElement(XML_PROPERTIES_MSG_IMAGE);
+//            contentElement.addElement(XML_PROPERTIES_MSG_MEDIA_ID).addCDATA(content);
+//            return doc.asXML();
+//        } else if (StringUtils.equals(MESSAGE_TYPE_VOICE, type)) {
+//            Element contentElement = root.addElement(XML_PROPERTIES_MSG_IMAGE);
+//            contentElement.addElement(XML_PROPERTIES_MSG_VOICE).addCDATA(content);
+//            return doc.asXML();
+//        } else {
+//            return "";
+//        }
     }
 }

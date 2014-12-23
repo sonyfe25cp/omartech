@@ -30,6 +30,7 @@ public class MusicReply extends ReplyMessage {
     }
 
     @Override
+    @Deprecated
     public void setContent(String content) {
 
     }
