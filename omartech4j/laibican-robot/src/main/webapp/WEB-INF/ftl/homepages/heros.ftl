@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,13 +10,14 @@
     <title>暴雪英雄榜</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="/css/bootstrap.min.css">
 
     <!-- Custom styles for this template -->
     <link href="http://getbootstrap.com/examples/cover/cover.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="http://getbootstrap.com/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <!--[if lt IE 9]>
+    <script src="http://getbootstrap.com/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="http://getbootstrap.com/assets/js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -40,9 +40,11 @@
 
             <div class="inner cover">
                 <h1 class="cover-heading">关注 <strong class="color:red">暴雪英雄榜</strong> 公众号</h1>
+
                 <p class="lead">
-                        每次都需要挨个告诉小伙伴来加好友？太out了，直接分享暴雪名片吧！还能查看魔兽世界英雄榜、暗黑3英雄榜呢~
+                    每次都需要挨个告诉小伙伴来加好友？太out了，直接分享暴雪名片吧！还能查看魔兽世界英雄榜、暗黑3英雄榜呢~
                 </p>
+
                 <p class="lead">
                     <img src="/images/heros_logo.png">
                 </p>
@@ -63,7 +65,7 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="/js/jquery-1.11.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script src="http://getbootstrap.com/assets/js/docs.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

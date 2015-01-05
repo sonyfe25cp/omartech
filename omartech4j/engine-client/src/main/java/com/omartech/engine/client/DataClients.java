@@ -1,8 +1,6 @@
 package com.omartech.engine.client;
 
-import cn.techwolf.data.gen.Article;
-import cn.techwolf.data.gen.ArticleRequest;
-import cn.techwolf.data.gen.ArticleResponse;
+import cn.techwolf.data.gen.*;
 import com.google.gson.Gson;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
@@ -69,6 +67,29 @@ public class DataClients {
             try {
                 client = pool.getClient(client);
                 ArticleResponse resp = client.client.insertArticle(req);
+                pool.returnClient(client);
+                return resp;
+
+            } catch (TException e1) {
+                e = e1;
+                if (client != null) {
+                    pool.returnBrokenClient(client);
+                }
+                // retry
+            }
+        }
+        throw new ClientException(e);
+    }
+
+    // auto generated code, do not edit
+    public BeautyResponse searchBeauty(BeautyRequest req) throws ClientException {
+        ThriftClient client = null;
+        Exception e = null;
+
+        for (int i = 0; i < TRY_COUNT; i++) {
+            try {
+                client = pool.getClient(client);
+                BeautyResponse resp = client.client.searchBeauty(req);
                 pool.returnClient(client);
                 return resp;
 

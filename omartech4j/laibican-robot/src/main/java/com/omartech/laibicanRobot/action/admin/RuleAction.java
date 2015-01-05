@@ -31,7 +31,7 @@ public class RuleAction {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new ModelAndView("").addObject("rules", rules).addObject("pageNo", pageNo);
+        return new ModelAndView("/admin/rules/list").addObject("rules", rules).addObject("pageNo", pageNo);
     }
 
 }

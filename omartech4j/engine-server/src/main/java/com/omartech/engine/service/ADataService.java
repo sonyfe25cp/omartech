@@ -25,7 +25,13 @@ public class ADataService extends AIndexSearcher implements DataService.Iface {
     }
 
     @Override
+    public BeautyResponse searchBeauty(BeautyRequest req) throws TException {
+        throw new TException();
+    }
+
+    @Override
     public QieyexinxiResponse searchQiyexinxi(QiyexinxiRequest req) throws TException {
         throw new TException();
     }
+
 }

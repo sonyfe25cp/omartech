@@ -16,7 +16,7 @@
 	<dependency>
 		<groupId>cn.techwolf.data</groupId>
 			<artifactId>campus-recruiting</artifactId>
-			<version>1.0</version>
+			<version>1.1-SNOPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>

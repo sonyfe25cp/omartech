@@ -1,10 +1,15 @@
 package com.omartech.laibicanRobot.service;
 
+import cn.techwolf.data.gen.*;
+import com.omartech.engine.client.ClientException;
 import com.omartech.engine.client.DataClients;
 import com.omartech.laibicanRobot.filter.Rule;
 import com.omartech.laibicanRobot.filter.RuleType;
+import com.omartech.laibicanRobot.model.AppEnum;
+import com.omartech.laibicanRobot.model.QueryLog;
 import com.omartech.laibicanRobot.model.ReplyEnum;
 import com.omartech.laibicanRobot.model.User;
+import com.omartech.laibicanRobot.model.message.WeixinTextMessage;
 import com.omartech.laibicanRobot.model.reply.ArticleReply;
 import com.omartech.laibicanRobot.model.reply.ArticleReplyItem;
 import com.omartech.laibicanRobot.model.reply.NormalReply;
@@ -12,8 +17,10 @@ import com.omartech.laibicanRobot.model.reply.ReplyMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.management.Query;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * Created by omar on 14-12-18.
@@ -28,22 +35,128 @@ public class CenterService {
     }
 
 
-    public ReplyMessage findAnswer(String query) throws SQLException {
+    public ReplyMessage findAnswer(WeixinTextMessage textMessage) throws SQLException, ClientException {
+        String query = textMessage.getContent();
+        String fromName = textMessage.getFromName();
+        String toName = textMessage.getToName();
+        int date10 = textMessage.getDate10();
+        long messageId = textMessage.getMessageId();
+
+
+        Connection connection = con.get();
+        AppEnum appEnum = textMessage.getAppEnum();
+        if (appEnum == null) {
+            logger.error("some app miss appEnum");
+        }
+        insertQueryLog(fromName, query, appEnum.toString(), connection);
+
         ReplyMessage replyMessage = null;
 
         replyMessage = matchFilter(query);
         if (replyMessage == null) {
+            logger.info("find reply from index");
             String keyWord = findKeyWord(query);
-
-            //DataClient client = new DataClient();
-            //Article article = client.search(keyWord);
-            //reply = Wrapper.wrap();
+            DataClients dataClients = fetchClient();
+            ArticleRequest req = new ArticleRequest();
+            req.setKeyword(keyWord);
+            ArticleResponse articleResponse = dataClients.searchArticle(req);
+            replyMessage = wrap(articleResponse, appEnum);
         }
         if (replyMessage == null) {
-            return fetchBakUpMsg();
+            logger.info("reply with default");
+            replyMessage = fetchBakUpMsg();
         }
+
+        replyMessage.setFromName(toName);
+        replyMessage.setToName(fromName);
+        replyMessage.setAddTime(new Date());
         return replyMessage;
     }
+
+    public ReplyMessage findAnswer(String uid, String query, AppEnum appEnum, String toName) throws SQLException, ClientException {
+
+        Connection connection = con.get();
+        if (appEnum == null) {
+            logger.error("some app miss appEnum");
+        }
+        insertQueryLog(uid, query, appEnum.toString(), connection);
+        ReplyMessage replyMessage = null;
+
+        replyMessage = matchFilter(query);
+        if (replyMessage == null) {
+            logger.info("find reply from index");
+            String keyWord = findKeyWord(query);
+            DataClients dataClients = fetchClient();
+            ArticleRequest req = new ArticleRequest();
+            req.setKeyword(keyWord);
+            ArticleResponse articleResponse = dataClients.searchArticle(req);
+            replyMessage = wrap(articleResponse, appEnum);
+        }
+        if (replyMessage == null) {
+            logger.info("reply with default");
+            replyMessage = fetchBakUpMsg();
+        }
+
+        replyMessage.setFromName(toName);
+        replyMessage.setToName(uid);
+        replyMessage.setAddTime(new Date());
+        logger.info("reply msg to client");
+        return replyMessage;
+    }
+
+
+    private ReplyMessage wrap(ArticleResponse articleResponse, AppEnum appEnum) {
+        List<Article> articles = articleResponse.getArticles();
+        if (articles == null || articles.size() == 0) {
+            logger.info("wrap no articles");
+            return null;
+        } else {
+            ArticleReply replyMessage = new ArticleReply();
+
+            for (Article article : articles) {
+                ArticleReplyItem articleReplyItem = new ArticleReplyItem();
+                articleReplyItem.setTitle(article.getTitle());
+                articleReplyItem.setDescription(article.content);
+                articleReplyItem.setPicUrl(findAPicture());
+                articleReplyItem.setUrl(wrapUrl(article.getId(), appEnum));
+                replyMessage.addArticleReplyItem(articleReplyItem);
+            }
+            return replyMessage;
+        }
+
+    }
+
+    private String wrapUrl(long id, AppEnum appEnum) {
+        String host = "http://www.laibican.com";
+        if (appEnum == null) {
+            appEnum = AppEnum.Other;
+        }
+        String url = host + "/wx/" + appEnum.toString() + "-" + id + ".html";
+        return url;
+    }
+
+    private String findAPicture() {
+        Random random = new Random();
+        int i1 = random.nextInt();
+        int abs = Math.abs(i1);
+        int i = abs % 30000;
+        DataClients dataClients = fetchClient();
+        BeautyRequest request = new BeautyRequest();
+        request.setOffset(i);
+        request.setLimit(1);
+        String url = "";
+        try {
+            BeautyResponse beautyResponse = dataClients.searchBeauty(request);
+            List<Beauty> beauties = beautyResponse.getBeauties();
+            for (Beauty beauty : beauties) {
+                url = beauty.getThumbLargeUrl();
+            }
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
 
     private ReplyMessage fetchBakUpMsg() {
         NormalReply normalReply = new NormalReply();
@@ -52,7 +165,7 @@ public class CenterService {
     }
 
     private String findKeyWord(String query) {
-        return null;
+        return query;
     }
 
     ReplyMessage matchFilter(String query) throws SQLException {
@@ -84,7 +197,7 @@ public class CenterService {
     public List<ReplyMessage> listReplyMessage(int begin, int limit) throws SQLException {
         Connection connection = con.get();
         List<ReplyMessage> list = new ArrayList<>();
-        String sql = "select * from replys where flag = 1 limit ?,?";
+        String sql = "SELECT * FROM replys WHERE flag = 1 LIMIT ?,?";
         try (PreparedStatement psmt = connection.prepareStatement(sql)) {
             psmt.setInt(1, begin);
             psmt.setInt(2, limit);
@@ -113,7 +226,7 @@ public class CenterService {
 
 
     private ReplyMessage fetchReplyMessageById(int replyId) throws SQLException {
-        String sql = "select * from replys where id = ?";
+        String sql = "SELECT * FROM replys WHERE id = ?";
         Connection connection = con.get();
         try (PreparedStatement psmt = connection.prepareStatement(sql)) {
             psmt.setInt(1, replyId);
@@ -166,7 +279,7 @@ public class CenterService {
     private Map<RuleType, Integer> fetchRuleOrder() throws SQLException {
         Map<RuleType, Integer> map = new HashMap<>();
         Connection connection = con.get();
-        String sql = "select * from rule";
+        String sql = "SELECT * FROM rule";
         try (PreparedStatement psmt = connection.prepareStatement(sql);
              ResultSet rs = psmt.executeQuery();
         ) {
@@ -185,7 +298,7 @@ public class CenterService {
         List<Rule> rules = new ArrayList<>();
         String sql = "";
         if (limit == 0) {
-            sql = "select id, ruleType, keyword, replyId from rules";
+            sql = "SELECT id, ruleType, keyword, replyId FROM rules";
         } else {
             sql = "select id, ruleType, keyword, replyId from rules limit " + offset + "," + limit;
         }
@@ -210,9 +323,52 @@ public class CenterService {
         return rules;
     }
 
+    public List<QueryLog> findQueryLogs(int offset, int limit) {
+        return findQueryLogs(offset, limit, con.get());
+    }
+
+    public List<QueryLog> findQueryLogs(int offset, int limit, Connection connection) {
+        List<QueryLog> logs = new ArrayList<>();
+        String sql = "SELECT id, uid, query, source FROM logs LIMIT ?,? ";
+        try {
+            PreparedStatement psmt = connection.prepareStatement(sql);
+            psmt.setInt(1, offset);
+            psmt.setInt(2, limit);
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                QueryLog object = new QueryLog();
+                int id = rs.getInt("id");
+                object.setId(id);
+                String uid = rs.getString("uid");
+                object.setUid(uid);
+                String query = rs.getString("query");
+                object.setQuery(query);
+                String source = rs.getString("source");
+                object.setSource(source);
+                logs.add(object);
+            }
+            rs.close();
+            psmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return logs;
+    }
+
+    public void insertQueryLog(String openId, String query, String appName, Connection connection) throws SQLException {
+        String sql = "INSERT INTO logs(uid, query, source) VALUES(?,?,?)";
+        try (PreparedStatement psmt = connection.prepareStatement(sql)) {
+            psmt.setString(1, openId);
+            psmt.setString(2, query);
+            psmt.setString(3, appName);
+            psmt.executeUpdate();
+        }
+        logger.info("insert query log over");
+    }
+
 
     public void insertUser(User user, Connection connection) throws SQLException {
-        String sql = "insert into users(uid, subscribe, nickname, sex, city, country, province, language, headimgurl, subscribe_time, unionid) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO users(uid, subscribe, nickname, sex, city, country, province, language, headimgurl, subscribe_time, unionid) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         int subscribe = user.getSubscribe();
         String nickname = user.getNickname();
         int sex = user.getSex();

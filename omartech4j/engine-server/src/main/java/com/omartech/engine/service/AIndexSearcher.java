@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,11 +88,13 @@ public abstract class AIndexSearcher<T> extends AIndexService implements DataSer
     }
 
     protected List<String> cutWords(String string) throws IOException {
-        if(StringUtils.isEmpty(string)){
+        if (StringUtils.isEmpty(string)) {
             return null;
-        }else {
+        } else {//todo: fix bugs
             TokenStream tokenStream = analyzer.tokenStream("", string);
-            return null;
+            List<String> strings = new ArrayList<>();
+            strings.add(string);
+            return strings;
         }
     }
 

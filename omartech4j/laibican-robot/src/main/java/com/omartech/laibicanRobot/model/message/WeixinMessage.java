@@ -3,6 +3,7 @@
  */
 package com.omartech.laibicanRobot.model.message;
 
+import com.omartech.laibicanRobot.model.AppEnum;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import java.util.Date;
  * @createTime 2014年8月14日 上午11:14:55
  */
 public abstract class WeixinMessage {
+
+    private AppEnum appEnum;
 
     /**
      * Logger for this class
@@ -220,5 +223,13 @@ public abstract class WeixinMessage {
                 ", messageId=" + messageId +
                 ", addTime=" + addTime +
                 '}';
+    }
+
+    public AppEnum getAppEnum() {
+        return appEnum;
+    }
+
+    public void setAppEnum(AppEnum appEnum) {
+        this.appEnum = appEnum;
     }
 }

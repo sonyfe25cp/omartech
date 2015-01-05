@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <script>
         var _hmt = _hmt || [];
-        (function() {
+        (function () {
             var hm = document.createElement("script");
             hm.src = "//hm.baidu.com/hm.js?22dc68c75d9e12bf66a51e626be87947";
             var s = document.getElementsByTagName("script")[0];
@@ -18,7 +18,7 @@
     <title>天天比惨，活力四射</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="/css/bootstrap.min.css">
 
     <!-- Custom styles for this template -->
     <link href="http://getbootstrap.com/examples/cover/cover.css" rel="stylesheet">
@@ -78,7 +78,7 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="/js/jquery-1.11.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script src="http://getbootstrap.com/assets/js/docs.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

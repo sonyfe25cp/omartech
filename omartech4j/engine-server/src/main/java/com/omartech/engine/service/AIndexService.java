@@ -4,7 +4,9 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.util.Version;
+import org.kohsuke.args4j.Option;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -13,7 +15,8 @@ import java.util.Date;
  * Created by omar on 15-1-5.
  */
 public class AIndexService {
-    protected int cpu = 4;
+    @Option(name = "-cpu", usage = "the num of cpu")
+    protected int cpu = 2;
     String indexPath;
     protected Analyzer analyzer = new CJKAnalyzer(Version.LUCENE_48);
 

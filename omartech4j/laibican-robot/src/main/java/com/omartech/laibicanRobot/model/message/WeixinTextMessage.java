@@ -3,19 +3,21 @@
  */
 package com.omartech.laibicanRobot.model.message;
 
+import com.omartech.laibicanRobot.model.AppEnum;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 /**
  * Comments for WeixinTextMessage.java
- * 
+ *
  * @author <a href="mailto:liujun@techwolf.cn">刘军</a>
  * @createTime 2014年8月14日 下午2:42:09
  */
 public class WeixinTextMessage extends WeixinMessage {
 
     private String text;
+
 
     /* (non-Javadoc)
      * @see cn.techwolf.kanzhun.weixin.mp.model.WeixinMessage#getType()
@@ -96,4 +98,5 @@ public class WeixinTextMessage extends WeixinMessage {
                 "text='" + text + '\'' +
                 '}';
     }
+
 }

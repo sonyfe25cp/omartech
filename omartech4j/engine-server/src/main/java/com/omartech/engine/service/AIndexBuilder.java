@@ -1,9 +1,11 @@
 package com.omartech.engine.service;
 
 import cn.techwolf.data.gen.Article;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -37,7 +39,11 @@ public class AIndexBuilder extends AIndexService {
     }
 
     void init() throws IOException {
-        Directory dir = NIOFSDirectory.open(new File(indexPath));
+        File folder = new File(indexPath);
+        if (folder.exists()) {
+            folder.delete();
+        }
+        Directory dir = NIOFSDirectory.open(folder);
         IndexWriterConfig conf = new IndexWriterConfig(Version.LUCENE_48, analyzer);
         writer = new IndexWriter(dir, conf);
     }
@@ -54,7 +60,8 @@ public class AIndexBuilder extends AIndexService {
         do {
             articles = fetchList(min, batch, sql, connection);
             for (Article article : articles) {
-                poolExecutor.submit(new Worker(article));
+//                poolExecutor.submit(new Worker(article));
+                new Worker(article).run();
                 long id = article.getId();
                 min = Math.max(id, min);
                 count++;
@@ -63,6 +70,7 @@ public class AIndexBuilder extends AIndexService {
                 }
             }
         } while (articles.size() > 0);
+        logger.info("{} articles are indexed", count);
         poolExecutor.shutdown();
         poolExecutor.awaitTermination(1, TimeUnit.DAYS);
         writer.commit();
@@ -91,8 +99,14 @@ public class AIndexBuilder extends AIndexService {
 
     public static Document toDoc(Article article) {
         Document document = new Document();
-        document.add(new TextField(TITLE, article.getTitle(), Field.Store.NO));
-        document.add(new TextField(CONTENT, article.getContent(), Field.Store.NO));
+        if (!StringUtils.isEmpty(article.getTitle())) {
+            document.add(new TextField(TITLE, article.getTitle().trim(), Field.Store.NO));
+        }
+        if (!StringUtils.isEmpty(article.getContent())) {
+            document.add(new TextField(CONTENT, article.getContent().trim(), Field.Store.NO));
+        }
+        document.add(new TextField(ID, article.getId() + "", Field.Store.YES));
+
         return document;
     }
 

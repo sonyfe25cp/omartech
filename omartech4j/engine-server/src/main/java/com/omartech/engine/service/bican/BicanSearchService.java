@@ -1,9 +1,6 @@
 package com.omartech.engine.service.bican;
 
-import cn.techwolf.data.gen.Article;
-import cn.techwolf.data.gen.ArticleRequest;
-import cn.techwolf.data.gen.ArticleResponse;
-import cn.techwolf.data.gen.ArticleType;
+import cn.techwolf.data.gen.*;
 import com.omartech.engine.service.ADataService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
@@ -14,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,17 +33,26 @@ public class BicanSearchService extends ADataService {
         String keyword = req.getKeyword();
         int offset = req.getOffset();
         int limit = req.getLimit();
+        limit = limit == 0 ? 30 : limit;
+        List<Long> ids = req.getIds();
         int topN = offset + limit;
 
         ArticleResponse response = new ArticleResponse();
         List<Article> articles = new ArrayList<>();
         Connection connection = con.get();
         if (StringUtils.isEmpty(keyword)) {
-            logger.info("list the articles");
-            articles = BicanDataService.findArticles(offset, limit, connection);
+            if (ids == null || ids.size() == 0) {
+                logger.info("list the articles");
+                articles = BicanDataService.findArticles(offset, limit, connection);
+            } else {
+                logger.info("find articles by ids ");
+                for (long id : ids) {
+                    Article art = BicanDataService.findById(id, connection);
+                    articles.add(art);
+                }
+            }
         } else {
             logger.info("query:{}, offset:{}, limit:{}", new String[]{keyword, offset + "", limit + ""});
-
             try {
                 BooleanQuery master = new BooleanQuery();
                 List<String> words = cutWords(keyword);
@@ -59,14 +63,14 @@ public class BicanSearchService extends ADataService {
                         TermQuery termQuery = new TermQuery(new Term(field, word));
                         bq.add(termQuery, BooleanClause.Occur.SHOULD);
                     }
-                    master.add(bq, BooleanClause.Occur.MUST);
+                    master.add(bq, BooleanClause.Occur.SHOULD);
                 }
 
+                logger.info(master.toString());
                 TopDocs topDocs = searcher.search(master, topN);
                 ScoreDoc[] scoreDocs = topDocs.scoreDocs;
                 int currentLength = scoreDocs.length;
                 if (currentLength >= offset) {
-
                     for (ScoreDoc scoreDoc : scoreDocs) {
                         int docId = scoreDoc.doc;
                         Document doc = searcher.doc(docId);
@@ -78,9 +82,6 @@ public class BicanSearchService extends ADataService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        for (Article article : articles) {
-            System.out.println(article.getId() + " : " + article.getContent());
         }
         response.setArticles(articles);
         response.setKeyword(keyword);
@@ -119,7 +120,54 @@ public class BicanSearchService extends ADataService {
             return conn;
         }
     };
+    static ThreadLocal<Connection> beautyCon = new InheritableThreadLocal<Connection>() {
+        @Override
+        protected Connection initialValue() {
+            Connection conn = null;
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/beauty", "root", "");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return conn;
+        }
+    };
 
+    @Override
+    public BeautyResponse searchBeauty(BeautyRequest req) throws TException {
+        String query = req.getQuery();
+        int limit = req.getLimit();
+        int offset = req.getOffset();
+        String sql = "select id, thumbLargeUrl from images where 1=1 ";
+        if (query != null) {
+            sql += " and tags like '%" + query + "%' ";
+        }
+        sql += " and id > ? limit ?";
+        logger.info("find beauty : {}", sql);
+        List<Beauty> beauties = new ArrayList<>();
+        Connection connection = beautyCon.get();
+        try (PreparedStatement psmt = connection.prepareStatement(sql)) {
+            psmt.setInt(1, offset);
+            psmt.setInt(2, limit);
+            ResultSet resultSet = psmt.executeQuery();
+            while (resultSet.next()) {
+                String thumbLargeUrl = resultSet.getString("thumbLargeUrl");
+                Beauty beauty = new Beauty();
+                beauty.setThumbLargeUrl(thumbLargeUrl);
+                String id = resultSet.getString("id");
+                beauty.setId(Integer.parseInt(id));
+                beauties.add(beauty);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        BeautyResponse response = new BeautyResponse();
+        response.setBeauties(beauties);
+        return response;
+    }
 
     public static void main(String[] args) {
         try {

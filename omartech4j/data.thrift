@@ -22,6 +22,7 @@ struct ArticleRequest{
   1: string keyword,
   2: i32 offset,
   3: i32 limit,
+  4: list<i64> ids
 }
 
 struct ArticleResponse{
@@ -53,6 +54,24 @@ struct Person{
   3: PositionType positionType,
 }
 
+struct Beauty{//美女图
+  1: i32 id,
+  2: string tags,
+  3: string downloadUrl,
+  4: string thumbnailUrl,
+  5: string thumbLargeUrl,
+  6: string thumbLargeTnUrl
+}
+struct BeautyRequest{
+  1: string query,
+  2: i32 offset,
+  3: i32 limit
+}
+struct BeautyResponse{
+  1: string query,
+  2: list<Beauty> beauties,
+  3: i32 total,
+}
 
 struct Qiyexinxi{//企业信息
   1: string name,
@@ -91,6 +110,8 @@ service DataService{
   ArticleResponse searchArticle(1: ArticleRequest req) //查询文章
 
   ArticleResponse insertArticle(1: Article article) //保存文章
+
+  BeautyResponse searchBeauty(1: BeautyRequest req)
 
   QieyexinxiResponse searchQiyexinxi(1: QiyexinxiRequest req)// 查询企业信息
   
