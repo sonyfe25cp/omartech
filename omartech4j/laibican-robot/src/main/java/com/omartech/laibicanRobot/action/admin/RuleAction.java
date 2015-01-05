@@ -2,6 +2,7 @@ package com.omartech.laibicanRobot.action.admin;
 
 import com.omartech.laibicanRobot.filter.Rule;
 import com.omartech.laibicanRobot.service.CenterService;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +14,7 @@ import java.util.List;
  * 相关规则
  * Created by omar on 14-12-18.
  */
+@Controller
 @RequestMapping("/rules")
 public class RuleAction {
 

@@ -2,18 +2,27 @@ CREATE DATABASE weixin
   DEFAULT CHARSET = 'utf8';
 USE weixin;
 
-create table rule(
-  id int not null AUTO_INCREMENT,
+CREATE TABLE article (
+  id        INT          NOT NULL AUTO_INCREMENT,
+  title     VARCHAR(500),
+  content   TEXT,
+  createdAt DATETIME     NOT NULL,
+  appName   VARCHAR(100) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE rule (
+  id       INT NOT NULL AUTO_INCREMENT,
   ruleType VARCHAR(45) COMMENT '过滤器类型',
   priority INT COMMENT '优先级，越小越靠前',
   PRIMARY KEY (id)
 );
 
 CREATE TABLE rules (
-  id         INT NOT NULL AUTO_INCREMENT,
+  id       INT NOT NULL AUTO_INCREMENT,
   ruleType VARCHAR(45) COMMENT '过滤器类型',
-  keyword    VARCHAR(45) COMMENT '关键词',
-  replyId    INT COMMENT '反馈id',
+  keyword  VARCHAR(45) COMMENT '关键词',
+  replyId  INT COMMENT '反馈id',
   PRIMARY KEY (id)
 );
 
@@ -23,9 +32,10 @@ CREATE TABLE replys (
   title       VARCHAR(200) COMMENT '文章标题',
   description VARCHAR(300) COMMENT '文章描述',
   url         VARCHAR(300) COMMENT '文章链接',
-  picUrl VARCHAR(300) COMMENT '图片链接',
-  content varchar(500) COMMENT '内容',
-  array VARCHAR(200) COMMENT '多图文类型, id,id,',
+  picUrl      VARCHAR(300) COMMENT '图片链接',
+  content     VARCHAR(500) COMMENT '内容',
+  array       VARCHAR(200) COMMENT '多图文类型, id,id,',
+  flag        INT COMMENT '0为子节点，1为父节点',
   PRIMARY KEY (id)
 );
 

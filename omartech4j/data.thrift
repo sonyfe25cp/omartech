@@ -90,7 +90,7 @@ service DataService{
 
   ArticleResponse searchArticle(1: ArticleRequest req) //查询文章
 
-  void insertArticle(1: Article article) //保存文章
+  ArticleResponse insertArticle(1: Article article) //保存文章
 
   QieyexinxiResponse searchQiyexinxi(1: QiyexinxiRequest req)// 查询企业信息
   

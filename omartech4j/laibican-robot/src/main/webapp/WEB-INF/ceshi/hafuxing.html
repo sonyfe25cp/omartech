@@ -1,0 +1,1309 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,minimum-scale=0.5,maximum-scale=0.5,initial-scale=0.5"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title>心理测试</title>
+    <!--<link rel="dns-prefetch" href="//miniapps-file.lapula.com">-->
+    <!--<link rel="dns-prefetch" href="//miniapps-image.lapula.com">-->
+    <link rel="stylesheet" type="text/css" href="/css/ceshi/hafuxing/reset.css"/>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?22dc68c75d9e12bf66a51e626be87947";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <style type="text/css">
+        body {
+            width: 640px;
+            min-height: 960px;
+            height: 100%;
+            margin: auto;
+            background: rgb(230, 230, 230);
+            -webkit-user-select: none;
+            -webkit-text-size-adjust: none;
+            -webkit-touch-callout: none;
+        }
+
+        a {
+            -webkit-tap-highlight-color: rgba(0, 0, 0);
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+        }
+
+        .midYellowBtn {
+            background-color: rgb(255, 52, 1);
+            border: none;
+            width: 500px;
+            height: 100px;
+            color: #FFF;
+            font-size: 36px;
+            border-radius: 4px;
+            -webkit-border-radius: 4px;
+        }
+
+        .maxYellowBtn {
+            background-color: rgb(255, 52, 1);
+            border: none;
+            width: 600px;
+            height: 100px;
+            color: #FFF;
+            font-size: 36px;
+            border-radius: 4px;
+            -webkit-border-radius: 4px;
+        }
+
+        .importInfo {
+            color: rgb(255, 52, 1);
+        }
+
+        .wrapper {
+            width: 600px;
+            margin: auto;
+        }
+
+        .titleDiv {
+            width: 100%;
+            margin-top: 60px;
+            margin-bottom: 30px;
+        }
+
+        .titleDiv .frontDiv {
+            width: 100%;
+            background: #FFF;
+            z-index: 1;
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+
+        .titleDiv .careerTagDiv {
+            width: 198px;
+            height: 122px;
+            margin-left: -12px;
+            margin-top: -172px;
+            background: url('http://miniapps-image.lapula.com/ceshi/img/tag/LabelZhiye.png') no-repeat;
+            z-index: 2;
+            position: absolute;
+        }
+
+        .titleDiv .funTagDiv {
+            width: 198px;
+            height: 122px;
+            margin-left: -12px;
+            margin-top: -172px;
+            background: url('http://miniapps-image.lapula.com/ceshi/img/tag/LabelQuwei.png') no-repeat;
+            z-index: 2;
+            position: absolute;
+        }
+
+        .titleDiv .loveTagDiv {
+            width: 198px;
+            height: 122px;
+            margin-left: -12px;
+            margin-top: -172px;
+            background: url('http://miniapps-image.lapula.com/ceshi/img/tag/LabelAiqing.png') no-repeat;
+            z-index: 2;
+            position: absolute;
+        }
+
+        .titleDiv .personalityTagDiv {
+            width: 198px;
+            height: 122px;
+            margin-left: -12px;
+            margin-top: -172px;
+            background: url('http://miniapps-image.lapula.com/ceshi/img/tag/LabelXingge.png') no-repeat;
+            z-index: 2;
+            position: absolute;
+        }
+
+        .titleDiv .desDiv {
+            text-align: right;
+            padding-right: 15px;
+        }
+
+        .titleDiv .desDiv .title {
+            font-size: 36px;
+            color: rgb(3, 3, 3);
+            display: block;
+        }
+
+        .titleDiv .desDiv .desc {
+            font-size: 24px;
+            color: rgb(128, 128, 128);
+            display: block;
+        }
+
+        .introDiv {
+            width: 100%;
+            margin-bottom: 80px;
+            display: none;
+        }
+
+        .introDiv .frontDiv {
+            width: 100%;
+            background: #FFF;
+            z-index: 1;
+            padding-bottom: 10px;
+        }
+
+        .introDiv img {
+            width: 500px;
+            height: 250px;
+            margin: 50px;
+            margin-bottom: 30px;
+        }
+
+        .introDiv .desDiv {
+            text-align: left;
+            padding-left: 50px;
+            padding-right: 50px;
+            padding-bottom: 60px;
+        }
+
+        .introDiv .desDiv .intro {
+            font-size: 28px;
+            color: rgb(80, 80, 80);
+        }
+
+        .introDiv .startBtnDiv {
+            width: 100%;
+            margin-top: -40px;
+            text-align: center;
+        }
+
+        .progressDiv {
+            width: 100%;
+            height: 30px;
+            background: #FFF;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .progressDiv .frontDiv {
+            width: 0%;
+            height: 30px;
+            background-color: rgb(255, 52, 1);
+        }
+
+        .progressDiv .desDiv {
+            float: right;
+            margin-top: -30px;
+            margin-right: 15px;
+        }
+
+        .progressDiv .desDiv span {
+            font-size: 24px;
+            color: #000;
+            line-height: 30px;
+        }
+
+        .questionDiv {
+            width: 100%;
+            margin-bottom: 80px;
+            display: none;
+        }
+
+        .questionDiv .frontDiv {
+            width: 100%;
+            background: #FFF;
+            z-index: 1;
+        }
+
+        .questionDiv .frontDiv ul {
+            list-style: none;
+            width: 600px;
+        }
+
+        .questionDiv .frontDiv ul li {
+            width: 560px;
+            padding: 36px 20px;
+            line-height: 60px;
+        }
+
+        .questionDiv .frontDiv ul li .questionNumDiv {
+            text-align: center;
+            background-color: rgb(255, 52, 1);
+            border-radius: 30px;
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+            font-size: 36px;
+            color: #FFF;
+            float: left;
+        }
+
+        .questionDiv .frontDiv ul li span {
+            font-size: 36px;
+            color: rgb(3, 3, 3);
+        }
+
+        .questionDiv .frontDiv ul .options {
+            width: 560px;
+            text-align: center;
+            padding: 44px 20px;
+            border-top: 3px solid;
+            border-color: #ECECEC;
+        }
+
+        .questionDiv .frontDiv ul .options span {
+            font-size: 32px;
+            color: rgb(128, 128, 128);
+        }
+
+        .shareDiv {
+            width: 100%;
+            padding-top: 10px;
+            margin-bottom: 80px;
+            display: none;
+        }
+
+        .shareDiv .frontDiv {
+            width: 100%;
+            background: #FFF;
+            z-index: 1;
+        }
+
+        .shareDiv .desDiv {
+            text-align: left;
+            padding: 44px 40px 70px;
+        }
+
+        .shareDiv .desDiv .summary {
+            font-size: 46px;
+            font-weight: bold;
+            color: rgb(3, 3, 3);
+            padding-bottom: 30px;
+            display: block;
+        }
+
+        .shareDiv .desDiv .desc {
+            font-size: 30px;
+            font-weight: bold;
+            color: rgb(128, 128, 128);
+            display: block;
+        }
+
+        .shareDiv img {
+            width: 100%;
+        }
+
+        .shareDiv .startBtnDiv {
+            width: 100%;
+            padding: 40px 0 10px;
+            text-align: center;
+        }
+
+        .moreTestUL {
+            list-style: none;
+            width: 640px;
+            margin: auto;
+            margin-top: -30px;
+            margin-bottom: 80px;
+        }
+
+        .moreTestUL li {
+            width: 318px;
+            height: 328px;
+            float: left;
+        }
+
+        .moreTestUL .leftGap {
+            padding-left: 4px;
+        }
+
+        .moreTestUL li .frontDiv {
+            width: 318px;
+            height: 328px;
+            background: rgb(237, 237, 237);
+        }
+
+        .moreTestUL li img {
+            width: 318px;
+            height: 212px;
+            display: block;
+        }
+
+        .moreTestUL li .desDiv {
+            text-align: left;
+            padding: 16px 12px 0;
+        }
+
+        .moreTestUL li .title {
+            font-size: 28px;
+            line-height: 28px;
+            color: rgb(0, 0, 0);
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .moreTestUL li .desc {
+            font-size: 18px;
+            line-height: 18px;
+            color: rgb(128, 128, 128);
+            margin-top: 10px;
+            display: block;
+        }
+
+        .moreTestUL li .desc .counter {
+            color: rgb(255, 52, 1);
+        }
+
+        .moreCeshiBtnDiv {
+            clear: both;
+            width: 100%;
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 80px;
+        }
+
+        .mustShareDiv {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #000;
+            z-index: 999;
+            display: none;
+        }
+
+        .mustShareDiv img {
+            float: right;
+        }
+    </style>
+    <script src="http://cdn.bootcss.com/zepto/1.1.4/zepto.min.js"></script>
+    <script src="http://cdn.bootcss.com/fastclick/1.0.3/fastclick.min.js"></script>
+</head>
+<body>
+<div class="wrapper" name="top">
+    <!-- Title Div -->
+    <div class="titleDiv">
+        <div class="frontDiv">
+            <div class="desDiv">
+                <span id="testName" class="title"></span>
+                <span class="desc">已有<span id="testCounter" class="importInfo"></span>人参加</span>
+            </div>
+        </div>
+        <div id="testTag" class="personalityTagDiv"></div>
+    </div>
+    <!-- End Title Div -->
+
+    <!-- Intro Div -->
+    <div class="introDiv">
+        <div class="frontDiv">
+            <img id="testPicture">
+
+            <div class="desDiv">
+                <span id="testDesc" class="intro"></span>
+            </div>
+        </div>
+        <div class="startBtnDiv">
+            <button id="startBtn" class="midYellowBtn" type="button">开始测试</button>
+        </div>
+    </div>
+    <!-- End Intro Div -->
+
+    <!-- Progress Div -->
+    <div class="progressDiv">
+        <div id="trackDiv" class="frontDiv"></div>
+        <div class="desDiv">
+            <span>共<span id="testQuestionsCounter"></span>题</span>
+        </div>
+    </div>
+    <!-- End Progress Div -->
+
+    <!-- Question Div -->
+    <div class="questionDiv">
+        <div class="frontDiv">
+            <ul id="questionList"></ul>
+        </div>
+    </div>
+    <!-- End Question Div -->
+
+    <!-- Share Div -->
+    <div class="shareDiv">
+        <div class="frontDiv">
+            <div class="desDiv">
+                <span id="resultSummary" class="summary"></span>
+                <span id="resultDesc" class="desc"></span>
+            </div>
+            <img id="resultPicture" src="" title="">
+        </div>
+        <div class="startBtnDiv">
+            <button class="midYellowBtn shareToWXBtn" type="button">分享给好友测测</button>
+        </div>
+    </div>
+    <!-- End Share Div -->
+
+    <!-- google adsence -->
+    <!--<div style="margin:auto;margin-top:-30px;width:336px;margin-bottom:80px;">-->
+    <!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+    <!--微信朋友圈互动网页方形广告 -->
+    <!--<ins class="adsbygoogle"-->
+    <!--style="display:inline-block;width:336px;height:280px"-->
+    <!--data-ad-client="ca-pub-0039930953329332"-->
+    <!--data-ad-slot="0569108537"></ins>-->
+    <!--<script>-->
+    <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
+    <!--//        </script>-->
+    <!--</div>-->
+    <!-- End google adsence -->
+
+</div>
+
+<!-- 强制分享图层 -->
+<div class="mustShareDiv"><img src="http://miniapps-image.lapula.com/img/mask.gif"/></div>
+<!-- End 强制分享图层 -->
+
+<ul id="moreTestUL" class="moreTestUL"></ul>
+
+<div class="moreCeshiBtnDiv">
+    <!--<button id="moreCeshiBtn" class="midYellowBtn" type="button">更多测试</button>-->
+    <a class="midYellowBtn" href="http://www.laibican.com">更多测试</a>
+</div>
+
+<script type="text/javascript">
+    var _bottomAd = 'xlnl_wx';
+</script>
+<style type="text/css">
+    .maxYellowBtn {
+        background-color: #FF7800;
+        border: none;
+        width: 600px;
+        height: 100px;
+        color: #FFF;
+        font-size: 36px;
+        border-radius: 4px;
+        -webkit-border-radius: 4px;
+    }
+
+    .minGreenBtn {
+        background-color: rgb(4, 192, 0);
+        border: none;
+        width: 112px;
+        height: 62px;
+        color: #FFF;
+        font-size: 28px;
+        border-radius: 4px;
+        -webkit-border-radius: 4px;
+    }
+
+    .placeholderDiv0 {
+        width: 640px;
+        height: 200px;
+        display: none;
+        clear: both;
+    }
+
+    .floatAdDiv0 {
+        height: 200px;
+        position: fixed;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        margin: 0;
+        z-index: 997;
+        display: none;
+        clear: both;
+    }
+
+    .floatAdDiv0 .backDiv {
+        width: 100%;
+        height: 200px;
+        background: #FFF;
+        position: absolute;
+        opacity: 1.0;
+    }
+
+    .floatAdDiv0 .frontDiv {
+        width: 100%;
+        height: 200px;
+        z-index: 1;
+        position: absolute;
+    }
+
+    .floatAdDiv0 .desDiv {
+        text-align: center;
+        padding-right: 15px;
+        margin-top: 10px;
+    }
+
+    .floatAdDiv0 .desDiv .desc {
+        font-size: 21px;
+        color: rgb(80, 80, 80);
+    }
+
+    .floatAdDiv0 .adBtnDiv {
+        width: 100%;
+        text-align: center;
+        padding-top: 35px;
+    }
+
+    .floatAdDiv0 .closeDiv {
+        background: url('http://miniapps-image.lapula.com/ceshi/img/cancel@2x.png');
+        width: 30px;
+        height: 30px;
+        float: right;
+    }
+
+    .placeholderDiv1 {
+        width: 640px;
+        height: 128px;
+        display: none;
+        clear: both;
+    }
+
+    .floatAdDiv1 {
+        height: 128px;
+        position: fixed;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        margin: 0;
+        z-index: 997;
+        display: none;
+        clear: both;
+    }
+
+    .floatAdDiv1 .backDiv {
+        width: 100%;
+        height: 128px;
+        background: rgb(69, 68, 73);
+        position: absolute;
+        opacity: 1.0;
+    }
+
+    .floatAdDiv1 .frontDiv {
+        width: 100%;
+        height: 128px;
+        z-index: 1;
+        position: absolute;
+    }
+
+    .floatAdDiv1 img {
+        width: 80px;
+        height: 80px;
+        float: left;
+        margin: 24px;
+        margin-right: 12px;
+    }
+
+    .floatAdDiv1 .desDiv {
+        width: 376px;
+        text-align: left;
+        float: left;
+        margin-top: 24px;
+    }
+
+    .floatAdDiv1 .desDiv .title {
+        font-size: 28px;
+        color: rgb(156, 156, 156);
+    }
+
+    .floatAdDiv1 .desDiv .desc {
+        font-size: 24px;
+        color: rgb(156, 156, 156);
+    }
+
+    .floatAdDiv1 .adBtnDiv {
+        width: 112px;
+        float: right;
+        margin-top: 33px;
+        margin-right: 24px;
+    }
+</style>
+<!-- Float AD Div -->
+<div class="placeholderDiv0"></div>
+<div class="floatAdDiv0">
+    <div class="backDiv"></div>
+    <div class="frontDiv">
+        <div id="adBottomCloseBtn" class="closeDiv"></div>
+        <div class="adBtnDiv">
+            <a id="adLinkBottom0" href="#">
+                <button id="adBtnBottom0" class="maxYellowBtn" type="button"></button>
+            </a>
+        </div>
+        <div class="desDiv">
+            <span id="adDescBottom0" class="desc"></span>
+        </div>
+    </div>
+</div>
+<!-- End Float AD Div -->
+
+<!-- Float AD Div 1 -->
+<div class="placeholderDiv1"></div>
+<div class="floatAdDiv1">
+    <div class="backDiv"></div>
+    <div class="frontDiv">
+        <img id="adImgBottom1" src="" title="">
+
+        <div class="desDiv">
+            <span id="adTitleBottom1" class="title"></span><br/>
+            <span id="adDescBottom1" class="desc"></span>
+        </div>
+        <div class="adBtnDiv">
+            <a id="adLinkBottom1" href="#">
+                <button id="adBtnBottom1" class="minGreenBtn" type="button"></button>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- End Float AD Div -->
+<!--
+<script type="text/javascript">
+    //(function(){setTimeout(function(){
+    //$('body').css('height', $(window).height());
+    //}, 100);})();
+
+    //获取底部广告栏信息
+    function getAdBottom() {
+        if (!(/MicroMessenger/i.test(navigator.userAgent)) || (/Lapula/i.test(navigator.userAgent))) return;
+        $.get('http://miniapps.sinaapp.com/api/ad/get_bottom_ad.php?key=' + _bottomAd, function (response) {
+            var objs = JSON.parse(response);
+            if (objs.ret == -1) {
+                return;
+            } else {
+                objs = objs.ad;
+                //隐藏原广告
+                $('.placeholderDiv0').css('display', 'none');
+                $('.floatAdDiv0').css('display', 'none');
+                $('.placeholderDiv1').css('display', 'none');
+                $('.floatAdDiv1').css('display', 'none');
+                //加载内容
+                if (objs.ad_type == '0') {
+                    $('#adDescBottom0').html(objs.ad_desc);
+                    $('#adBtnBottom0').html(objs.ad_btn);
+                    $('#adLinkBottom0').attr('href', objs.ad_link);
+                } else if (objs.ad_type == '1') {
+                    $('#adImgBottom1').attr('src', objs.ad_img + '!80x80');
+                    $('#adImgBottom1').attr('title', objs.ad_title);
+                    if ($('#adTitleBottom1').html() == '') $('#adTitleBottom1').html(objs.ad_title);
+                    $('#adDescBottom1').html(objs.ad_desc);
+                    $('#adBtnBottom1').html(objs.ad_btn);
+                    $('#adLinkBottom1').attr('href', objs.ad_link);
+                }
+                //显示新广告
+                $('.placeholderDiv' + objs.ad_type).css('display', 'block');
+                $('.floatAdDiv' + objs.ad_type).css('display', 'block');
+                $('.floatAdDiv' + objs.ad_type).css('top', $(window).height() - $('.floatAdDiv' + objs.ad_type).height());
+                //是否轮播
+                if (objs.timeout > 0) {
+                    setTimeout(function () {
+                        getAdBottom();
+                    }, objs.timeout);
+                }
+            }
+        });
+    }
+    (function () {
+        getAdBottom();
+    })();//默认每次加载执行一次
+    //监听广告关闭按钮
+    // 	$('#adBottomCloseBtn').on('touchend', function(event){
+    // 		event.preventDefault();
+    // 	});
+    $('#adBottomCloseBtn').on('click', function (event) {
+        event.preventDefault();
+        //隐藏原广告
+        $('.placeholderDiv0').css('display', 'none');
+        $('.floatAdDiv0').css('display', 'none');
+        $('.placeholderDiv1').css('display', 'none');
+        $('.floatAdDiv1').css('display', 'none');
+    });
+</script>
+-->
+<!-- 测试内容 -->
+<script type="text/javascript">
+    var _ceshiObj = {};
+    var _currentQuestionIndex = 0;
+    var _currentScore = 0;
+
+    //加载测试内容
+    function loadCeshiContent() {
+        $.post('http://miniapps.sinaapp.com/api/ceshi/get.php?timestamp=' + (new Date().getTime()), {'ceshi_id': '14'}, function (response) {
+            var objs = JSON.parse(response);
+            if (objs.ret != 1) {
+                location.href = './index.php';
+            } else {
+                _ceshiObj = objs.ceshi;
+                //加载测试名字
+                $('title').text(_ceshiObj.name);
+                //加载介绍模块
+                $('#testName').html(_ceshiObj.name);
+                $('#testTag').attr('class', _ceshiObj.tag + 'TagDiv');
+                $('#testCounter').html(_ceshiObj.counter);
+                $('#testQuestionsCounter').html(_ceshiObj.questions.length);
+                $('#testPicture').attr('src', _ceshiObj.picture + '!500x250');
+                $('#testPicture').attr('title', _ceshiObj.name);
+                $('#testDesc').html(_ceshiObj.desc);
+
+                //更新分享数据
+                var tmpShareObj = {
+                    'icon': _ceshiObj.icon,
+                    'title': _ceshiObj.name,
+                    'description': _ceshiObj.desc
+                };
+                updateShareData(tmpShareObj);
+
+                //默认直接开始测试
+                $('#startBtn').click();
+            }
+        });
+    }
+    (function () {
+        //加载测试内容
+        loadCeshiContent();
+
+        //加载fastclick组件
+        new FastClick(document.body);
+
+        //开始测试
+// 				$('#startBtn').on('touchend', function(event){
+// 					event.preventDefault();
+// 				});
+        $('#startBtn').on('click', function (event) {
+            event.preventDefault();
+            //隐藏介绍模块，显示问题模块
+            $('.introDiv').css('display', 'none');
+            $('.questionDiv').css('display', 'block');
+            //加载问题
+            if (_ceshiObj.method == 'plus') { //加载求和类测试
+                loadNextQuestionByPlus(_currentQuestionIndex);
+            }
+            else if (_ceshiObj.method == 'skip') { //加载跳转类测试
+                loadNextQuestionBySkip(_currentQuestionIndex);
+            }
+            else if (_ceshiObj.method == 'group-plus') { //加载分组求和类测试
+                _currentScore = {};
+                loadNextQuestionByGroupPlus(_currentQuestionIndex);
+            }
+            else if (_ceshiObj.method == 'merge-answer') { //加载分组合成答案类测试
+                _currentScore = {};
+                loadNextQuestionByMergeAnswer(_currentQuestionIndex);
+            }
+        });
+
+        //更多测试
+// 				$('#moreCeshiBtn').on('touchend', function(event){
+// 					event.preventDefault();
+// 				});
+        $('#moreCeshiBtn').on('click', function (event) {
+            event.preventDefault();
+            location.href = './index.php';
+        });
+    })();
+
+    //做测试统计
+    function playCeshi() {
+//        if ('14' != '') {
+//            $.post('http://miniapps.sinaapp.com/api/ceshi/play.php?timestamp=' + (new Date().getTime()), {'ceshi_id': '14'}, function (response) {
+//                TODO 回调
+//            });
+//        }
+    }
+
+    //按照求和方式加载下一套题目
+    function loadNextQuestionByPlus(questionIndex) {
+        //显示做题进度
+        $('.progressDiv').css('display', 'block');
+        $('#trackDiv').css('width', ((questionIndex + 1) / _ceshiObj.questions.length * 100) + '%');
+
+        //加载问题
+        $('#questionList').html('');
+        for (var i = 0; i < _ceshiObj.questions[questionIndex].length; i++) {
+            if (i == 0) {
+                $('#questionList').append('<li><div class="questionNumDiv">' + (_currentQuestionIndex + 1) + '</div><span>' + _ceshiObj.questions[questionIndex][0] + '</span></li>');
+            }
+            if (i > 1 && _ceshiObj.questions[questionIndex][i] !== '') {
+                $('#questionList').append('<li class="options" tag="' + (i - 2) + '"><span>' + _ceshiObj.questions[questionIndex][i] + '</span></li>');
+            }
+        }
+        //合计做题数递增
+        _currentQuestionIndex++;
+
+        //添加问题选项监听
+// 				$('.options').on('touchend', function(event){
+// 					event.preventDefault();
+// 				});
+        $('.options').on('click', function (event) {
+            event.preventDefault();
+            var tmpArr = _ceshiObj.questions[questionIndex][1].replace('{', '').replace('}', '').split(',');
+            //按照选项分值求和
+            if (tmpArr[$(this).attr('tag')].search(/^[+-]?[0-9.]*$/) >= 0) {
+                _currentScore += parseInt(tmpArr[$(this).attr('tag')]);
+            }
+            //不是最后一题则继续加载下一题，否则显示答案
+            if (_currentQuestionIndex < _ceshiObj.questions.length) {
+                loadNextQuestionByPlus(_currentQuestionIndex);
+            } else {
+                loadAnswer(_currentScore);
+            }
+        });
+
+        //backToTop回到头部
+        location.href = '#top';
+    }
+
+    //按照跳转方式加载下一套题目
+    function loadNextQuestionBySkip(questionIndex) {
+        //加载问题
+        $('#questionList').html('');
+        for (var i = 0; i < _ceshiObj.questions[questionIndex].length; i++) {
+            if (i == 0) {
+                $('#questionList').append('<li><div class="questionNumDiv">' + (_currentQuestionIndex + 1) + '</div><span>' + _ceshiObj.questions[questionIndex][0] + '</span></li>');
+            }
+            if (i > 1 && _ceshiObj.questions[questionIndex][i] !== '') {
+                $('#questionList').append('<li class="options" tag="' + (i - 2) + '"><span>' + _ceshiObj.questions[questionIndex][i] + '</span></li>');
+            }
+        }
+        //合计做题数递增
+        _currentQuestionIndex++;
+
+        //添加问题选项监听
+// 				$('.options').on('touchend', function(event){
+// 					event.preventDefault();
+// 				});
+        $('.options').on('click', function (event) {
+            event.preventDefault();
+            var tmpArr = _ceshiObj.questions[questionIndex][1].replace('{', '').replace('}', '').split(',');
+            //是数字，则跳转到下一题
+            if (tmpArr[$(this).attr('tag')].search(/^[+-]?[0-9.]*$/) >= 0) {
+                loadNextQuestionBySkip(tmpArr[$(this).attr('tag')] - 1);
+            } else { //是字母，则显示结果
+                loadAnswer(tmpArr[$(this).attr('tag')].toUpperCase());
+            }
+        });
+
+        //backToTop回到头部
+        location.href = '#top';
+    }
+
+    //按照分组求和方式加载下一套题目
+    function loadNextQuestionByGroupPlus(questionIndex) {
+        //显示做题进度
+        $('.progressDiv').css('display', 'block');
+        $('#trackDiv').css('width', ((questionIndex + 1) / _ceshiObj.questions.length * 100) + '%');
+
+        //加载问题
+        $('#questionList').html('');
+        for (var i = 0; i < _ceshiObj.questions[questionIndex].length; i++) {
+            if (i == 0) {
+                $('#questionList').append('<li><div class="questionNumDiv">' + (_currentQuestionIndex + 1) + '</div><span>' + _ceshiObj.questions[questionIndex][0] + '</span></li>');
+            }
+            if (i > 1 && _ceshiObj.questions[questionIndex][i] !== '') {
+                $('#questionList').append('<li class="options" tag="' + (i - 2) + '"><span>' + _ceshiObj.questions[questionIndex][i] + '</span></li>');
+            }
+        }
+        //合计做题数递增
+        _currentQuestionIndex++;
+
+        //添加问题选项监听
+// 				$('.options').on('touchend', function(event){
+// 					event.preventDefault();
+// 				});
+        $('.options').on('click', function (event) {
+            event.preventDefault();
+            var tmpArr = _ceshiObj.questions[questionIndex][1].replace('{', '').replace('}', '').split(',');
+            //按照选项分值分组求和
+            if (tmpArr[$(this).attr('tag')].substr(1).search(/^[+-]?[0-9.]*$/) >= 0) {
+                var groupKeyTmp = tmpArr[$(this).attr('tag')].substr(0, 1).toUpperCase();
+                var scoreTmp = parseInt(tmpArr[$(this).attr('tag')].substr(1));
+                if (typeof(_currentScore[groupKeyTmp]) == 'undefined') _currentScore[groupKeyTmp] = 0;
+                _currentScore[groupKeyTmp] += scoreTmp;
+            }
+            //不是最后一题则继续加载下一题，否则显示答案
+            if (_currentQuestionIndex < _ceshiObj.questions.length) {
+                loadNextQuestionByGroupPlus(_currentQuestionIndex);
+            } else {
+                //计算出最高分的分组
+                var maxGroupKey = 'A';
+                for (var groupKey in _currentScore) {
+                    if (_currentScore[groupKey] > _currentScore[maxGroupKey]) {
+                        maxGroupKey = groupKey;
+                    }
+                }
+                //按照得分最高的分组获得答案
+                loadAnswer(maxGroupKey);
+            }
+        });
+
+        //backToTop回到头部
+        location.href = '#top';
+    }
+
+    //按照分组测试合成答案方式加载下一套题目
+    function loadNextQuestionByMergeAnswer(questionIndex) {
+        //显示做题进度
+        $('.progressDiv').css('display', 'block');
+        $('#trackDiv').css('width', ((questionIndex + 1) / _ceshiObj.questions.length * 100) + '%');
+
+        //加载问题
+        $('#questionList').html('');
+        for (var i = 0; i < _ceshiObj.questions[questionIndex].length; i++) {
+            if (i == 0) {
+                $('#questionList').append('<li><div class="questionNumDiv">' + (_currentQuestionIndex + 1) + '</div><span>' + _ceshiObj.questions[questionIndex][0] + '</span></li>');
+            }
+            if (i > 1 && _ceshiObj.questions[questionIndex][i] !== '') {
+                $('#questionList').append('<li class="options" tag="' + (i - 2) + '"><span>' + _ceshiObj.questions[questionIndex][i] + '</span></li>');
+            }
+        }
+        //合计做题数递增
+        _currentQuestionIndex++;
+
+        //添加问题选项监听
+// 				$('.options').on('touchend', function(event){
+// 					event.preventDefault();
+// 				});
+        $('.options').on('click', function (event) {
+            event.preventDefault();
+            var tmpArr = _ceshiObj.questions[questionIndex][1].replace('{', '').replace('}', '').split(',');
+            //按照选项分值分组求和
+            if (tmpArr[$(this).attr('tag')].substr(1).search(/^[+-]?[0-9.]*$/) >= 0) {
+                var groupKeyTmp = tmpArr[$(this).attr('tag')].substr(0, 1).toUpperCase();
+                var scoreTmp = parseInt(tmpArr[$(this).attr('tag')].substr(1));
+                if (typeof(_currentScore[groupKeyTmp]) == 'undefined') _currentScore[groupKeyTmp] = 0;
+                _currentScore[groupKeyTmp] += scoreTmp;
+            }
+            //不是最后一题则继续加载下一题，否则显示答案
+            if (_currentQuestionIndex < _ceshiObj.questions.length) {
+                loadNextQuestionByMergeAnswer(_currentQuestionIndex);
+            } else {
+                //按照分组测试不同组的得分合成答案
+                loadAnswerByScoreArr(_currentScore);
+            }
+        });
+
+        //backToTop回到头部
+        location.href = '#top';
+    }
+
+    //按得分展示结果
+    function loadAnswer(score) {
+//        getAdBottom();//获取底部关注广告
+
+        for (var i = 0; i < _ceshiObj.answers.length; i++) {
+            if ((score >= _ceshiObj.answers[i][5] && score < _ceshiObj.answers[i][6]) //求和类测试
+                    || (score == _ceshiObj.answers[i][5].toUpperCase() && score == _ceshiObj.answers[i][6].toUpperCase()) //跳转类测试
+            ) {
+                //满足条件显示结果
+                $('#resultPicture').attr('src', _ceshiObj.answers[i][2] + '!600x400');
+                $('#resultPicture').attr('title', _ceshiObj.answers[i][0]);
+                $('#resultSummary').html(_ceshiObj.answers[i][0]);
+                $('#resultDesc').html(_ceshiObj.answers[i][1]);
+                //隐藏问题模块，显示结果分享模块
+                $('.questionDiv').css('display', 'none');
+                $('.titleDiv').css('display', 'none');
+                $('.progressDiv').css('display', 'none');
+                $('.shareDiv').css('display', 'block');
+
+                //backToTop回到头部
+                location.href = '#top';
+
+                //做测试统计
+                playCeshi();
+
+                //更新分享数据
+                var tmpShareObj = {
+                    'icon': _ceshiObj.answers[i][4],
+                    'title': _ceshiObj.name,
+                    'description': _ceshiObj.answers[i][3]
+                };
+                updateShareData(tmpShareObj);
+                break;
+            }
+        }
+    }
+
+    //按分组测试得分合成并展示结果
+    function loadAnswerByScoreArr(scoreArr) {
+        getAdBottom();//获取底部关注广告
+
+        var resultAnswer = {'summary': '', 'description': '', 'picture': '', 'share': '', 'share_pic': ''};
+        for (var groupKey in scoreArr) {
+            for (var i = 0; i < _ceshiObj.answers.length; i++) {
+                if (_ceshiObj.answers[i][5].substr(0, 1).toUpperCase() == groupKey.toUpperCase()) {
+                    if (scoreArr[groupKey] >= parseInt(_ceshiObj.answers[i][5].substr(1)) && scoreArr[groupKey] < parseInt(_ceshiObj.answers[i][6].substr(1))) {
+                        if (_ceshiObj.answers[i][0] != '') resultAnswer['summary'] += _ceshiObj.answers[i][0]
+                        if (_ceshiObj.answers[i][1] != '') resultAnswer['description'] += _ceshiObj.answers[i][1];
+                        if (_ceshiObj.answers[i][2] != '') resultAnswer['picture'] = _ceshiObj.answers[i][2] + '!600x400';
+                        if (_ceshiObj.answers[i][3] != '') resultAnswer['share'] += _ceshiObj.answers[i][3];
+                        if (_ceshiObj.answers[i][4] != '') resultAnswer['share_pic'] = _ceshiObj.answers[i][4];
+                        break;
+                    }
+                }
+            }
+        }
+
+        //显示结果
+        $('#resultPicture').attr('src', resultAnswer['picture']);
+        $('#resultPicture').attr('title', resultAnswer['summary']);
+        $('#resultSummary').html(resultAnswer['summary']);
+        $('#resultDesc').html(resultAnswer['description']);
+        //隐藏问题模块，显示结果分享模块
+        $('.questionDiv').css('display', 'none');
+        $('.titleDiv').css('display', 'none');
+        $('.progressDiv').css('display', 'none');
+        $('.shareDiv').css('display', 'block');
+
+        //backToTop回到头部
+        location.href = '#top';
+
+        //做测试统计
+        playCeshi();
+
+        //更新分享数据
+        var tmpShareObj = {
+            'icon': resultAnswer['share_pic'],
+            'title': _ceshiObj.name,
+            'description': resultAnswer['share']
+        };
+        updateShareData(tmpShareObj);
+    }
+
+    //更新分享数据
+    //obj:{'no':xxx,'icon':xxx,'weixin_url':xxx,'url':xxx,'title':xxx,'description':xxx,'sms':xxx}
+    function updateShareData(obj) {
+    }
+
+    function changeAdBottom() {
+        if ($('#adTitleBottom1').html().indexOf('人都关注') >= 0) return;
+        $('#adTitleBottom1').html(_ceshiObj.name.substring(0, _ceshiObj.name.indexOf('话')) + '人都关注的微信号');
+    }
+
+    //Warning 强制分享图层，分享朋友圈后看答案
+    function showPreShare() {
+        var isNeedShare = false;
+        if (isNeedShare) {
+            if ($('.mustShareDiv').css('display') == 'block') {
+                //显示答案
+                $('.mustShareDiv').css('display', 'none');
+                $('.shareDiv').css('display', 'block');
+            } else {
+                //显示预处理页
+                $('.shareDiv').css('display', 'none');
+                $('.mustShareDiv').css('display', 'block');
+            }
+        }
+    }
+</script>
+<!-- End 测试内容 -->
+
+<!-- 更多测试 -->
+<script type="text/javascript">
+    function getCeshiList(page) {
+//        $.post('http://miniapps.sinaapp.com/api/ceshi/more.php?timestamp=' + (new Date().getTime()), {
+//            'type': '',
+//            'ceshi_id': '14'
+//        }, function (response) {
+//            var objs = JSON.parse(response);
+//            if (objs['ret'] == 1) {
+//                var ceshiArr = objs['ceshi'];
+//                for (var i = 0; i < ceshiArr.length; i++) {
+//                    var htmlTmp = '<li ' + ((i % 2 != 0) ? 'class="leftGap"' : '') + '>'
+//                            + '<div class="frontDiv">'
+//                            + '<a href="' + ceshiArr[i]['url'] + '">'
+//                            + '<img class="icon" src="' + ceshiArr[i]['picture'] + '" title="' + ceshiArr[i]['name'] + '">'
+//                            + '<div class="desDiv">'
+//                            + '<span class="title">' + ceshiArr[i]['name'] + '</span>'
+//                            + '<span class="desc" style="display:' + (ceshiArr[i]['counter'] == '0' ? 'none' : 'block') + ';">已有<span class="counter">' + ceshiArr[i]['counter'] + '</span>人参加</span>'
+//                            + '</div>'
+//                            + '</a>'
+//                            + '</div>'
+//                            + '</li>';
+//                    $('#moreTestUL').append(htmlTmp);
+//                }
+//            }
+//        });
+    }
+    (function () {
+        setTimeout(function () {
+            getCeshiList();
+        }, 1000);
+    })();
+</script>
+<!-- End 更多测试 -->
+
+<!-- 分享 -->
+<script type="text/javascript">
+    var imgUrl = "http://miniapps-image.lapula.com/img/ad/icon_ceshi.jpg!120x120";
+    var lineLink = "http://www.laibican.com/ceshi/hafuxing.html";
+    var descContent = '测试一下你的性格吧？';
+    var shareTitle = '我做了哈佛性向测试，你要不要来试一下？';
+    var appid = '';
+
+    function shareFriend() {
+        WeixinJSBridge.invoke('sendAppMessage', {
+            "appid": appid,
+            "img_url": imgUrl,
+            "img_width": "200",
+            "img_height": "200",
+            "link": lineLink,
+            "desc": descContent,
+            "title": shareTitle
+        }, function (res) {
+            //_report('send_msg', res.err_msg);
+        })
+    }
+    function shareTimeline() {
+        WeixinJSBridge.invoke('shareTimeline', {
+            "img_url": imgUrl,
+            "img_width": "200",
+            "img_height": "200",
+            "link": lineLink,
+            "desc": descContent,
+            "title": shareTitle
+        }, function (res) {
+            //_report('timeline', res.err_msg);
+        });
+    }
+    function shareWeibo() {
+        WeixinJSBridge.invoke('shareWeibo', {
+            "content": descContent,
+            "url": lineLink
+        }, function (res) {
+            //_report('weibo', res.err_msg);
+        });
+    }
+    // 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。
+    document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+        // 发送给好友
+        WeixinJSBridge.on('menu:share:appmessage', function (argv) {
+            shareFriend();
+        });
+        // 分享到朋友圈
+        WeixinJSBridge.on('menu:share:timeline', function (argv) {
+            shareTimeline();
+        });
+        // 分享到微博
+        WeixinJSBridge.on('menu:share:weibo', function (argv) {
+            shareWeibo();
+        });
+    }, false);
+</script>
+<style type="text/css">
+    .adImg {
+        width: 100%;
+        display: block;
+    }
+
+    .browser-tips {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 998;
+    }
+
+    .browser-tips-content {
+        position: relative;
+        z-index: 999;
+        margin: 0 10px;
+        padding: 5px;
+        background-color: #fff;
+        border-radius: 0 0 5px 5px;
+    }
+
+    .browser-tips-content label {
+        position: relative;
+        z-index: 999;
+        padding: 0 6px;
+        line-height: 84px;
+        background-color: #fff;
+        font-size: 30px;
+    }
+
+    .browser-tips-content .line-with-bg {
+        display: block;
+        background-color: #d7eaf6;
+        border-radius: 2px;
+    }
+
+    .browser-tips-content
+    .tips-arrow {
+        position: absolute;
+        top: 0;
+        right: 40px;
+        width: 60px;
+        height: 60px;
+        background: url("http://miniapps-image.lapula.com/img/wechat_tips_arrow_2x.jpg") no-repeat right top;
+        background-size: 60px 60px;
+    }
+
+    .browser-tips-content .font-attention {
+        color: #f34028;
+    }
+
+    .browser-tips-mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(36, 39, 42, .8);
+    }
+
+    .closeShareBtn {
+        background-color: rgb(4, 192, 0);
+        border: none;
+        width: 112px;
+        height: 62px;
+        color: #FFF;
+        font-size: 28px;
+        border-radius: 4px;
+        -webkit-border-radius: 4px;
+        float: right;
+        margin-top: 15px;
+        margin-right: 40px;
+    }
+</style>
+
+<script type="text/javascript">
+    function _showShareView() {
+        var browserTips = $('<div></div>')
+                .attr('id', 'browserTips')
+                .addClass('browser-tips')
+                .html('<div class="browser-tips-content">'
+                + '<div class="tips-arrow"></div>'
+                + '<label>①点击<span class="font-attention">右上角</span>按钮</label>'
+                + '<label class="line-with-bg">②选择<span class="font-attention">「发送给好友」</span>或<span class="font-attention">「分享到朋友圈」</span></label>'
+                + '</div>'
+                + '<div class="browser-tips-mask"></div>');
+
+        $('body').append(browserTips);
+
+        setTimeout(function () {
+            var closeShareTipsBtn = $('<label style="text-align:center;"><button class="closeShareBtn" type="button">关闭</button></label>');
+            browserTips.children('.browser-tips-content').append(closeShareTipsBtn);
+            closeShareTipsBtn.on('click', function (event) {
+                event.preventDefault();
+                browserTips.remove();
+            });
+        }, 1000);
+    }
+    $('.shareToWXBtn').on('click', function (event) {
+        event.preventDefault();
+        _showShareView();
+    });
+</script>
+<!-- End 分享 -->
+
+<!-- 图片懒加载 -->
+<script src="http://miniapps-file.lapula.com/js/zepto/plugins/zepto.picLazyLoad.min.js"></script>
+<script type="text/javascript">$('img').picLazyLoad({threshold: 100, placeholder: '#'});</script>
+<!-- End 图片懒加载 -->
+
+
+</body>
+</html>

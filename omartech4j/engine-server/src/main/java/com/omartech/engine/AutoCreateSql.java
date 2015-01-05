@@ -21,9 +21,9 @@ public class AutoCreateSql {
 
     public static void main(String[] args) {
         AutoCreateSql acs = new AutoCreateSql();
-        acs.createInsertFromSql("/tmp/user.m");
+//        acs.createInsertFromSql("/tmp/art.sq");
 //        acs.createSelectFromBean("/tmp/edu_th");
-//        acs.createSelectFromSql("/tmp/r1.sql", true);
+        acs.createSelectFromSql("/tmp/art.sq", false);
     }
 
     void createSelectFromBean(String path) {
@@ -187,38 +187,35 @@ public class AutoCreateSql {
             sb.append(");");
             System.out.println("String sql = \"" + sb.toString() + "\";");//sql
             int index = 1;
-            System.out.println("try{");
-            System.out.println("PreparedStatement psmt = conn.prepareStatement(sql);");
+            System.out.println("try(");
+            System.out.println("PreparedStatement psmt = conn.prepareStatement(sql);){");
             for (String line : lines) {
                 line = line.trim();
                 String[] split = line.split(" ");
                 String name = split[0].replaceAll("`", "");
                 String type = split[1].toLowerCase();
                 if (type.startsWith("int")) {
-                    String psmt = "psmt.setInt(" + index + ", " + name + ");//" + name;
+                    String psmt = "psmt.setInt(" + index + ", object.get" + headUpperCase(name) + "());//" + name;
                     System.out.println(psmt);
                 } else if (type.startsWith("varchar") || type.contains("text")) {
-                    String psmt = "psmt.setString(" + index + ", " + name + ");//" + name;
+                    String psmt = "psmt.setString(" + index + ", object.get" + headUpperCase(name) + "());//" + name;
                     System.out.println(psmt);
                 } else if (type.equals("date")) {
-                    String psmt = "psmt.setDate(" + index + ", " + name + ");//" + name;
+                    String psmt = "psmt.setDate(" + index + ", object.get" + headUpperCase(name) + "());//" + name;
                     System.out.println(psmt);
                 } else if (type.equals("datetime")) {
-                    String psmt = "psmt.setTimestamp(" + index + ", " + name + ");//" + name;
+                    String psmt = "psmt.setTimestamp(" + index + ", object.get" + headUpperCase(name) + "());//" + name;
                     System.out.println(psmt);
                 } else if (type.startsWith("bigint")) {
-                    String psmt = "psmt.setLong(" + index + ", " + name + ");//" + name;
+                    String psmt = "psmt.setLong(" + index + ", object.get" + headUpperCase(name) + "());//" + name;
                     System.out.println(psmt);
-                }else{
+                } else {
                     System.out.println(type);
                 }
                 index++;
             }
             System.out.println("psmt.execute();");
-            System.out.println("psmt.close();");
-            System.out.println("} catch (SQLException e) {\n" +
-                    "\te.printStackTrace();\n" +
-                    "}");
+            System.out.println("}");
         } catch (IOException e) {
             e.printStackTrace();
         }

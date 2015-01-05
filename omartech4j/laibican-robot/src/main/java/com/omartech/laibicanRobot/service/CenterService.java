@@ -1,5 +1,6 @@
 package com.omartech.laibicanRobot.service;
 
+import com.omartech.engine.client.DataClients;
 import com.omartech.laibicanRobot.filter.Rule;
 import com.omartech.laibicanRobot.filter.RuleType;
 import com.omartech.laibicanRobot.model.ReplyEnum;
@@ -19,6 +20,13 @@ import java.util.*;
  */
 public class CenterService {
     static Logger logger = LoggerFactory.getLogger(CenterService.class);
+
+
+    public static DataClients fetchClient() {
+        DataClients dataClients = new DataClients("127.0.0.1:5678,127.0.0.1:5678");
+        return dataClients;
+    }
+
 
     public ReplyMessage findAnswer(String query) throws SQLException {
         ReplyMessage replyMessage = null;
@@ -72,6 +80,37 @@ public class CenterService {
         }
         return replyMessage;
     }
+
+    public List<ReplyMessage> listReplyMessage(int begin, int limit) throws SQLException {
+        Connection connection = con.get();
+        List<ReplyMessage> list = new ArrayList<>();
+        String sql = "select * from replys where flag = 1 limit ?,?";
+        try (PreparedStatement psmt = connection.prepareStatement(sql)) {
+            psmt.setInt(1, begin);
+            psmt.setInt(2, limit);
+            try (ResultSet resultSet = psmt.executeQuery();) {
+                while (resultSet.next()) {
+                    String replyEnum = resultSet.getString("replyEnum");
+                    String title = resultSet.getString("title");
+                    String content = resultSet.getString("content");
+                    int id = resultSet.getInt("id");
+                    ReplyMessage replyMessage = new ArticleReply();
+                    replyMessage.setContent(content);
+                    replyMessage.setId(id);
+                    list.add(replyMessage);
+                }
+            }
+        }
+
+        List<ReplyMessage> array = new ArrayList<>();
+        for (ReplyMessage replyMessage : list) {
+            int id = replyMessage.getId();
+            ReplyMessage replyMessage1 = fetchReplyMessageById(id);
+            array.add(replyMessage1);
+        }
+        return array;
+    }
+
 
     private ReplyMessage fetchReplyMessageById(int replyId) throws SQLException {
         String sql = "select * from replys where id = ?";
