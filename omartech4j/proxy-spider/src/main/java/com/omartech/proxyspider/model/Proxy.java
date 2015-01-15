@@ -2,47 +2,53 @@ package com.omartech.proxyspider.model;
 
 public class Proxy {
 
-	public int id;
-	
-	public String host;
-	
-	public int port;
-	
-	public String proxyType;
+    public int id;
+
+    public String host;
+
+    public int port;
+
+    public String proxyType;
+
+    public String comment;
 
     public int status;
 
-	public int getId() {
-		return id;
-	}
+    public String location;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public long latency;
 
-	public String getHost() {
-		return host;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public int getPort() {
-		return port;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	public String getProxyType() {
-		return proxyType;
-	}
+    public int getPort() {
+        return port;
+    }
 
-	public void setProxyType(String proxyType) {
-		this.proxyType = proxyType;
-	}
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getProxyType() {
+        return proxyType;
+    }
+
+    public void setProxyType(String proxyType) {
+        this.proxyType = proxyType;
+    }
 
     public int getStatus() {
         return status;
@@ -61,5 +67,29 @@ public class Proxy {
                 ", proxyType='" + proxyType + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public long getLatency() {
+        return latency;
+    }
+
+    public void setLatency(long latency) {
+        this.latency = latency;
     }
 }

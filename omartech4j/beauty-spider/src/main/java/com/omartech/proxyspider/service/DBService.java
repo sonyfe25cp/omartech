@@ -1,13 +1,16 @@
 package com.omartech.proxyspider.service;
 
 import com.omartech.proxyspider.model.Image;
+import com.omartech.proxyspider.model.MokoUser;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -148,7 +151,55 @@ public class DBService {
             }
             return object;
         }
+    }
 
+
+    public static void insertMokoUser(MokoUser mokoUser, Connection connection) throws SQLException {
+        String sql = "INSERT INTO mokoUser(id, name, gender, tags) VALUES(?,?,?,?);";
+        try (PreparedStatement psmt = connection.prepareStatement(sql)) {
+            psmt.setInt(1, mokoUser.getId());
+            psmt.setString(2, mokoUser.getName());
+            psmt.setInt(3, mokoUser.getSex());
+            psmt.setString(4, mokoUser.getTags().toString());
+            psmt.executeUpdate();
+        }
+    }
+
+    public static void insertMokoPic(int id, String downloadUrl, String thumbUrl, Connection connection) throws SQLException {
+        String sql = "INSERT INTO mokoPic(id, downloadUrl, thumbUrl) VALUES(?,?, ?)";
+        try (PreparedStatement psmt = connection.prepareStatement(sql)) {
+            psmt.setInt(1, id);
+            psmt.setString(2, downloadUrl);
+            psmt.setString(3, thumbUrl);
+            psmt.executeUpdate();
+        }
+    }
+
+    public static List<MokoUser> fetchAll(Connection connection) {
+        List<MokoUser> users = new ArrayList<>();
+        String sql = "SELECT id, name, gender, tags FROM mokoUser ";
+        try {
+            PreparedStatement psmt = connection.prepareStatement(sql);
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                MokoUser object = new MokoUser();
+                int id = rs.getInt("id");
+                object.setId(id);
+                String name = rs.getString("name");
+                object.setName(name);
+                int gender = rs.getInt("gender");
+                object.setSex(gender);
+                String tags = rs.getString("tags");
+                List<String> strings = Arrays.asList(tags);
+                object.setTags(new HashSet<String>(strings));
+                users.add(object);
+            }
+            rs.close();
+            psmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
 
     }
 }

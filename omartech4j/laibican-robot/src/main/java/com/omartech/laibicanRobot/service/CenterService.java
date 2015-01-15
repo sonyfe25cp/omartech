@@ -1,6 +1,8 @@
 package com.omartech.laibicanRobot.service;
 
+import ch.qos.logback.core.db.dialect.DBUtil;
 import cn.techwolf.data.gen.*;
+import cn.techwolf.data.utils.DBUtils;
 import com.omartech.engine.client.ClientException;
 import com.omartech.engine.client.DataClients;
 import com.omartech.laibicanRobot.filter.Rule;
@@ -9,6 +11,7 @@ import com.omartech.laibicanRobot.model.AppEnum;
 import com.omartech.laibicanRobot.model.QueryLog;
 import com.omartech.laibicanRobot.model.ReplyEnum;
 import com.omartech.laibicanRobot.model.User;
+import com.omartech.laibicanRobot.model.message.WeixinArticleMessage;
 import com.omartech.laibicanRobot.model.message.WeixinTextMessage;
 import com.omartech.laibicanRobot.model.reply.ArticleReply;
 import com.omartech.laibicanRobot.model.reply.ArticleReplyItem;
@@ -17,7 +20,6 @@ import com.omartech.laibicanRobot.model.reply.ReplyMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.Query;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -25,13 +27,29 @@ import java.util.Date;
 /**
  * Created by omar on 14-12-18.
  */
+
 public class CenterService {
     static Logger logger = LoggerFactory.getLogger(CenterService.class);
 
 
+    private static DataClients dataClients = new DataClients("127.0.0.1:5678,127.0.0.1:5678");
+
     public static DataClients fetchClient() {
-        DataClients dataClients = new DataClients("127.0.0.1:5678,127.0.0.1:5678");
         return dataClients;
+    }
+
+
+    Connection fetchConnection() {
+        Connection connection;
+        boolean flag = false;
+        do {
+            connection = con.get();
+            flag = DBUtils.verifyConnection(connection, "select id from rule limit 1");
+            if (!flag) {
+                con.remove();
+            }
+        } while (!flag);
+        return connection;
     }
 
 
@@ -43,28 +61,33 @@ public class CenterService {
         long messageId = textMessage.getMessageId();
 
 
-        Connection connection = con.get();
         AppEnum appEnum = textMessage.getAppEnum();
         if (appEnum == null) {
             logger.error("some app miss appEnum");
         }
-        insertQueryLog(fromName, query, appEnum.toString(), connection);
+        insertQueryLog(fromName, query, appEnum.toString(), fetchConnection());
 
         ReplyMessage replyMessage = null;
 
-        replyMessage = matchFilter(query);
-        if (replyMessage == null) {
-            logger.info("find reply from index");
-            String keyWord = findKeyWord(query);
-            DataClients dataClients = fetchClient();
-            ArticleRequest req = new ArticleRequest();
-            req.setKeyword(keyWord);
-            ArticleResponse articleResponse = dataClients.searchArticle(req);
-            replyMessage = wrap(articleResponse, appEnum);
-        }
-        if (replyMessage == null) {
-            logger.info("reply with default");
-            replyMessage = fetchBakUpMsg();
+
+        if (query.contains("求签")) {
+//            replyMessage = fetchBakUpMsg("http://www.laibican.com/sactivity/yaoqian.html");
+            replyMessage = fetchYaoqianMsg();
+        } else {
+            replyMessage = matchFilter(query);
+            if (replyMessage == null) {
+                logger.info("find reply from index");
+                String keyWord = findKeyWord(query);
+                DataClients dataClients = fetchClient();
+                ArticleRequest req = new ArticleRequest();
+                req.setKeyword(keyWord);
+                ArticleResponse articleResponse = dataClients.searchArticle(req);
+                replyMessage = wrap(articleResponse, appEnum);
+            }
+            if (replyMessage == null) {
+                logger.info("reply with default");
+                replyMessage = fetchBakUpMsg("嗯，然后呢？");
+            }
         }
 
         replyMessage.setFromName(toName);
@@ -75,11 +98,10 @@ public class CenterService {
 
     public ReplyMessage findAnswer(String uid, String query, AppEnum appEnum, String toName) throws SQLException, ClientException {
 
-        Connection connection = con.get();
         if (appEnum == null) {
             logger.error("some app miss appEnum");
         }
-        insertQueryLog(uid, query, appEnum.toString(), connection);
+        insertQueryLog(uid, query, appEnum.toString(), fetchConnection());
         ReplyMessage replyMessage = null;
 
         replyMessage = matchFilter(query);
@@ -94,7 +116,7 @@ public class CenterService {
         }
         if (replyMessage == null) {
             logger.info("reply with default");
-            replyMessage = fetchBakUpMsg();
+            replyMessage = fetchBakUpMsg("嗯，然后呢？");
         }
 
         replyMessage.setFromName(toName);
@@ -115,7 +137,34 @@ public class CenterService {
 
             for (Article article : articles) {
                 ArticleReplyItem articleReplyItem = new ArticleReplyItem();
-                articleReplyItem.setTitle(article.getTitle());
+                ArticleType articleType = article.getArticleType();
+                String title = article.getTitle();
+                if (title == null || title.trim().length() == 0) {
+                    String content = article.getContent();
+                    if (content.length() > 15) {
+                        title = content.substring(0, 15) + "..";
+                    } else {
+                        title = content;
+                    }
+//                    switch (articleType) {
+//                        case Xiaohua:
+//                            title = "笑话" + article.getId();
+//                            break;
+//                        case Bican:
+//                            title = "比惨" + article.getId();
+//                            break;
+//                        case Shudong:
+//                            title = "树洞" + article.getId();
+//                            break;
+//                        case Jobs:
+//                            title = "招聘" + article.getId();
+//                            break;
+//                        default:
+//                            title = article.getContent();
+//                            break;
+//                    }
+                }
+                articleReplyItem.setTitle(title);
                 articleReplyItem.setDescription(article.content);
                 articleReplyItem.setPicUrl(findAPicture());
                 articleReplyItem.setUrl(wrapUrl(article.getId(), appEnum));
@@ -157,10 +206,23 @@ public class CenterService {
         return url;
     }
 
+    private ReplyMessage fetchYaoqianMsg() {
+        String url = "http://www.laibican.com/sactivity/yaoqian.html";//新年抽签
+        String pic = "http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbg9ziajFTlJoJ2PIlFQqAbsOibvGvkQJbeKLRaU6LvyeH5pOS4VsY1lrNACibjuV3cYTTqIwRFOkB0oA/0?tp=webp";
+        ArticleReplyItem articleReplyItem = new ArticleReplyItem();
+        articleReplyItem.setUrl(url);
+        articleReplyItem.setPicUrl(pic);
+        articleReplyItem.setTitle("为2015抽一发幸运签吧！");
+        articleReplyItem.setDescription("2015羊年到，抽一卦幸运签，好运先知道，让朋友也来卜一下吧。");
 
-    private ReplyMessage fetchBakUpMsg() {
+        ArticleReply articleReply = new ArticleReply();
+        articleReply.addArticleReplyItem(articleReplyItem);
+        return articleReply;
+    }
+
+    private ReplyMessage fetchBakUpMsg(String str) {
         NormalReply normalReply = new NormalReply();
-        normalReply.setContent("嗯，然后呢？");
+        normalReply.setContent(str);
         return normalReply;
     }
 
@@ -195,10 +257,9 @@ public class CenterService {
     }
 
     public List<ReplyMessage> listReplyMessage(int begin, int limit) throws SQLException {
-        Connection connection = con.get();
         List<ReplyMessage> list = new ArrayList<>();
         String sql = "SELECT * FROM replys WHERE flag = 1 LIMIT ?,?";
-        try (PreparedStatement psmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement psmt = fetchConnection().prepareStatement(sql)) {
             psmt.setInt(1, begin);
             psmt.setInt(2, limit);
             try (ResultSet resultSet = psmt.executeQuery();) {
@@ -227,8 +288,7 @@ public class CenterService {
 
     private ReplyMessage fetchReplyMessageById(int replyId) throws SQLException {
         String sql = "SELECT * FROM replys WHERE id = ?";
-        Connection connection = con.get();
-        try (PreparedStatement psmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement psmt = fetchConnection().prepareStatement(sql)) {
             psmt.setInt(1, replyId);
             try (ResultSet resultSet = psmt.executeQuery();) {
                 if (resultSet.next()) {
@@ -278,9 +338,8 @@ public class CenterService {
 
     private Map<RuleType, Integer> fetchRuleOrder() throws SQLException {
         Map<RuleType, Integer> map = new HashMap<>();
-        Connection connection = con.get();
         String sql = "SELECT * FROM rule";
-        try (PreparedStatement psmt = connection.prepareStatement(sql);
+        try (PreparedStatement psmt = fetchConnection().prepareStatement(sql);
              ResultSet rs = psmt.executeQuery();
         ) {
             while (rs.next()) {
@@ -294,7 +353,6 @@ public class CenterService {
     }
 
     public List<Rule> fetchRules(int offset, int limit) throws SQLException {
-        Connection connection = con.get();
         List<Rule> rules = new ArrayList<>();
         String sql = "";
         if (limit == 0) {
@@ -302,7 +360,7 @@ public class CenterService {
         } else {
             sql = "select id, ruleType, keyword, replyId from rules limit " + offset + "," + limit;
         }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try (PreparedStatement preparedStatement = fetchConnection().prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery();
         ) {
             while (resultSet.next()) {
@@ -407,6 +465,7 @@ public class CenterService {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/weixin", "root", "");
+                logger.info("open a new connection to db");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {

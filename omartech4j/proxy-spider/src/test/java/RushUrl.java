@@ -27,7 +27,11 @@ public class RushUrl {
     public static void main(String[] args) {
         String url = "http://jiaoyu.baidu.com/BeautyBws/vote?beautyId=420&collegeId=97";
         RushUrl ru = new RushUrl();
-        ru.test(url);
+        try {
+            ru.test(url);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -35,7 +39,7 @@ public class RushUrl {
     final static String BAIDUREFER = "http://www.baidu.com";
 
 
-    void test(String url) {
+    void test(String url) throws SQLException {
         Connection connection = con.get();
         List<Proxy> https = DBService.findProxyList(100, "http", connection);
         for (Proxy http : https) {

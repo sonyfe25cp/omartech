@@ -1,6 +1,7 @@
 package com.omartech.proxyspider;
 
 import com.omartech.proxyspider.model.HtmlObject;
+import com.techwolf.campusrecruiting.utils.DefetcherUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -8,9 +9,11 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -30,12 +33,12 @@ public class Spider {
 
     static final int MaxTimes = 3;
 
-    public static HtmlObject fetchPage(String url, Map<String, String> headers, String refer) {
+    public static HtmlObject fetchPage(CloseableHttpClient client, String url, Map<String, String> headers, String refer) {
         HtmlObject object = null;
         int times = 0;
         do {
             times++;
-            object = fetchPage(url, null, headers, refer);
+            object = fetchPage(client, url, null, headers, refer);
         } while (object == null && times < MaxTimes);
 
         return object;
@@ -44,15 +47,15 @@ public class Spider {
     final static String BAIDUREFER = "http://www.baidu.com";
 
 
-    private static HtmlObject fetchPage(String url, HttpHost proxy, Map<String, String> headers,
-                                        String refer) {
+    public static HtmlObject fetchPage(CloseableHttpClient client, String url, HttpHost proxy, Map<String, String> headers,
+                                       String refer) {
         logger.info("crawling {}, with {}, from {}", new String[]{url,
                 proxy == null ? " no proxy " : proxy.toHostString(), refer});
-        HttpClientBuilder create = HttpClientBuilder.create();
-        CloseableHttpClient client = create.build();
+//        HttpClientBuilder create = HttpClientBuilder.create();
+//        CloseableHttpClient client = create.build();
         HtmlObject object = null;
         HttpGet get = new HttpGet(url);
-        RequestConfig.Builder config = RequestConfig.custom().setSocketTimeout(40000)
+        RequestConfig.Builder config = RequestConfig.custom().setSocketTimeout(15000)
                 .setConnectTimeout(15000).setRedirectsEnabled(false);
         get.setConfig(config.build());
         get.setHeader("User-Agent", USER_AGENT);
@@ -67,6 +70,8 @@ public class Spider {
                 get.setHeader(entry.getKey(), entry.getValue());
             }
         }
+        get.setHeader("Host", findHost(url));
+
         get.setHeader("Referer", refer == null ? BAIDUREFER : refer);
         try {
 
@@ -76,7 +81,10 @@ public class Spider {
             logger.debug("{} -- statusCode : {}", url, statusCode);
             switch (statusCode) {
                 case 200:
-                    String html = IOUtils.toString(response.getEntity().getContent());
+//                    InputStream content = response.getEntity().getContent();
+//                    String html = IOUtils.toString(content);
+                    String html = DefetcherUtils.toString(response);
+//                    content.close();
                     object = new HtmlObject();
                     object.setHtml(html);
                     object.setUrl(url);
@@ -91,8 +99,10 @@ public class Spider {
                 case 400:
                     logger.info("400 -- {}", url);
                     break;
+                default:
+                    logger.info("status code : {}, url :{}", statusCode, url);
+                    break;
             }
-            client.close();
             if (object != null) {
                 String html = object.getHtml();
                 logger.debug("html.size: {}", object.getHtml().length());
@@ -107,6 +117,28 @@ public class Spider {
         } else {
             return object;
         }
+    }
+
+    private static String findHost(String url) {
+        String url2 = url.replace("http://", "");
+        int index = url2.indexOf("/");
+        String host = null;
+        if (index <= 0) {
+            host = url2;
+        } else {
+            host = url2.substring(0, index);
+        }
+        return host;
+    }
+
+
+    public static void main(String[] args) {
+//        String t = "http://www.kuaidaili.com/free/inha/";
+//        System.out.println(findHost(t));
+
+        long validate = Crawler.validate(new HttpHost("185.34.16.117", 8080));
+        System.out.println(validate);
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.omartech.engine.service.bican;
 
 import cn.techwolf.data.gen.*;
+import cn.techwolf.data.utils.DBUtils;
 import com.omartech.engine.service.ADataService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
@@ -39,7 +40,7 @@ public class BicanSearchService extends ADataService {
 
         ArticleResponse response = new ArticleResponse();
         List<Article> articles = new ArrayList<>();
-        Connection connection = con.get();
+        Connection connection = fetchConnection("weixin");
         if (StringUtils.isEmpty(keyword)) {
             if (ids == null || ids.size() == 0) {
                 logger.info("list the articles");
@@ -94,7 +95,7 @@ public class BicanSearchService extends ADataService {
     @Override
     public ArticleResponse insertArticle(Article article) throws TException {
         logger.info("insert article :{}", article.toString());
-        Connection connection = con.get();
+        Connection connection = fetchConnection("weixin");
         article.setCreatedAt(formatTime(new Date()));
         try {
             BicanDataService.insert(article, connection);
@@ -105,6 +106,33 @@ public class BicanSearchService extends ADataService {
         return new ArticleResponse();
     }
 
+    static Connection fetchConnection(String db) {
+        Connection connection = null;
+        boolean flag = false;
+        do {
+            switch (db) {
+                case "weixin":
+                    connection = con.get();
+                    flag = DBUtils.verifyConnection(connection, "select id from rule limit 1");
+                    if (!flag) {
+                        con.remove();
+                    }
+                    break;
+                case "beauty":
+                    connection = beautyCon.get();
+                    flag = DBUtils.verifyConnection(connection, "select id from images limit 1");
+                    if (!flag) {
+                        beautyCon.remove();
+                    }
+                    break;
+                default:
+                    logger.info("error db conn");
+                    break;
+            }
+        } while (!flag);
+        return connection;
+    }
+
     static ThreadLocal<Connection> con = new InheritableThreadLocal<Connection>() {
         @Override
         protected Connection initialValue() {
@@ -112,6 +140,7 @@ public class BicanSearchService extends ADataService {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/weixin", "root", "");
+                logger.info("new connection to weixin");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
@@ -127,6 +156,7 @@ public class BicanSearchService extends ADataService {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/beauty", "root", "");
+                logger.info("new connection to beauty");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
@@ -145,21 +175,22 @@ public class BicanSearchService extends ADataService {
         if (query != null) {
             sql += " and tags like '%" + query + "%' ";
         }
-        sql += " and id > ? limit ?";
-        logger.info("find beauty : {}", sql);
+        sql += " limit ?,?";
         List<Beauty> beauties = new ArrayList<>();
-        Connection connection = beautyCon.get();
+        Connection connection = fetchConnection("beauty");
         try (PreparedStatement psmt = connection.prepareStatement(sql)) {
             psmt.setInt(1, offset);
             psmt.setInt(2, limit);
-            ResultSet resultSet = psmt.executeQuery();
-            while (resultSet.next()) {
-                String thumbLargeUrl = resultSet.getString("thumbLargeUrl");
-                Beauty beauty = new Beauty();
-                beauty.setThumbLargeUrl(thumbLargeUrl);
-                String id = resultSet.getString("id");
-                beauty.setId(Integer.parseInt(id));
-                beauties.add(beauty);
+            try (ResultSet resultSet = psmt.executeQuery();) {
+                logger.info("find beauty : {}", resultSet.getStatement().toString());
+                while (resultSet.next()) {
+                    String thumbLargeUrl = resultSet.getString("thumbLargeUrl");
+                    Beauty beauty = new Beauty();
+                    beauty.setThumbLargeUrl(thumbLargeUrl);
+                    String id = resultSet.getString("id");
+                    beauty.setId(Long.parseLong(id));
+                    beauties.add(beauty);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

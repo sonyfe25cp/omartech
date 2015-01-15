@@ -17,6 +17,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.techwolf.data</groupId>
+            <artifactId>data-utils</artifactId>
+            <version>1.1-SNOPSHOT</version>
+        </dependency>
+
         <!-- 添加对spring框架的依赖 -->
         <dependency>
             <groupId>org.springframework</groupId>

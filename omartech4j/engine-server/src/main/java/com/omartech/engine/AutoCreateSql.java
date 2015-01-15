@@ -23,7 +23,7 @@ public class AutoCreateSql {
         AutoCreateSql acs = new AutoCreateSql();
 //        acs.createInsertFromSql("/tmp/art.sq");
 //        acs.createSelectFromBean("/tmp/edu_th");
-        acs.createSelectFromSql("/tmp/logs.sq", false);
+        acs.createSelectFromSql("/tmp/mo.sql", false);
     }
 
     void createSelectFromBean(String path) {

@@ -7,7 +7,8 @@ enum ArticleType{
   Xiaohua = 1,
   Bican = 2,
   Shudong = 3,
-  Other = 4 
+  Other = 4,
+  Jobs = 5,
 }
 
 struct Article{
@@ -55,7 +56,7 @@ struct Person{
 }
 
 struct Beauty{//美女图
-  1: i32 id,
+  1: i64 id,
   2: string tags,
   3: string downloadUrl,
   4: string thumbnailUrl,

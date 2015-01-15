@@ -10,6 +10,7 @@ import com.omartech.laibicanRobot.model.reply.ReplyMessage;
 import com.omartech.laibicanRobot.service.CenterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,6 @@ import java.util.List;
 public class HeroAction extends AWeixinAction {
 
     static Logger logger = LoggerFactory.getLogger(HeroAction.class);
-
 
     final static String token = "omartech";
 
@@ -61,7 +61,7 @@ public class HeroAction extends AWeixinAction {
                            HttpServletResponse response
     ) {
         logger.info("i have receive the post req");
-        String xml = super.reveiveMsg(signature, timestamp, nonce, body, AppEnum.Hero);
+        String xml = super.reveiveMsg(signature, timestamp, nonce, body, AppEnum.Bican);
         response.setCharacterEncoding("UTF-8");
         try {
             PrintWriter writer = response.getWriter();

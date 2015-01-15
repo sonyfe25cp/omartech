@@ -19,6 +19,7 @@
     <mvc:resources mapping="/sactivity/**" location="/WEB-INF/sactivity/"/>
     <mvc:resources mapping="/games/**" location="/WEB-INF/games/"/>
     <mvc:resources mapping="/ceshi/**" location="/WEB-INF/ceshi/"/>
+    <mvc:resources mapping="/robots.txt" location="/WEB-INF/robots.txt"/>
 
     <context:component-scan base-package="com.omartech.laibicanRobot.action"/>
 

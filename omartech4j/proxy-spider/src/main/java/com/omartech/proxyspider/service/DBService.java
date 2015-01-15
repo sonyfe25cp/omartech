@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class DBService {
 
-    public static boolean inserOrNot(Proxy proxy, Connection conn) {
+    public static boolean inserOrUpdate(Proxy proxy, Connection conn) throws SQLException {
         String host = proxy.getHost();
         int port = proxy.getPort();
         Proxy proxy1 = findProxy(host, port, conn);
@@ -21,31 +21,43 @@ public class DBService {
             insert(proxy, conn);
             return true;
         } else {
+            proxy1.setLatency(proxy.getLatency());
+            update(proxy1, conn);
             return false;
         }
     }
 
-    public static void insert(Proxy proxy, Connection conn) {
-        String sql = "insert into proxy(host, port, proxyType, status, created_at) values(?, ?, ?, ?, ?);";
-        try {
-            PreparedStatement psmt = conn.prepareStatement(sql);
-            psmt.setString(1, proxy.host);//host
-            psmt.setInt(2, proxy.port);//port
-            psmt.setString(3, proxy.proxyType);//proxyType
-            psmt.setInt(4, proxy.status);//status
-            psmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-            psmt.execute();
+    public static void update(Proxy proxy, Connection conn) throws SQLException {
+        String sql = "UPDATE proxy SET latency = ? WHERE id = ?";
+        try (
+                PreparedStatement psmt = conn.prepareStatement(sql);) {
+            psmt.setLong(1, proxy.getLatency());
+            psmt.setInt(2, proxy.getId());
+            psmt.executeUpdate();
             psmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public static Proxy findProxy(String host, int port, Connection conn) {
-        String sql = "select * from proxy where host = ? and port = ?";
+
+    public static void insert(Proxy proxy, Connection conn) throws SQLException {
+        String sql = "INSERT INTO proxy(host, port, proxyType, status, created_at, comment, latency) VALUES(?, ?, ?, ?, ?, ?, ?);";
+        try (PreparedStatement psmt = conn.prepareStatement(sql);) {
+            psmt.setString(1, proxy.host);//host
+            psmt.setInt(2, proxy.port);//port
+            psmt.setString(3, proxy.proxyType.toLowerCase());//proxyType
+            psmt.setInt(4, proxy.status);//status
+            psmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+            psmt.setString(6, proxy.getComment());
+            psmt.setLong(7, proxy.getLatency());
+            psmt.execute();
+            psmt.close();
+        }
+    }
+
+    public static Proxy findProxy(String host, int port, Connection conn) throws SQLException {
+        String sql = "SELECT * FROM proxy WHERE host = ? AND port = ?";
         Proxy proxy = null;
-        try {
-            PreparedStatement psmt = conn.prepareStatement(sql);
+        try (PreparedStatement psmt = conn.prepareStatement(sql);) {
             psmt.setString(1, host);//host
             psmt.setInt(2, port);//port
             ResultSet rs = psmt.executeQuery();
@@ -54,20 +66,19 @@ public class DBService {
                 proxy = new Proxy();
                 String host1 = rs.getString("host");
                 int port1 = rs.getInt("port");
+                int id = rs.getInt("id");
                 proxy.host = host1;
                 proxy.port = port1;
+                proxy.id = id;
             }
             rs.close();
-            psmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return proxy;
     }
 
 
-    public static List<Proxy> findProxyList(int size, String proxyType, Connection conn) {
-        String sql = "select * from proxy where proxyType = ? order by id desc limit ? ";
+    public static List<Proxy> findProxyList(int size, String proxyType, Connection conn) throws SQLException {
+        String sql = "SELECT * FROM proxy WHERE proxyType = ? ORDER BY id DESC LIMIT ? ";
         List<Proxy> proxies = new ArrayList<>();
         try (PreparedStatement psmt = conn.prepareStatement(sql)) {
             psmt.setString(1, proxyType);
@@ -85,36 +96,9 @@ public class DBService {
 
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return proxies;
     }
 
-
-//    Connection conn = null;
-//    public void initDB() {
-//        try {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/proxy", "root", "");
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    public void close() {
-//        try {
-//            conn.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                conn.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
 }

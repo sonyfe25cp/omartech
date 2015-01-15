@@ -1,16 +1,27 @@
 package com.omartech.proxyspider;
 
 import com.omartech.proxyspider.model.HtmlObject;
+import com.omartech.proxyspider.service.DefetcherUtils;
+import com.techwolf.campusrecruiting.utils.URLRefiner;
+import org.apache.http.protocol.HTTP;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -43,13 +54,23 @@ public class Spider {
 
     final static String BAIDUREFER = "http://www.baidu.com";
 
-
     private static HtmlObject fetchPage(String url, HttpHost proxy, Map<String, String> headers,
                                         String refer) {
-        logger.info("crawling {}, with {}, from {}", new String[]{url,
-                proxy == null ? " no proxy " : proxy.toHostString(), refer});
         HttpClientBuilder create = HttpClientBuilder.create();
         CloseableHttpClient client = create.build();
+        HtmlObject htmlObject = fetchPage(client, url, proxy, headers, refer);
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return htmlObject;
+    }
+
+    public static HtmlObject fetchPage(CloseableHttpClient client, String url, HttpHost proxy, Map<String, String> headers,
+                                       String refer) {
+        logger.info("crawling {}, with {}, from {}", new String[]{url,
+                proxy == null ? " no proxy " : proxy.toHostString(), refer});
         HtmlObject object = null;
         HttpGet get = new HttpGet(url);
         RequestConfig.Builder config = RequestConfig.custom().setSocketTimeout(40000)
@@ -71,12 +92,11 @@ public class Spider {
         try {
 
             HttpResponse response = client.execute(get);
-
             int statusCode = response.getStatusLine().getStatusCode();
             logger.debug("{} -- statusCode : {}", url, statusCode);
             switch (statusCode) {
                 case 200:
-                    String html = IOUtils.toString(response.getEntity().getContent());
+                    String html = DefetcherUtils.toString(response);
                     object = new HtmlObject();
                     object.setHtml(html);
                     object.setUrl(url);
@@ -92,7 +112,6 @@ public class Spider {
                     logger.info("400 -- {}", url);
                     break;
             }
-            client.close();
             if (object != null) {
                 String html = object.getHtml();
                 logger.debug("html.size: {}", object.getHtml().length());
@@ -107,6 +126,78 @@ public class Spider {
         } else {
             return object;
         }
+    }
+
+
+    public static HtmlObject fetchPageByPost(CloseableHttpClient client, String url, HttpHost proxy, Map<String, String> headers,
+                                             Map<String, String> args,
+                                             String refer) {
+
+        logger.info("crawling {}, with {}, from {}", new String[]{url,
+                proxy == null ? " no proxy " : proxy.toHostString(), refer});
+        HtmlObject object = null;
+        HttpPost post = new HttpPost(url);
+        RequestConfig.Builder config = RequestConfig.custom().setSocketTimeout(40000)
+                .setConnectTimeout(15000).setRedirectsEnabled(false);
+        if (proxy != null) {
+            config.setProxy(proxy);
+        }
+        post.setConfig(config.build());
+        if (headers == null) {
+            post.setHeader("User-Agent", USER_AGENT);
+            post.setHeader("Accept", "textml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            post.setHeader("Accept-Language", "zh-cn,zh;q=0.5");
+            post.setHeader("Connection", "keep-alive");
+            post.setHeader("Accept-Encoding", "gzip");
+            post.setHeader("Proxy-Connection", "keep-alive");
+            String findHost = URLRefiner.findHost(url);
+            post.setHeader("Host", findHost);
+            post.setHeader("Referer", refer == null ? BAIDUREFER : refer);
+        }
+        List<NameValuePair> params = new ArrayList<>();
+        for (Map.Entry<String, String> entry : args.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            params.add(new BasicNameValuePair(key, value));
+        }
+        try {
+            post.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+        try {
+
+            HttpResponse response = client.execute(post);
+
+            int statusCode = response.getStatusLine().getStatusCode();
+            logger.debug("{} -- statusCode : {}", url, statusCode);
+            switch (statusCode) {
+                case 200:
+                    String html = DefetcherUtils.toString(response);
+                    object = new HtmlObject();
+                    object.setHtml(html);
+                    object.setUrl(url);
+                    object.setRefer(refer);
+                    break;
+                case 301:
+                    logger.info("301 -- {}", url);
+                    break;
+                case 302:
+                    logger.info("302 -- {}", url);
+                    break;
+                case 400:
+                    logger.info("400 -- {}", url);
+                    break;
+            }
+            if (object != null) {
+                String html = object.getHtml();
+                //                logger.info("html : {}", html);
+            }
+        } catch (Exception e) {
+            logger.error("can't get this url: {}, with proxy: {}", url, proxy == null ? "no proxy"
+                    : proxy.toHostString());
+        }
+        return object;
     }
 
 

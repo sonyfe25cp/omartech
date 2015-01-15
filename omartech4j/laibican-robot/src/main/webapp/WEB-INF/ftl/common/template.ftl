@@ -3,7 +3,7 @@
 <div class="container">
     <ol class="breadcrumb">
         <li><a href="/">主页</a></li>
-        <li><a href="#">比惨</a></li>
+        <#--<li><a href="#">比惨</a></li>-->
     <#--<li class="active">笑话</li>-->
     </ol>
 

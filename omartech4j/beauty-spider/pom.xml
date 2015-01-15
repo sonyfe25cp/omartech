@@ -139,7 +139,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.omartech.proxyspider.Crawler</mainClass>
+                            <!--<mainClass>com.omartech.proxyspider.Crawler</mainClass>-->
+                            <mainClass>com.omartech.proxyspider.MoKoCrawler</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

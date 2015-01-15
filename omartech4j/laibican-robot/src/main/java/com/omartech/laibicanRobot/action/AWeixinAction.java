@@ -3,6 +3,7 @@ package com.omartech.laibicanRobot.action;
 import com.omartech.engine.client.ClientException;
 import com.omartech.laibicanRobot.model.AppEnum;
 import com.omartech.laibicanRobot.model.message.WeixinMessage;
+import com.omartech.laibicanRobot.model.message.WeixinSubscribeMessage;
 import com.omartech.laibicanRobot.model.message.WeixinTextMessage;
 import com.omartech.laibicanRobot.model.reply.ArticleReply;
 import com.omartech.laibicanRobot.model.reply.ArticleReplyItem;
@@ -29,6 +30,8 @@ public abstract class AWeixinAction {
 
     protected final static String token = "omartech";
 
+    static CenterService centerService = new CenterService();
+
     public String reveiveMsg(String signature,
                              String timestamp,
                              String nonce,
@@ -48,7 +51,8 @@ public abstract class AWeixinAction {
                 ReplyMessage replyMessage = getReplyMessage(message);
                 if (replyMessage != null) {
                     String xml = replyMessage.toXML().trim();
-                    logger.info("replayMessage : {}", xml);
+//                    logger.info("replayMessage : {}", xml);
+                    logger.info("xml returned");
                     return xml;
                 } else {
                     logger.error("replay is null");
@@ -66,10 +70,10 @@ public abstract class AWeixinAction {
         for (int i = 0; i < list.length; i++) {
             str += list[i];
         }
-        logger.info("list : {}", str);
+//        logger.info("list : {}", str);
 
         String echo = new SHA1().getDigestOfString(str.getBytes()).toLowerCase();//SHA1加密
-        logger.info("echo : {}", echo);
+//        logger.info("echo : {}", echo);
         return echo;
     }
 
@@ -84,12 +88,89 @@ public abstract class AWeixinAction {
                 replyMessage = replayTextMessage(textMessage);
                 logger.info("find match");
                 break;
+            case WeixinMessage.MESSAGE_TYPE_EVENT://新关注
+                WeixinSubscribeMessage subscribeMessage = (WeixinSubscribeMessage) message;
+                String event = subscribeMessage.getEvent();
+                switch (event) {
+                    case WeixinMessage.MESSAGE_EVENT_SUBSCRIBE:
+                        logger.info("new fans");
+                        replyMessage = fetchSubscribeMsg(subscribeMessage);
+                        break;
+                    case WeixinMessage.MESSAGE_EVENT_UNSUBSCRIBE:
+                        logger.info("a fans left");
+                        replyMessage = fetchUnscribeMsg(message);
+                        break;
+                    default:
+                        logger.info("what's event? {}", event);
+                        break;
+                }
+                break;
             default:
+                logger.info("msg type {} is not handled", type);
                 break;
         }
         logger.info("return reply");
         return replyMessage;
     }
+
+    ReplyMessage fetchSubscribeMsg(WeixinSubscribeMessage message) {
+        String url = "http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=202676955&idx=1&sn=f3d509a5b37801104a48d4c9ad7b8cdd#rd";//新年抽签
+        String pic = "http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbg9ziajFTlJoJ2PIlFQqAbsOibvGvkQJbeKLRaU6LvyeH5pOS4VsY1lrNACibjuV3cYTTqIwRFOkB0oA/0?tp=webp";
+        ArticleReplyItem articleReplyItem = new ArticleReplyItem();
+        articleReplyItem.setUrl(url);
+        articleReplyItem.setPicUrl(pic);
+        articleReplyItem.setTitle("为2015抽一发幸运签吧！");
+        articleReplyItem.setDescription("2015羊年到，抽一卦幸运签，好运先知道，让朋友也来卜一下吧。");
+
+        ArticleReply articleReply = new ArticleReply();
+        articleReply.addArticleReplyItem(articleReplyItem);
+
+        switch (message.getAppEnum()) {
+            case Bican:
+                ArticleReplyItem bicanIntro = new ArticleReplyItem();
+                bicanIntro.setTitle("比惨是个什么公众号？");
+                bicanIntro.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201453464&idx=2&sn=efa7f728eacde03f0dce2e63e601a215#rd");
+                bicanIntro.setPicUrl("http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbgv9RJ2TDR9UDfajtZlATUpy2QS10BXzW4lHaiaJtHXicT53LAho2NKTVysaNyjpGO0as1RRtwQuhlA/640?tp=webp");
+                bicanIntro.setDescription("比惨是国内首家交流各种悲剧的平台~");
+                articleReply.addArticleReplyItem(bicanIntro);
+                break;
+            case Hero:
+                logger.info("sorry for hero");
+                ArticleReplyItem tuijian = new ArticleReplyItem();
+                tuijian.setTitle("抱歉，小编还在开发，推荐您个好玩的消消气");
+                tuijian.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201453464&idx=2&sn=efa7f728eacde03f0dce2e63e601a215#rd");
+                tuijian.setPicUrl("http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbgv9RJ2TDR9UDfajtZlATUpy2QS10BXzW4lHaiaJtHXicT53LAho2NKTVysaNyjpGO0as1RRtwQuhlA/640?tp=webp");
+                tuijian.setDescription("比惨是国内首家交流各种悲剧的平台~");
+                articleReply.addArticleReplyItem(tuijian);
+                break;
+            case Jobs:
+                logger.info("sorry for jobs");
+                ArticleReplyItem tuijian2 = new ArticleReplyItem();
+                tuijian2.setTitle("抱歉，小编还在开发，推荐您个好玩的消消气");
+                tuijian2.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201453464&idx=2&sn=efa7f728eacde03f0dce2e63e601a215#rd");
+                tuijian2.setPicUrl("http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbgv9RJ2TDR9UDfajtZlATUpy2QS10BXzW4lHaiaJtHXicT53LAho2NKTVysaNyjpGO0as1RRtwQuhlA/640?tp=webp");
+                tuijian2.setDescription("比惨是国内首家交流各种悲剧的平台~");
+                articleReply.addArticleReplyItem(tuijian2);
+                break;
+            default:
+                logger.info("what's app ? {}");
+                break;
+        }
+        articleReply.setAddTime(new Date());
+        articleReply.setFromName(message.getToName());
+        articleReply.setToName(message.getFromName());
+        return articleReply;
+    }
+
+    ReplyMessage fetchUnscribeMsg(WeixinMessage message) {
+        NormalReply reply = new NormalReply();
+        reply.setContent("少年，不爱我了么？");
+        reply.setFromName(message.getToName());
+        reply.setToName(message.getFromName());
+        reply.setAddTime(new Date());
+        return reply;
+    }
+
 
     boolean verifyRight(@RequestParam String signature,
                         @RequestParam String timestamp,
@@ -147,8 +228,7 @@ public abstract class AWeixinAction {
             return replyMessage;
         } else {
             try {
-                CenterService c = new CenterService();
-                ReplyMessage answer = c.findAnswer(textMessage);
+                ReplyMessage answer = centerService.findAnswer(textMessage);
                 return answer;
             } catch (SQLException e) {
                 logger.error("center service error");
@@ -160,4 +240,5 @@ public abstract class AWeixinAction {
             }
         }
     }
+
 }
