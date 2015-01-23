@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>27AEBD2C-2FB7-431A-93E9-F72904C2226B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>smallworld</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>9405FFF9FDB52BB8E95420C3C07622C171E0476A</key>
+		<string>github.com:sonyfe25cp/omartech.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>swift-codes/smallworld/smallworld.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>9405FFF9FDB52BB8E95420C3C07622C171E0476A</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:sonyfe25cp/omartech.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>9405FFF9FDB52BB8E95420C3C07622C171E0476A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>9405FFF9FDB52BB8E95420C3C07622C171E0476A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>omartech</string>
+		</dict>
+	</array>
+</dict>
+</plist>

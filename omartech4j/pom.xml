@@ -17,6 +17,7 @@
         <module>beauty-spider</module>
         <module>engine-server</module>
         <module>engine-client</module>
+        <module>weixin-web</module>
     </modules>
 
     <properties>

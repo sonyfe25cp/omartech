@@ -123,11 +123,11 @@ public class Crawler {
         try {
             HtmlObject htmlObject = Spider.fetchPage(client, url, proxy, null, null);
             client.close();
-            String html = htmlObject.getHtml();
-            if (htmlObject == null || StringUtils.isEmpty(html)) {
+            if (htmlObject == null || StringUtils.isEmpty(htmlObject.getHtml())) {
                 logger.info("cant reach ");
                 return Max;
             } else {
+                String html = htmlObject.getHtml();
                 Document document = Jsoup.parse(html);
                 document.select("script, style, link").remove();
                 String tmp = document.toString();

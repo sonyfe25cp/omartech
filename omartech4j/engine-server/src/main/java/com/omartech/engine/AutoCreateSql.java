@@ -21,9 +21,9 @@ public class AutoCreateSql {
 
     public static void main(String[] args) {
         AutoCreateSql acs = new AutoCreateSql();
-//        acs.createInsertFromSql("/tmp/art.sq");
+//        acs.createInsertFromSql("/tmp/pos.sq");
 //        acs.createSelectFromBean("/tmp/edu_th");
-        acs.createSelectFromSql("/tmp/mo.sql", false);
+        acs.createSelectFromSql("/tmp/acc.sq", false);
     }
 
     void createSelectFromBean(String path) {
@@ -104,7 +104,7 @@ public class AutoCreateSql {
                 if (line.trim().length() > 0) {
                     String[] split = line.split(" ");
                     String variable = split[0].replaceAll("`", "");
-                    String type = split[1].replaceAll("\\(.*\\)", "");
+                    String type = split[1].replaceAll("\\(.*\\)", "").replace(",", "");
                     switch (type) {
                         case "int":
                             System.out.println("\t\tint " + variable + " = rs.getInt(\"" + variable + "\");");
@@ -174,9 +174,11 @@ public class AutoCreateSql {
             for (String line : lines) {
                 line = line.trim();
                 String[] split = line.split(" ");
-                String name = split[0];
-                String type = split[1];
-                sb.append(name + ", ");
+                if (split.length >= 2) {
+                    String name = split[0];
+                    String type = split[1];
+                    sb.append(name + ", ");
+                }
             }
             sb.setLength(sb.length() - 2);
             sb.append(") values(");
