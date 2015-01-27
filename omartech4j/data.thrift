@@ -106,6 +106,53 @@ struct QieyexinxiResponse{
   3: list<Qiyexinxi> qiyexinxis,
 }
 
+struct Proxy{
+  1: i32 id,
+  2: string host,
+  3: i32 port,
+  4: string proxyType,
+  5: string comment,
+  6: i32 status,
+  7: string location,
+  8: i64 latency,
+}
+
+struct HtmlObject{
+  1: string html,
+  2: string provider,
+  3: string url,
+  4: string refer,
+  5: i32 statusCode,
+  6: string redirectUrl,
+}
+
+struct WeixinAccount{
+  1: string title,
+  2: string name,
+  3: string logo,
+  4: string erweima,
+  5: string description,
+  6: string weixinrenzheng,
+  7: bool offical,
+  8: bool live,
+  9: string openId,
+}
+
+struct WeixinPost{
+  1: string title,
+  2: string headImg,
+  3: string url,
+  4: string imgLink,
+  5: string siteLink,
+  6: string content168,
+  7: string content,
+  8: string date7,
+  9: string html,
+  10: i32 readCount,
+  11: i32 voteCount,
+  12: string openId,
+}
+
 service DataService{
 
   ArticleResponse searchArticle(1: ArticleRequest req) //查询文章

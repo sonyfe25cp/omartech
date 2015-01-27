@@ -13,11 +13,10 @@
     <modules>
         <module>campus-recruiting-robot</module>
         <module>laibican-robot</module>
-        <module>proxy-spider</module>
         <module>beauty-spider</module>
         <module>engine-server</module>
         <module>engine-client</module>
-        <module>weixin-web</module>
+        <module>review-quality</module>
     </modules>
 
     <properties>
