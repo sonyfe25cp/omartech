@@ -34,6 +34,7 @@ public class BITUnionMemberDownloader {
         }
     }
 
+
     void gogo() throws InterruptedException, IOException {
 
         CloseableHttpClient loginClient = BITUnionRobot.createLoginClient();
