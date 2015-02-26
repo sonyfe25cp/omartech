@@ -1,5 +1,5 @@
-import com.omartech.proxyspider.model.HtmlObject;
-import com.omartech.proxyspider.model.Proxy;
+import cn.techwolf.data.gen.HtmlObject;
+import cn.techwolf.data.gen.Proxy;
 import com.omartech.proxyspider.service.DBService;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;

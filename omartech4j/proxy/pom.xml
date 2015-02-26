@@ -7,13 +7,38 @@
     <artifactId>proxy</artifactId>
     <version>1.0</version>
 
+    <modules>
+        <module>proxy-client</module>
+        <module>proxy-server</module>
+        <module>proxy-spider</module>
+    </modules>
+
     <packaging>pom</packaging>
     <name>proxy</name>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>Internal Release Repository</name>
+            <url>http://www.omartech.com:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Internal Snapshot Repository</name>
+            <url>http://www.omartech.com:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 
     <dependencies>
         <dependency>
             <groupId>com.omartech</groupId>
             <artifactId>omartech-utils</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.omartech</groupId>
+            <artifactId>omartech-parent</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
@@ -63,9 +88,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.5</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
