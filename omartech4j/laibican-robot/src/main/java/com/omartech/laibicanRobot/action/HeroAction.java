@@ -73,6 +73,11 @@ public class HeroAction extends AWeixinAction {
         }
     }
 
+    @Override
+    public ReplyMessage customeredReplay(WeixinTextMessage textMessage) {
+        return null;
+    }
+
 //    @RequestMapping(value = "/receive1", method = RequestMethod.GET)
 //    @ResponseBody
 //    public String testxml() {

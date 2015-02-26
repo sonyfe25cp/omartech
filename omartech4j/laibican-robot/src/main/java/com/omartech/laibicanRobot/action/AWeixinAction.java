@@ -2,6 +2,7 @@ package com.omartech.laibicanRobot.action;
 
 import com.omartech.engine.client.ClientException;
 import com.omartech.laibicanRobot.model.AppEnum;
+import com.omartech.laibicanRobot.model.message.WeixinEventMessage;
 import com.omartech.laibicanRobot.model.message.WeixinMessage;
 import com.omartech.laibicanRobot.model.message.WeixinSubscribeMessage;
 import com.omartech.laibicanRobot.model.message.WeixinTextMessage;
@@ -50,8 +51,10 @@ public abstract class AWeixinAction {
             } else {
                 ReplyMessage replyMessage = getReplyMessage(message);
                 if (replyMessage != null) {
+                    replyMessage.setFromName(message.getToName());
+                    replyMessage.setToName(message.getFromName());
+                    replyMessage.setAddTime(new Date());
                     String xml = replyMessage.toXML().trim();
-//                    logger.info("replayMessage : {}", xml);
                     logger.info("xml returned");
                     return xml;
                 } else {
@@ -87,6 +90,10 @@ public abstract class AWeixinAction {
                 WeixinTextMessage textMessage = (WeixinTextMessage) message;
                 replyMessage = replayTextMessage(textMessage);
                 logger.info("find match");
+                if (replyMessage == null) {
+                    logger.info("reply with default");
+                    replyMessage = CenterService.fetchBakUpMsg("嗯，然后呢？");
+                }
                 break;
             case WeixinMessage.MESSAGE_TYPE_EVENT://新关注
                 WeixinSubscribeMessage subscribeMessage = (WeixinSubscribeMessage) message;
@@ -105,6 +112,16 @@ public abstract class AWeixinAction {
                         break;
                 }
                 break;
+            case WeixinMessage.MESSAGE_EVENT_CLICK://菜单点击
+                logger.info("menu click");
+                WeixinEventMessage eventMessage = (WeixinEventMessage) message;
+                String eventKey = eventMessage.getEventKey();
+                logger.info("eventKey: {}", eventKey);
+                replyMessage = centerService.findResponseWith(eventMessage);
+                break;
+            case WeixinMessage.MESSAGE_EVENT_VIEW://菜单视图
+                logger.info("menu view");
+                break;
             default:
                 logger.info("msg type {} is not handled", type);
                 break;
@@ -115,6 +132,7 @@ public abstract class AWeixinAction {
 
     ReplyMessage fetchSubscribeMsg(WeixinSubscribeMessage message) {
         String url = "http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=202676955&idx=1&sn=f3d509a5b37801104a48d4c9ad7b8cdd#rd";//新年抽签
+//        String url = "www.laibican.com/sactivity/yaoqian.html";//新年抽签
         String pic = "http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbg9ziajFTlJoJ2PIlFQqAbsOibvGvkQJbeKLRaU6LvyeH5pOS4VsY1lrNACibjuV3cYTTqIwRFOkB0oA/0?tp=webp";
         ArticleReplyItem articleReplyItem = new ArticleReplyItem();
         articleReplyItem.setUrl(url);
@@ -195,50 +213,22 @@ public abstract class AWeixinAction {
         long messageId = textMessage.getMessageId();
 
         logger.info("from:{} to:{} at:{} content:{}, id:{}", new String[]{fromName, toName, date10 + "", content, messageId + ""});
-//        ReplyMessage replyMessage = null;
-        if (content.equals("哈哈")) {
-            ArticleReply replyMessage = new ArticleReply();
-            ArticleReplyItem articleReplyItem = new ArticleReplyItem();
-            articleReplyItem.setPicUrl("http://mmbiz.qpic.cn/mmbiz/dYyiavLsrKlsyp3jKP8iahWQWEtGjgvSsvEwOcaCTbawseAvVa6UQED0YTNXDwbSLiaVgibLGpjlCHeC07dzgm916g/640?tp=webp");
-            articleReplyItem.setUrl("http://mp.weixin.qq.com/s?__biz=MjM5Mjk2Njg4Mw==&mid=201881251&idx=1&sn=080d67a33e3d3e0300e63256c2eb20d2#rd");
-            articleReplyItem.setTitle("这是第一个");
-            articleReplyItem.setDescription("wolegequ");
-            ArticleReplyItem articleReplyItem2 = new ArticleReplyItem();
-            articleReplyItem2.setPicUrl("http://mmbiz.qpic.cn/mmbiz/dYyiavLsrKlsyp3jKP8iahWQWEtGjgvSsvYn8pNibibHGSfCNJouchgNwicn45BZ1qcSaWhD7iaWRf95mRlicK0DWBDoQ/640?tp=webp");
-            articleReplyItem2.setUrl("http://mp.weixin.qq.com/s?__biz=MjM5MTU2MDYwNw==&mid=201513154&idx=1&sn=70f658a1023b75eac9a91d489e7f7e5c#rd");
-            articleReplyItem2.setTitle("这是第二个");
-            articleReplyItem2.setDescription("hhahahahahahahah");
-            List<ArticleReplyItem> articleReplyItemList = new ArrayList<>();
-            articleReplyItemList.add(articleReplyItem);
-            articleReplyItemList.add(articleReplyItem2);
-            replyMessage.setArticleReplyItemList(articleReplyItemList);
-            replyMessage.setAddTime(new Date());
-            replyMessage.setFromName(toName);
-            replyMessage.setToName(fromName);
-            logger.info("replayTextMsg over");
-            return replyMessage;
-        } else if (content.equals("1")) {
-            logger.info("this");
-            NormalReply replyMessage = new NormalReply();
-            replyMessage.setToName(fromName);
-            replyMessage.setFromName(toName);
-            replyMessage.setContent("world hello,写后台真的很不容易，别瞎鸡巴加需求了" + content);
-            replyMessage.setAddTime(new Date());
-            logger.info("over");
-            return replyMessage;
-        } else {
-            try {
-                ReplyMessage answer = centerService.findAnswer(textMessage);
-                return answer;
-            } catch (SQLException e) {
-                logger.error("center service error");
-                e.printStackTrace();
-                return null;
-            } catch (ClientException e) {
-                e.printStackTrace();
-                return null;
+        try {
+            ReplyMessage replyMessage = customeredReplay(textMessage);
+            if (replyMessage == null) {
+                replyMessage = centerService.findAnswer(textMessage);
             }
+            return replyMessage;
+        } catch (SQLException e) {
+            logger.error("center service error");
+            e.printStackTrace();
+            return null;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
         }
     }
+
+    public abstract ReplyMessage customeredReplay(WeixinTextMessage textMessage);
 
 }

@@ -12,6 +12,7 @@ import com.omartech.laibicanRobot.model.QueryLog;
 import com.omartech.laibicanRobot.model.ReplyEnum;
 import com.omartech.laibicanRobot.model.User;
 import com.omartech.laibicanRobot.model.message.WeixinArticleMessage;
+import com.omartech.laibicanRobot.model.message.WeixinEventMessage;
 import com.omartech.laibicanRobot.model.message.WeixinTextMessage;
 import com.omartech.laibicanRobot.model.reply.ArticleReply;
 import com.omartech.laibicanRobot.model.reply.ArticleReplyItem;
@@ -73,6 +74,10 @@ public class CenterService {
         if (query.contains("求签")) {
 //            replyMessage = fetchBakUpMsg("http://www.laibican.com/sactivity/yaoqian.html");
             replyMessage = fetchYaoqianMsg();
+        } else if (query.startsWith("没了")) {
+            replyMessage = fetchBakUpMsg("噢...");
+        } else if (query.startsWith("相亲宝典")) {
+            replyMessage = fetchXiangqin();
         } else {
             replyMessage = matchFilter(query);
             if (replyMessage == null) {
@@ -84,16 +89,30 @@ public class CenterService {
                 ArticleResponse articleResponse = dataClients.searchArticle(req);
                 replyMessage = wrap(articleResponse, appEnum);
             }
-            if (replyMessage == null) {
-                logger.info("reply with default");
-                replyMessage = fetchBakUpMsg("嗯，然后呢？");
-            }
         }
-
-        replyMessage.setFromName(toName);
-        replyMessage.setToName(fromName);
-        replyMessage.setAddTime(new Date());
         return replyMessage;
+    }
+
+    private static ReplyMessage fetchXiangqin() {
+        ArticleReplyItem a1 = new ArticleReplyItem();
+        ArticleReplyItem a2 = new ArticleReplyItem();
+        ArticleReplyItem a3 = new ArticleReplyItem();
+        a1.setTitle("相亲宝典：第一部");
+        a1.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/Q2BricGyedbgxgo2WKMECkIm69RicpKLzH1dQ3gZdL1fiaSVkdjCq4CKBklIftZsGgWWO5Ue3mmAIsu06aAwjHjcg/0");
+        a2.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/Q2BricGyedbjwZ9fJXOKiaew1EvG7XicOXQ9E0rngCfk0mvQUmQ5V1vlNV4ib4LQVvKyeibjdqnia8htN1vF6nyjk7Ow/0");
+        a3.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/Q2BricGyedbhUkKzW8kEy1UBtYTbUgeVaEpy2RjTRH1ocOMBrhIPZaKpwPAMrpPmRahtzXnrJMWlZgPt2uqxia3Q/0");
+        a1.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=203168325&idx=2&sn=277655df7526a6ee2843656720537a8b#rd");
+        a2.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=203189676&idx=2&sn=812423b80c5be97fe8ce9e8d6296ec78#rd");
+        a3.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=203207457&idx=2&sn=b811abbdfb14647b7904813c6aa1cfab#rd");
+        a2.setTitle("相亲宝典：第二部");
+        a3.setTitle("相亲宝典：第三部");
+
+        ArticleReply ar = new ArticleReply();
+        ar.addArticleReplyItem(a1);
+        ar.addArticleReplyItem(a2);
+        ar.addArticleReplyItem(a3);
+        return ar;
+
     }
 
     public ReplyMessage findAnswer(String uid, String query, AppEnum appEnum, String toName) throws SQLException, ClientException {
@@ -111,6 +130,7 @@ public class CenterService {
             DataClients dataClients = fetchClient();
             ArticleRequest req = new ArticleRequest();
             req.setKeyword(keyWord);
+            req.setLimit(10);
             ArticleResponse articleResponse = dataClients.searchArticle(req);
             replyMessage = wrap(articleResponse, appEnum);
         }
@@ -184,7 +204,7 @@ public class CenterService {
         return url;
     }
 
-    private String findAPicture() {
+    public String findAPicture() {
         Random random = new Random();
         int i1 = random.nextInt();
         int abs = Math.abs(i1);
@@ -220,7 +240,7 @@ public class CenterService {
         return articleReply;
     }
 
-    private ReplyMessage fetchBakUpMsg(String str) {
+    public static ReplyMessage fetchBakUpMsg(String str) {
         NormalReply normalReply = new NormalReply();
         normalReply.setContent(str);
         return normalReply;
@@ -475,4 +495,117 @@ public class CenterService {
         }
     };
 
+    public ReplyMessage findResponseWith(WeixinEventMessage eventMessage) {
+        AppEnum appEnum = eventMessage.getAppEnum();
+        String eventKey = eventMessage.getEventKey();
+        switch (appEnum) {
+            case Bican:
+
+                break;
+            default:
+                switch (eventKey) {
+                    case "beauty"://看个美女
+                        BeautyRequest bq = new BeautyRequest();
+                        int max = 36860;
+                        Random random = new Random();
+                        float rate = random.nextFloat();
+                        int offset = Math.round(max * rate);
+                        bq.setOffset(offset);
+                        bq.setLimit(1);
+                        try {
+                            BeautyResponse response = dataClients.searchBeauty(bq);
+                            List<Beauty> beauties = response.getBeauties();
+                            ArticleReply articleReply = new ArticleReply();
+                            for (Beauty beauty : beauties) {
+                                ArticleReplyItem articleReplyItem = new ArticleReplyItem();
+                                articleReplyItem.setTitle(beauty.getTags() + "美女一枚");
+                                articleReplyItem.setPicUrl(beauty.getThumbLargeUrl());
+                                articleReplyItem.setUrl("http://www.laibican.com/beauty/" + beauty.getId());
+                                articleReplyItem.setDescription("这里还有很多很棒的模特~");
+                                articleReply.addArticleReplyItem(articleReplyItem);
+                            }
+                            return articleReply;
+                        } catch (ClientException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "bican":
+                        ArticleRequest articleRequest = new ArticleRequest();
+                        articleRequest.setArticleType(ArticleType.Bican);
+                        articleRequest.setLimit(1);
+                        articleRequest.setOffset(-1);
+                        try {
+                            ArticleResponse bicanResponse = dataClients.searchArticle(articleRequest);
+                            List<Article> articles = bicanResponse.getArticles();
+                            NormalReply normalReply = new NormalReply();
+                            for (Article article : articles) {
+                                normalReply.setContent(article.getContent());
+                            }
+                            return normalReply;
+                        } catch (ClientException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "jok":
+                        ArticleRequest jokRequest = new ArticleRequest();
+                        jokRequest.setArticleType(ArticleType.Xiaohua);
+                        jokRequest.setLimit(1);
+                        jokRequest.setOffset(-1);
+                        try {
+                            ArticleResponse jokResponse = dataClients.searchArticle(jokRequest);
+                            List<Article> articles = jokResponse.getArticles();
+                            NormalReply normalReply = new NormalReply();
+                            for (Article article : articles) {
+                                normalReply.setContent(article.getContent());
+                            }
+                            return normalReply;
+                        } catch (ClientException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "advice":
+                        return fetchBakUpMsg("请给小编些建议或者抱怨吧:)");
+                    case "love":
+                        return fetchXiangqin();
+                    case "lucky":
+                        return fetchYaoqianMsg();
+                    case "money":
+                        return fetchMoneyMsg();
+
+                    default:
+                        logger.info("what?{}", eventKey);
+                        break;
+                }
+                break;
+        }
+        return null;
+    }
+
+    static ReplyMessage fetchMoneyMsg() {
+        ArticleReply articleReply = new ArticleReply();
+        ArticleReplyItem articleReplyItem = new ArticleReplyItem();
+        articleReplyItem.setTitle("微信发红包");
+        articleReplyItem.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=203362192&idx=1&sn=990cd09d8886ad4b019c3ab4b5ad6f74#rd");
+        articleReplyItem.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/Q2BricGyedbjGessTtOlNicrKkNkMxmyo5xpibryrnSiciaNhTzVzhrbDtQzibzp8knMOnhJ2o9Vx3sK8W3Ju2HDmicKA/0");
+        articleReplyItem.setDescription("恭喜发财！领取红包>>");
+        articleReply.addArticleReplyItem(articleReplyItem);
+        return articleReply;
+    }
+
+    public JobResponse findJobsToday(String today, boolean intern, int offset, int limit) {
+        JobRequest req = new JobRequest();
+        req.setOffset(offset);
+        req.setLimit(limit);
+        req.setCreatedAt(today);
+        if(intern) {
+            req.setJobType("实习");
+        }
+        JobResponse jobResponse = null;
+        try {
+            jobResponse = dataClients.searchJobs(req);
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return jobResponse;
+    }
 }

@@ -61,4 +61,8 @@ public class BicanAction extends AWeixinAction {
         }
     }
 
+    @Override
+    public ReplyMessage customeredReplay(WeixinTextMessage textMessage) {
+        return null;
+    }
 }
