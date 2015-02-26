@@ -82,7 +82,8 @@ public class BITUnionRobot {
             if (pieces.size() > 1) {
                 String lz = pieces.get(0);
                 logger.info("*********************************************************");
-                lz = lz + "共 " + pieces.size() + " 楼，麻烦不要抢哦~~";
+                lz = lz + "共 " + pieces.size() + " 楼，麻烦不要抢哦~~" +
+                        "\n[size=5][color=Red]请扫描头像的二维码 或者 公众号搜 job-seeker[/color][/size]";
                 logger.info(lz);
                 threadPage = createPost(httpclient, title, lz, moduleId);
                 int threadId = findTid(threadPage);
@@ -186,7 +187,7 @@ public class BITUnionRobot {
             List<NameValuePair> nvps = new ArrayList<>();
             nvps.add(new BasicNameValuePair("action", "login"));
             nvps.add(new BasicNameValuePair("username", "mikki"));
-            nvps.add(new BasicNameValuePair("password", "nvidia7600"));
+            nvps.add(new BasicNameValuePair("password", "vaio7600"));
             nvps.add(new BasicNameValuePair("cookietime", "3600"));
             nvps.add(new BasicNameValuePair("referer", "/home.php?"));
             nvps.add(new BasicNameValuePair("verify", "40422"));
@@ -281,7 +282,7 @@ public class BITUnionRobot {
     }
 
     static String replayPost(CloseableHttpClient httpclient, String title, String content, int moduleId, int threadId, String refer) {
-        if (threadId == 0 || moduleId == 0) {
+        if (threadId == 0 || moduleId == 0 || content.length() == 0) {
             return null;
         }
         Map<String, String> map = new HashMap<>();
