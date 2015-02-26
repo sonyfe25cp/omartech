@@ -103,5 +103,26 @@ public class DataClients {
         }
         throw new ClientException(e);
     }
+    // auto generated code, do not edit
+    public JobResponse searchJobs(JobRequest req) throws ClientException {
+        ThriftClient client = null;
+        Exception e = null;
 
+        for (int i = 0; i < TRY_COUNT; i++) {
+            try {
+                client = pool.getClient(client);
+                JobResponse resp = client.client.searchJobs(req);
+                pool.returnClient(client);
+                return resp;
+
+            } catch (TException e1) {
+                e = e1;
+                if (client != null) {
+                    pool.returnBrokenClient(client);
+                }
+                // retry
+            }
+        }
+        throw new ClientException(e);
+    }
 }

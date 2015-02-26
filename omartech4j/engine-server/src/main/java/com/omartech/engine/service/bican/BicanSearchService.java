@@ -16,6 +16,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by omar on 14-12-16.
@@ -28,6 +29,10 @@ public class BicanSearchService extends ADataService {
         super(indexPath);
     }
 
+    private static final String CAMPUS = "campus";
+    private static final String BEAUTY = "beauty";
+    private static final String WEIXIN = "weixin";
+
     @Override
     public ArticleResponse searchArticle(ArticleRequest req) throws TException {
 
@@ -37,6 +42,7 @@ public class BicanSearchService extends ADataService {
         limit = limit == 0 ? 30 : limit;
         List<Long> ids = req.getIds();
         int topN = offset + limit;
+        ArticleType articleType = req.getArticleType();
 
         ArticleResponse response = new ArticleResponse();
         List<Article> articles = new ArrayList<>();
@@ -44,7 +50,36 @@ public class BicanSearchService extends ADataService {
         if (StringUtils.isEmpty(keyword)) {
             if (ids == null || ids.size() == 0) {
                 logger.info("list the articles");
-                articles = BicanDataService.findArticles(offset, limit, connection);
+                if (articleType == null) {
+                    articles = BicanDataService.findArticles(offset, limit, connection);
+                } else {
+
+                    TermQuery termQuery = new TermQuery(new Term("appName", articleType.toString()));
+                    try {
+                        TopDocs topDocs = searcher.search(termQuery, topN);
+                        ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+                        int currentLength = scoreDocs.length;
+                        if (currentLength > 0) {
+                            if (offset == -1) {//随机来一发
+                                Random random = new Random();
+                                offset = Math.round(random.nextFloat() * currentLength);
+                            }
+
+                            int end = currentLength > offset ? offset : currentLength;
+                            if (currentLength >= offset) {
+                                for (int pos = offset; pos <= end; pos++) {
+                                    int docId = scoreDocs[pos].doc;
+                                    Document doc = searcher.doc(docId);
+                                    String id = doc.get(ID);
+                                    Article article = BicanDataService.findById(Long.parseLong(id), connection);
+                                    articles.add(article);
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             } else {
                 logger.info("find articles by ids ");
                 for (long id : ids) {
@@ -71,13 +106,16 @@ public class BicanSearchService extends ADataService {
                 TopDocs topDocs = searcher.search(master, topN);
                 ScoreDoc[] scoreDocs = topDocs.scoreDocs;
                 int currentLength = scoreDocs.length;
-                if (currentLength >= offset) {
-                    for (ScoreDoc scoreDoc : scoreDocs) {
-                        int docId = scoreDoc.doc;
-                        Document doc = searcher.doc(docId);
-                        String id = doc.get(ID);
-                        Article article = BicanDataService.findById(Long.parseLong(id), connection);
-                        articles.add(article);
+                if (currentLength > 0) {
+                    int end = currentLength > offset ? offset : currentLength;
+                    if (currentLength >= offset) {
+                        for (int pos = offset; pos <= end; pos++) {
+                            int docId = scoreDocs[pos].doc;
+                            Document doc = searcher.doc(docId);
+                            String id = doc.get(ID);
+                            Article article = BicanDataService.findById(Long.parseLong(id), connection);
+                            articles.add(article);
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -111,18 +149,25 @@ public class BicanSearchService extends ADataService {
         boolean flag = false;
         do {
             switch (db) {
-                case "weixin":
+                case WEIXIN:
                     connection = con.get();
                     flag = DBUtils.verifyConnection(connection, "select id from rule limit 1");
                     if (!flag) {
                         con.remove();
                     }
                     break;
-                case "beauty":
+                case BEAUTY:
                     connection = beautyCon.get();
                     flag = DBUtils.verifyConnection(connection, "select id from images limit 1");
                     if (!flag) {
                         beautyCon.remove();
+                    }
+                    break;
+                case CAMPUS:
+                    connection = campusCon.get();
+                    flag = DBUtils.verifyConnection(connection, "select id from jd limit 1");
+                    if (!flag) {
+                        campusCon.remove();
                     }
                     break;
                 default:
@@ -165,6 +210,22 @@ public class BicanSearchService extends ADataService {
             return conn;
         }
     };
+    static ThreadLocal<Connection> campusCon = new InheritableThreadLocal<Connection>() {
+        @Override
+        protected Connection initialValue() {
+            Connection conn = null;
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/campus", "root", "");
+                logger.info("new connection to campus");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return conn;
+        }
+    };
 
     @Override
     public BeautyResponse searchBeauty(BeautyRequest req) throws TException {
@@ -199,6 +260,69 @@ public class BicanSearchService extends ADataService {
         response.setBeauties(beauties);
         return response;
     }
+
+    @Override
+    public JobResponse searchJobs(JobRequest req) throws TException {
+        String createdAt = req.getCreatedAt();
+        createdAt = "2015-01-10";
+        int limit = req.getLimit();
+        int offset = req.getOffset();
+        String word = req.getWord();
+        String jobType = req.getJobType();
+        String publishDate = req.getPublishDate();
+        JobResponse jobResponse = new JobResponse();
+        jobResponse.setOffset(offset);
+        jobResponse.setWord(word);
+        List<Job> jobs = new ArrayList<>();
+        if (!StringUtils.isEmpty(createdAt)) {//按日期查找
+            Connection connection = fetchConnection(CAMPUS);
+            String sql = "SELECT id, title, url, siteName, industry, hrEmail, company FROM jd WHERE date(createdAt) = ? ";
+            if (!StringUtils.isEmpty(jobType)) {
+                sql += " and jobType = '实习'";
+            } else {
+                sql += " and jobType != '实习'";
+            }
+            sql += "order by title LIMIT ?, ?";
+            try (
+                    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ) {
+                preparedStatement.setString(1, createdAt);
+                preparedStatement.setInt(2, offset);
+                preparedStatement.setInt(3, limit);
+                try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                    while (resultSet.next()) {
+                        long id = resultSet.getLong("id");
+                        String title = resultSet.getString("title");
+                        String url = resultSet.getString("url");
+                        String siteName = resultSet.getString("siteName");
+                        String industry = resultSet.getString("industry");
+                        String hrEmail = resultSet.getString("hrEmail");
+                        String company = resultSet.getString("company");
+                        Job job = new Job();
+                        job.setTitle(title);
+                        job.setCreatedAt(createdAt);
+                        job.setPublishDate(publishDate);
+                        job.setHrEmail(hrEmail);
+                        job.setId(id);
+                        job.setCompany(company);
+                        job.setSiteName(siteName);
+                        job.setUrl(url);
+                        job.setIndustry(industry);
+                        jobs.add(job);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            logger.error("其他需求?");
+        }
+        jobResponse.setJobs(jobs);
+        jobResponse.setTotal(jobs.size());
+        logger.info("search createdAt:{}, publishDate:{}, offset:{}, limit:{}, jobType:{}, jobs:{}", new String[]{createdAt, publishDate, offset + "", limit + "", jobType, jobs.size() + ""});
+        return jobResponse;
+    }
+
 
     public static void main(String[] args) {
         try {

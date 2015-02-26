@@ -23,7 +23,8 @@ struct ArticleRequest{
   1: string keyword,
   2: i32 offset,
   3: i32 limit,
-  4: list<i64> ids
+  4: list<i64> ids,
+  5: ArticleType articleType,
 }
 
 struct ArticleResponse{
@@ -136,6 +137,9 @@ struct WeixinAccount{
   7: bool offical,
   8: bool live,
   9: string openId,
+  10: i32 id,
+  11: string createdAt,
+  12: string updatedAt,
 }
 
 struct WeixinPost{
@@ -151,6 +155,41 @@ struct WeixinPost{
   10: i32 readCount,
   11: i32 voteCount,
   12: string openId,
+  13: i32 id,
+  14: string createdAt,
+  15: string updatedAt,
+}
+
+struct Job{
+  1: i64 id,
+  2: string title,
+  3: string publishDate,
+  4: string createdAt,
+  5: string url,
+  6: string siteName,
+  7: string industry,
+  8: string degree,
+  9: string hrEmail,
+  10: string company,
+  11: i32 headCount,
+  12: bool parsed,
+  13: string body,
+}
+
+struct JobRequest{
+  1: string word,
+  2: i32 offset,
+  3: i32 limit,
+  4: string publishDate,
+  5: string createdAt,
+  6: string jobType,
+}
+
+struct JobResponse{
+  1: string word,
+  2: i32 total,
+  3: list<Job> jobs,
+  4: i32 offset,
 }
 
 service DataService{
@@ -162,5 +201,7 @@ service DataService{
   BeautyResponse searchBeauty(1: BeautyRequest req)
 
   QieyexinxiResponse searchQiyexinxi(1: QiyexinxiRequest req)// 查询企业信息
+
+  JobResponse searchJobs(1: JobRequest req)//查询招聘
   
 }

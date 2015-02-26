@@ -1,12 +1,10 @@
 package com.omartech.engine.service;
 
 import cn.techwolf.data.gen.Article;
+import cn.techwolf.data.gen.ArticleType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -105,8 +103,9 @@ public class AIndexBuilder extends AIndexService {
         if (!StringUtils.isEmpty(article.getContent())) {
             document.add(new TextField(CONTENT, article.getContent().trim(), Field.Store.NO));
         }
-        document.add(new TextField(ID, article.getId() + "", Field.Store.YES));
 
+        document.add(new TextField(ID, article.getId() + "", Field.Store.YES));
+        document.add(new StringField(APPNAME, article.getArticleType().toString(), Field.Store.YES));
         return document;
     }
 
@@ -121,10 +120,12 @@ public class AIndexBuilder extends AIndexService {
                     String title = resultSet.getString("title");
                     String content = resultSet.getString("content");
                     long id = resultSet.getLong("id");
+                    String appName = resultSet.getString("appName");
                     Article article = new Article();
                     article.setId(id);
                     article.setContent(content);
                     article.setTitle(title);
+                    article.setArticleType(ArticleType.valueOf(appName));
                     array.add(article);
                 }
             }

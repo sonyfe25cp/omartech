@@ -10,6 +10,7 @@
 
     <artifactId>engine-client</artifactId>
     <packaging>jar</packaging>
+
     <dependencies>
 
         <!-- 添加对spring框架的依赖 -->

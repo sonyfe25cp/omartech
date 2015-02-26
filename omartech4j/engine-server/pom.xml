@@ -204,6 +204,7 @@
                     <archive>
                         <manifest>
                             <mainClass>com.omartech.engine.service.bican.BicanSearchService</mainClass>
+                            <!--<mainClass>com.omartech.engine.service.bican.BicanIndexer</mainClass>-->
                         </manifest>
                     </archive>
                     <descriptorRefs>

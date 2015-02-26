@@ -34,4 +34,9 @@ public class ADataService extends AIndexSearcher implements DataService.Iface {
         throw new TException();
     }
 
+    @Override
+    public JobResponse searchJobs(JobRequest req) throws TException {
+        throw new TException();
+    }
+
 }

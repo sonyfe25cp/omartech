@@ -23,6 +23,7 @@ public class AIndexService {
     public static final String ID = "id";
     public static final String TITLE = "title";
     public static final String CONTENT = "content";
+    public static final String APPNAME = "appName";
 
     public static String formatTime(Date date) {
         return DateFormatUtils.format(date, "yyyy-MM-dd");
