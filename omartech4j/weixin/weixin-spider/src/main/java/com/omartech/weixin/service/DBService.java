@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: ChenJie
@@ -15,6 +17,52 @@ import java.sql.SQLException;
  * Time: 11:30 AM
  */
 public class DBService {
+
+
+    public static List<WeixinAccount> findWeixinAccounts(int offset, int limit, Connection connection) throws SQLException {
+        String sql = "SELECT id, title, name, logo, erweima, description, weixinrenzheng, isOffical, isLive, openId FROM weixinAccount where id > ? LIMIT ? ";
+        List<WeixinAccount> objects = new ArrayList<>();
+        PreparedStatement psmt = connection.prepareStatement(sql);
+        psmt.setInt(1, offset);
+        psmt.setInt(2, limit);
+        ResultSet rs = psmt.executeQuery();
+        while (rs.next()) {
+            WeixinAccount object = new WeixinAccount();
+            int id = rs.getInt("id");
+            object.id = id;
+            String title = rs.getString("title");
+            object.title = title;
+            String name = rs.getString("name");
+            object.name = name;
+            String logo = rs.getString("logo");
+            object.logo = logo;
+            String erweima = rs.getString("erweima");
+            object.erweima = erweima;
+            String description = rs.getString("description");
+            object.description = description;
+            String weixinrenzheng = rs.getString("weixinrenzheng");
+            object.weixinrenzheng = weixinrenzheng;
+            boolean isOffical = rs.getBoolean("isOffical");
+            object.offical = isOffical;
+            boolean isLive = rs.getBoolean("isLive");
+            object.live = isLive;
+            String openId = rs.getString("openId");
+            object.openId = openId;
+            objects.add(object);
+        }
+        rs.close();
+        psmt.close();
+        return objects;
+    }
+
+    public static boolean isPostExist(WeixinPost post, Connection connection){
+        WeixinPost weixinPost = findWeixinPostByUrl(post.getUrl(), connection);
+        if (weixinPost == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     public static boolean insertOrUpdateWeixinPost(WeixinPost post, Connection connection) throws SQLException {
         WeixinPost weixinPost = findWeixinPostByUrl(post.getUrl(), connection);
@@ -27,7 +75,7 @@ public class DBService {
     }
 
     public static void insertWeixinPost(WeixinPost object, Connection conn) throws SQLException {
-        String sql = "INSERT INTO weixinPost(`title`, `headImg`, `url`, `imgLink`, `siteLink`, `content168`, `content`, `date7`, `html`, `readCount`, `voteCount`, `openId`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO weixinPost(`title`, `headImg`, `url`, `imgLink`, `siteLink`, `content168`, `content`, `date7`, `html`, `readCount`, `voteCount`, `openId`, `createdAt`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         try (
                 PreparedStatement psmt = conn.prepareStatement(sql);) {
             psmt.setString(1, object.getTitle());//title
@@ -42,6 +90,7 @@ public class DBService {
             psmt.setInt(10, object.getReadCount());//readCount
             psmt.setInt(11, object.getVoteCount());//voteCount
             psmt.setString(12, object.getOpenId());
+            psmt.setString(13, object.getCreatedAt());
             psmt.execute();
         }
 
@@ -62,7 +111,7 @@ public class DBService {
 
 
     public static void insertWeixinAccount(WeixinAccount object, Connection conn) throws SQLException {
-        String sql = "INSERT INTO weixinAccount(`title`, `name`, `logo`, `erweima`, `description`, `weixinrenzheng`, `isOffical`, `isLive`, `openId`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO weixinAccount(`title`, `name`, `logo`, `erweima`, `description`, `weixinrenzheng`, `isOffical`, `isLive`, `openId`, `createdAt`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         try (
                 PreparedStatement psmt = conn.prepareStatement(sql);) {
             psmt.setString(1, object.getTitle());//title
@@ -74,6 +123,7 @@ public class DBService {
             psmt.setBoolean(7, object.isOffical());//isOffical
             psmt.setBoolean(8, object.isLive());//isLive
             psmt.setString(9, object.getOpenId());//openId
+            psmt.setString(10, object.getCreatedAt());
             psmt.execute();
         }
     }

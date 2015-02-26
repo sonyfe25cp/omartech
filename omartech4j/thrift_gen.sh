@@ -7,6 +7,7 @@ rm -rf proxy/proxy-client/gen-java
 rm -rf proxy/proxy-spider/gen-java
 rm -rf weixin/weixin-web/gen-java
 rm -rf weixin/weixin-spider/gen-java
+rm -rf campus-recruiting-robot/gen-java
 
 DIR=`pwd`
 FILE="${DIR}/data.thrift"
@@ -14,6 +15,7 @@ FILE="${DIR}/data.thrift"
 (cd engine-client && thrift -gen java ${FILE})
 (cd engine-server&& thrift -gen java ${FILE})
 
+(cd campus-recruiting-robot&& thrift -gen java ${FILE})
 
 (cd omartech-utils&& thrift -gen java ${FILE})
 (cd proxy/proxy-client&& thrift -gen java ${FILE})

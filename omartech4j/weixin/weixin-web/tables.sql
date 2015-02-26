@@ -8,7 +8,8 @@ CREATE TABLE weixinAccount (
   weixinrenzheng VARCHAR(500),
   isOffical      INT          NOT NULL,
   isLive         INT          NOT NULL,
-  openId         VARCHAR(100) NOT NULL
+  openId         VARCHAR(100) NOT NULL,
+  createdAt      VARCHAR(45)
 );
 
 ALTER TABLE weixinAccount ADD INDEX openId(openId);
@@ -26,7 +27,9 @@ CREATE TABLE weixinPost (
   html       LONGTEXT,
   readCount  INT,
   voteCount  INT,
-  openId     VARCHAR(100) NOT NULL
+  openId     VARCHAR(100) NOT NULL,
+  createdAt  VARCHAR(45),
+  updatedAt  VARCHAR(45)
 );
 
 ALTER TABLE weixinPost ADD INDEX openId(openId);

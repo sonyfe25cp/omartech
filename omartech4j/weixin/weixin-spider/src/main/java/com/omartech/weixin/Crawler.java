@@ -6,10 +6,12 @@ import cn.techwolf.data.gen.WeixinPost;
 import com.google.gson.Gson;
 import com.omartech.proxy.proxy_client.ProxyClient;
 import com.omartech.weixin.service.DBService;
+import com.techwolf.omartech_utils.DBUtils;
 import org.ansj.domain.Term;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -44,8 +46,8 @@ public class Crawler {
     static Logger logger = LoggerFactory.getLogger(Crawler.class);
 
     public static void main(String[] args) {
-//        Crawler crawler = new Crawler();
-//        crawler.downloadAccounts();
+        Crawler crawler = new Crawler();
+        crawler.downloadAccounts();
 
 //        createPairUID();
         readCookie();
@@ -53,7 +55,7 @@ public class Crawler {
 
 
     private int cpu = Runtime.getRuntime().availableProcessors();
-    static ProxyClient proxyClient = new ProxyClient();
+//    static ProxyClient proxyClient = new ProxyClient();
     String alreadCrawledFile = "/tmp/wexinalready";
 
     private void downloadAccounts() {
@@ -83,26 +85,41 @@ public class Crawler {
 //        }
 
         //version2
-        try {
-            List<String> strings = FileUtils.readLines(new File("/tmp/company_names"));
-            for (String tmp : strings) {
-                tmp = StringUtils.deleteWhitespace(tmp);
-                tmp = tmp.replaceAll("[\"';,.，。\\.\\|\\-\\^\\~\\+]", "");
-                tmp = tmp.replaceAll("[\\[\\(（].+[\\)）\\]]", "");
-//                if(tmp.contains("（")){
-//                    logger.info("{} --> {}", tmp, tmp2);
+//        try {
+//            List<String> strings = FileUtils.readLines(new File("/tmp/company_names"));
+//            for (String tmp : strings) {
+//                tmp = StringUtils.deleteWhitespace(tmp);
+//                tmp = tmp.replaceAll("[\"';,.，。\\.\\|\\-\\^\\~\\+]", "");
+//                tmp = tmp.replaceAll("[\\[\\(（].+[\\)）\\]]", "");
+//                if (!StringUtils.isEmpty(tmp)) {
+//                    List<Term> terms = ToAnalysis.parse(tmp);
+//                    for(Term term : terms){
+//                        String name = term.getName();
+//                        if(name.length() > 1) {
+//                            wordsList.add(name);
+//                        }
+//                    }
+//                    wordsList.add(tmp);
 //                }
-                if (!StringUtils.isEmpty(tmp)) {
-                    List<Term> terms = ToAnalysis.parse(tmp);
-                    for(Term term : terms){
-                        String name = term.getName();
-                        if(name.length() > 1) {
-                            wordsList.add(name);
-                        }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+        //version3
+        try {
+            List<String> strings = FileUtils.readLines(new File("/tmp/1and2"));
+            for (String tmp : strings) {
+                String[] split = tmp.split("\t");
+                if (split.length > 0) {
+                    String s = split[0];
+                    if (!already.contains(s) && (!StringUtils.isEmpty(s))) {
+                        wordsList.add(s);
                     }
-                    wordsList.add(tmp);
                 }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,35 +147,11 @@ public class Crawler {
 
     private HtmlObject fetchResultsList(String word, int pageNo) {
 
-        if (!goodCookie.contains("SNUID")) {
-            logger.info("又不给注册id了..");
-            try {
-                Thread.sleep(1000 * 60 * 60);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-//            System.exit(0);
-        }
-
         String refer = "http://weixin.sogou.com/";
 
-        Map<String, String> args = new HashMap<>();
 
         int ran = new Random().nextInt(1000);
         int ast = 1421510528 + ran;
-
-        args.put("type", "1");
-        args.put("query", word);
-        args.put("fr", "sgsearch");
-        args.put("ie", "utf8");
-        args.put("_ast", ast + "");
-        args.put("_asf", "null");
-        args.put("w", "01029901");
-        args.put("p", "40040100");
-        args.put("dp", "1");
-        args.put("cid", "null");
-
-//        String url = "http://weixin.sogou.com/weixin";
 
         String url = "http://weixin.sogou.com/weixin?type=1&fr=sgsearch&ie=utf8&_ast=" + ast + "&_asf=null&w=01029901&p=40040100&dp=1&cid=null&query=" + word + "&page=" + pageNo;
 //        String url = "http://127.0.0.1:9901/weixin?type=1&fr=sgsearch&ie=utf8&_ast=" + ast + "&_asf=null&w=01029901&p=40040100&dp=1&cid=null&query=" + word + "&page=" + pageNo;
@@ -184,14 +177,13 @@ public class Crawler {
             headers.put("User-Agent", UA_COMPUTER);
 
             HttpHost proxy = null;
-//            HttpHost proxy = proxyClient.fetchOne();
+//
             object = Spider.fetchPage(url, proxy, headers, refer);
             switch (object.getStatusCode()) {
                 case 200:
                     flag = true;
                     break;
                 default:
-                    proxyClient.dropOut(proxy);
                     object = null;
                     goodCookie = readCookie();
                     break;
@@ -217,15 +209,24 @@ public class Crawler {
         public void run() {
             try {
                 int maxPage = 10;
-                Connection connection = con.get();
                 for (int currentPageNo = 1; currentPageNo <= maxPage; currentPageNo++) {
                     HtmlObject listPage = fetchResultsList(word, currentPageNo);
                     if (listPage != null && listPage.getHtml() != null) {
+                        Connection connection = null;
+                        boolean dbflag = true;
+                        do {
+                            connection = con.get();
+                            dbflag = DBUtils.verifyConnection(connection, "select id from weixinAccount limit 1");
+                            if (!dbflag) {
+                                con.remove();
+                            }
+                        } while (!dbflag);
                         String html = listPage.getHtml();
                         List<WeixinAccount> accounts = parseAccountFromHtml(html);
                         int alreadyHave = 0;
                         for (WeixinAccount account : accounts) {
                             logger.info("account: {}, openId:{}", account.getTitle(), account.getOpenId());
+                            account.setCreatedAt(DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
                             boolean flag = DBService.insertOrUpdateWeixinAccount(account, connection);
                         }
                         maxPage = parseMaxPageFromHtml(html);
@@ -242,146 +243,6 @@ public class Crawler {
         }
     }
 
-    class PostDownloadWorker implements Runnable {
-        WeixinAccount account;
-
-        public PostDownloadWorker(WeixinAccount account) {
-            this.account = account;
-        }
-
-        @Override
-        public void run() {
-            Connection connection = con.get();
-            fetchAllPosts(account, connection);
-        }
-    }
-
-    private void fetchAllPosts(WeixinAccount account, Connection connection) {
-        int max = 0;
-        int current = 1;
-        boolean jump = false;
-        do {
-            HtmlObject jsonList = fetchJsonList(account, current);
-
-            if (jsonList != null && (!StringUtils.isEmpty(jsonList.getHtml()))) {
-                String html = jsonList.getHtml();
-                String jsons = html;//filter json from html
-
-                ResultJson resultJson = gson.fromJson(jsons, ResultJson.class);
-                max = resultJson.totalPages;
-//                logger.info("max : {}", max);
-                try {
-                    List<WeixinPost> weixinPosts = parsePostsFromXML(resultJson);
-                    int already = 0;
-                    for (WeixinPost weixinPost : weixinPosts) {
-                        weixinPost.setOpenId(account.getOpenId());
-                        fetchWholePost(weixinPost);
-                        boolean flag = DBService.insertOrUpdateWeixinPost(weixinPost, connection);
-                        if (flag == false) {//jump logic
-                            already++;
-                        }
-                    }
-                    if (already == weixinPosts.size()) {
-                        jump = true;
-                    }
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            current++;
-        } while (current < max && (!jump));
-    }
-
-    private List<WeixinPost> parsePostsFromXML(ResultJson resultJson) throws DocumentException {
-        List<String> items = resultJson.items;
-        List<WeixinPost> posts = new ArrayList<>(items.size());
-        for (String item : items) {
-            WeixinPost post = new WeixinPost();
-            item = item.replaceAll("<\\/", "</");
-            org.dom4j.Document document = DocumentHelper.parseText(item);
-            org.dom4j.Element rootElement = document.getRootElement();
-            Iterator itemPare = rootElement.elementIterator("item");
-            while (itemPare.hasNext()) {
-                org.dom4j.Element firstLoop = (org.dom4j.Element) itemPare.next();
-                Iterator displays = firstLoop.elementIterator("display");
-                while (displays.hasNext()) {
-                    org.dom4j.Element displayNext = (org.dom4j.Element) displays.next();
-                    String title = displayNext.elementTextTrim("title");
-                    String url = displayNext.elementTextTrim("url");
-                    String imglink = displayNext.elementTextTrim("imglink");
-                    String headimage = displayNext.elementTextTrim("headimage");
-                    String content168 = displayNext.elementTextTrim("content168");
-                    String openid = displayNext.elementTextTrim("openid");
-                    String date = displayNext.elementTextTrim("date");
-                    post.setTitle(title);
-                    post.setUrl(url);
-                    post.setImgLink(imglink);
-                    post.setHeadImg(headimage);
-                    post.setContent168(content168);
-                    post.setDate7(date);
-                    post.setOpenId(openid);
-                }
-            }
-            posts.add(post);
-        }
-        return posts;
-    }
-
-    private void fetchWholePost(WeixinPost weixinPost) {
-        String url = weixinPost.getUrl();
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-        headers.put("Accept-Encoding", "gzip, deflate, sdch");
-        headers.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.6");
-        headers.put("Cache-Control", "no-cache");
-        headers.put("Connection", "keep-alive");
-        headers.put("Host", "mp.weixin.qq.com");
-        headers.put("Pragma", "no-cache");
-        headers.put("User-Agent", UA_WEIXIN);
-
-        HtmlObject object = Spider.fetchPage(url, headers, null);
-        if (object != null && (!StringUtils.isEmpty(object.getHtml()))) {
-            String html = object.getHtml();
-            Document doc = Jsoup.parse(html);
-            Element first = doc.select("#js_content").first();
-            String content = first.text();
-            String source = first.html();
-            weixinPost.setContent(content);
-            weixinPost.setHtml(source);
-        }
-    }
-
-    private HtmlObject fetchJsonList(WeixinAccount account, int current) {
-        String url = "http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid=" + account.getOpenId() + "&t=1421541945093&page=" + current;
-        Map<String, String> header = new HashMap<>();
-        header.put("Accept", "*/*");
-        header.put("Accept-Encoding", "gzip, deflate, sdch");
-        header.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.6");
-        header.put("Cache-Control", "no-cache");
-        header.put("Connection", "keep-alive");
-        header.put("Host", "weixin.sogou.com");
-        header.put("Pragma", "no-cache");
-        String refer = "";
-        if (current == 1) {
-
-        } else {
-            refer = "http://weixin.sogou.com/gzh?openid=" + account.getOpenId();
-        }
-        header.put("User-Agent", UA_COMPUTER);
-
-        HtmlObject object = Spider.fetchPage(url, header, refer);
-        if (object != null && (!StringUtils.isEmpty(object.getHtml()))) {
-            String html = object.getHtml();
-//            logger.info("html:{}", html);
-            String jsonStr = html.substring(html.indexOf("{"), html.lastIndexOf("}") + 1);
-//            logger.info(jsonStr);
-            object.setHtml(jsonStr);
-        }
-        return object;
-    }
 
     Gson gson = new Gson();
 
@@ -456,20 +317,13 @@ public class Crawler {
         return weixinAccounts;
     }
 
-    class ResultJson {
-        public int totalItems;
-        public int totalPages;
-        public int page;
-        public List<String> items;
-    }
-
     static ThreadLocal<Connection> con = new InheritableThreadLocal<Connection>() {
         @Override
         protected Connection initialValue() {
             Connection conn = null;
             try {
                 Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/weixin", "root", "");
+                conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/weixin", "root", "123123");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
@@ -479,51 +333,81 @@ public class Crawler {
         }
     };
 
-    static String createUserId() {
+    //    static String createUserId() {
+//        String pool = "ABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+//        StringBuilder mid = new StringBuilder();
+//        for (int i = 0; i < 16; i++) {
+//            int rand = new Random().nextInt(pool.length());
+//            mid.append(pool.charAt(rand));
+//        }
+//        return mid.toString();
+//    }
+    static String createSNUID() {
         String pool = "ABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        String demo = "60E1C16F260C930A0000000054CAE131";
         StringBuilder mid = new StringBuilder();
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < demo.length(); i++) {
             int rand = new Random().nextInt(pool.length());
             mid.append(pool.charAt(rand));
         }
         return mid.toString();
     }
+//
+//    static String[] createPairUID() {
+//        String middle = "4C1C920";
+//        String tail = "54C50328";
+//
+//        String pool = "ABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789";
+//
+//        String[] mids = new String[2];
+//        for (int t = 0; t < 2; t++) {
+//            StringBuilder mid = new StringBuilder();
+//            for (int i = 0; i < 7; i++) {
+//                int rand = new Random().nextInt(pool.length());
+//                mid.append(pool.charAt(rand));
+//            }
+//            mids[t] = mid.toString();
+//        }
+//
+//        StringBuilder tailbuilder = new StringBuilder();
+//        for (int i = 0; i < 8; i++) {
+//            int rand = new Random().nextInt(pool.length());
+//            tailbuilder.append(pool.charAt(rand));
+//        }
+//        tail = tailbuilder.toString();
+//
+//
+//        String[] result = new String[2];
+//        for (int i = 0; i < 2; i++) {
+//            String template = "4A41737B" + mids[i] + "A00000000" + tail;
+//            result[i] = template;
+//            System.out.println(template);
+//        }
+//        return result;
+//    }
 
-    static String[] createPairUID() {
-        String middle = "4C1C920";
-        String tail = "54C50328";
-
-        String pool = "ABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789";
-
-        String[] mids = new String[2];
-        for (int t = 0; t < 2; t++) {
-            StringBuilder mid = new StringBuilder();
-            for (int i = 0; i < 7; i++) {
-                int rand = new Random().nextInt(pool.length());
-                mid.append(pool.charAt(rand));
+    public static String readCookie() {
+        boolean f = true;
+        do {
+//            HttpHost proxy = proxyClient.fetchOne();
+            goodCookie = flushCookie(null);
+            if (!goodCookie.contains("SNUID")) {
+                logger.info("又不给注册id了..");
+                try {
+                    Thread.sleep(1000 * 5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                f = false;
             }
-            mids[t] = mid.toString();
-        }
-
-        StringBuilder tailbuilder = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
-            int rand = new Random().nextInt(pool.length());
-            tailbuilder.append(pool.charAt(rand));
-        }
-        tail = tailbuilder.toString();
-
-
-        String[] result = new String[2];
-        for (int i = 0; i < 2; i++) {
-            String template = "4A41737B" + mids[i] + "A00000000" + tail;
-            result[i] = template;
-            System.out.println(template);
-        }
-        return result;
+        } while (f);
+        return goodCookie;
     }
 
 
-    static String readCookie() {
+    static String flushCookie(HttpHost proxy) {
+        logger.info("重新获取Cookie!!!!!");
         Set<String> newCookieSet = new HashSet<>();
         HttpClientBuilder create = HttpClientBuilder.create();
         CloseableHttpClient client = create.build();
@@ -666,6 +550,11 @@ public class Crawler {
         }
         String cookie = newCookie.toString();
         logger.info("new Cookie : {}", cookie);
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return cookie;
     }
 
