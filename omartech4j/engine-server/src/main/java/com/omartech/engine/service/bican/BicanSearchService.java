@@ -264,15 +264,16 @@ public class BicanSearchService extends ADataService {
     @Override
     public JobResponse searchJobs(JobRequest req) throws TException {
         String createdAt = req.getCreatedAt();
-        createdAt = "2015-01-10";
         int limit = req.getLimit();
         int offset = req.getOffset();
         String word = req.getWord();
         String jobType = req.getJobType();
         String publishDate = req.getPublishDate();
+        String area = req.getArea();
         JobResponse jobResponse = new JobResponse();
         jobResponse.setOffset(offset);
         jobResponse.setWord(word);
+        jobResponse.setArea(area);
         List<Job> jobs = new ArrayList<>();
         if (!StringUtils.isEmpty(createdAt)) {//按日期查找
             Connection connection = fetchConnection(CAMPUS);
@@ -282,7 +283,11 @@ public class BicanSearchService extends ADataService {
             } else {
                 sql += " and jobType != '实习'";
             }
+            if (!StringUtils.isEmpty(area)) {
+                sql += " and area like '%" + area+"%' ";
+            }
             sql += "order by title LIMIT ?, ?";
+            System.out.println(sql);
             try (
                     PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ) {
@@ -319,7 +324,7 @@ public class BicanSearchService extends ADataService {
         }
         jobResponse.setJobs(jobs);
         jobResponse.setTotal(jobs.size());
-        logger.info("search createdAt:{}, publishDate:{}, offset:{}, limit:{}, jobType:{}, jobs:{}", new String[]{createdAt, publishDate, offset + "", limit + "", jobType, jobs.size() + ""});
+        logger.info("search createdAt:{}, publishDate:{}, area:{}, offset:{}, limit:{}, jobType:{}, jobs:{}", new String[]{createdAt, publishDate, area, offset + "", limit + "", jobType, jobs.size() + ""});
         return jobResponse;
     }
 

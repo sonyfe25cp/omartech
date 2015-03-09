@@ -183,6 +183,7 @@ struct JobRequest{
   4: string publishDate,
   5: string createdAt,
   6: string jobType,
+  7: string area,//地区
 }
 
 struct JobResponse{
@@ -190,6 +191,7 @@ struct JobResponse{
   2: i32 total,
   3: list<Job> jobs,
   4: i32 offset,
+  5: string area,
 }
 
 service DataService{
