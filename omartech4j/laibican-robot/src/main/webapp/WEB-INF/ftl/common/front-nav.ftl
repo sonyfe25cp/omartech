@@ -9,13 +9,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">来比惨</a>
+            <a class="navbar-brand" href="/">来比惨</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/bican">比惨</a></li>
                 <li><a href="/xiaohua">笑话</a></li>
-                <li><a href="/beauties">图片</a></li>
+                <#--<li><a href="/beauties">图片</a></li>-->
             <#--<li class="dropdown">-->
             <#--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown-->
             <#--<span class="caret"></span></a>-->

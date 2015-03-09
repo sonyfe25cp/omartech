@@ -74,7 +74,7 @@ public class CenterService {
         if (query.contains("求签")) {
 //            replyMessage = fetchBakUpMsg("http://www.laibican.com/sactivity/yaoqian.html");
             replyMessage = fetchYaoqianMsg();
-        } else if (query.startsWith("没了")) {
+        } else if (query.startsWith("没了") || query.startsWith("没有然后'")) {
             replyMessage = fetchBakUpMsg("噢...");
         } else if (query.startsWith("相亲宝典")) {
             replyMessage = fetchXiangqin();
@@ -592,11 +592,12 @@ public class CenterService {
         return articleReply;
     }
 
-    public JobResponse findJobsToday(String today, boolean intern, int offset, int limit) {
+    public JobResponse findJobsToday(String today, boolean intern, String area, int offset, int limit) {
         JobRequest req = new JobRequest();
         req.setOffset(offset);
         req.setLimit(limit);
         req.setCreatedAt(today);
+        req.setArea(area);
         if(intern) {
             req.setJobType("实习");
         }

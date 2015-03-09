@@ -9,6 +9,7 @@ import com.omartech.laibicanRobot.model.reply.ArticleReplyItem;
 import com.omartech.laibicanRobot.model.reply.NormalReply;
 import com.omartech.laibicanRobot.model.reply.ReplyMessage;
 import com.omartech.laibicanRobot.service.CenterService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +74,7 @@ public class JobsAction extends AWeixinAction {
         String content = textMessage.getContent();
         if (content.equals("today")) {
             String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
-            JobResponse jobsToday = centerService.findJobsToday(today, false, 0, 30);
+            JobResponse jobsToday = centerService.findJobsToday(today, false, "", 0, 30);
             if (jobsToday != null) {
                 ArticleReply replyMessage = new ArticleReply();
                 ArticleReplyItem articleReplyItem = new ArticleReplyItem();
@@ -95,17 +96,19 @@ public class JobsAction extends AWeixinAction {
     @RequestMapping("/today")
     public ModelAndView todayJobs(
             @RequestParam(required = false, defaultValue = "1") int pageNo,
+            @RequestParam(required = false, defaultValue = "") String area,
             @RequestParam(required = false, defaultValue = "false") boolean intern
-            ) {
+    ) {
         int limit = 30;
         int offset = (pageNo - 1) * limit;
         String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
-        JobResponse jobsToday = centerService.findJobsToday(today, intern, offset, limit);
+        JobResponse jobsToday = centerService.findJobsToday(today, intern, area, offset, limit);
         ModelAndView modelAndView = new ModelAndView("/jobs/list");
         if (jobsToday != null && jobsToday.getJobs() != null) {
             List<Job> jobs = jobsToday.getJobs();
             modelAndView.addObject("jobs", jobs);
         }
+        modelAndView.addObject("area", area);
         modelAndView.addObject("pageNo", pageNo);
         modelAndView.addObject("pageSize", limit);
         modelAndView.addObject("today", today);

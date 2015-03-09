@@ -161,14 +161,14 @@ public abstract class AWeixinAction {
                 tuijian.setDescription("比惨是国内首家交流各种悲剧的平台~");
                 articleReply.addArticleReplyItem(tuijian);
                 break;
-            case Jobs:
+            case Jobs://招聘模块暂时不用api了
                 logger.info("sorry for jobs");
-                ArticleReplyItem tuijian2 = new ArticleReplyItem();
-                tuijian2.setTitle("抱歉，小编还在开发，推荐您个好玩的消消气");
-                tuijian2.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201453464&idx=2&sn=efa7f728eacde03f0dce2e63e601a215#rd");
-                tuijian2.setPicUrl("http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbgv9RJ2TDR9UDfajtZlATUpy2QS10BXzW4lHaiaJtHXicT53LAho2NKTVysaNyjpGO0as1RRtwQuhlA/640?tp=webp");
-                tuijian2.setDescription("比惨是国内首家交流各种悲剧的平台~");
-                articleReply.addArticleReplyItem(tuijian2);
+//                ArticleReplyItem tuijian2 = new ArticleReplyItem();
+//                tuijian2.setTitle("抱歉，小编还在开发，推荐您个好玩的消消气");
+//                tuijian2.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201453464&idx=2&sn=efa7f728eacde03f0dce2e63e601a215#rd");
+//                tuijian2.setPicUrl("http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbgv9RJ2TDR9UDfajtZlATUpy2QS10BXzW4lHaiaJtHXicT53LAho2NKTVysaNyjpGO0as1RRtwQuhlA/640?tp=webp");
+//                tuijian2.setDescription("比惨是国内首家交流各种悲剧的平台~");
+//                articleReply.addArticleReplyItem(tuijian2);
                 break;
             default:
                 logger.info("what's app ? {}");
