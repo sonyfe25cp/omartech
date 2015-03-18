@@ -73,18 +73,21 @@ public class ProxyClient {
         String url = "http://" + ip + ":" + port + "/" + pageNo;
         port = (port == 0 ? 80 : port);
         HttpClientBuilder create = HttpClientBuilder.create();
+        HttpGet httpGet = new HttpGet(url);
         try (CloseableHttpClient client = create.build();) {
-            HttpGet httpGet = new HttpGet(url);
-            CloseableHttpResponse response = client.execute(httpGet);
-            String json = DefetcherUtils.toString(response);
-            if (!StringUtils.isEmpty(json)) {
-                proxies = gson.fromJson(json, new TypeToken<List<Proxy>>() {
-                }.getType());
+            try (CloseableHttpResponse response = client.execute(httpGet);) {
+                String json = DefetcherUtils.toString(response);
+                if (!StringUtils.isEmpty(json)) {
+                    proxies = gson.fromJson(json, new TypeToken<List<Proxy>>() {
+                    }.getType());
+                }
             }
         } catch (HttpHostConnectException e1) {
+            httpGet.abort();
             logger.error("HttpHostConnectException error");
         } catch (IOException e) {
             logger.error("HttpHostConnectException error");
+            httpGet.abort();
         }
         logger.info("fetch {}, get {} proxies", url, proxies.size());
         return proxies;

@@ -11,6 +11,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +29,6 @@ public class Spider {
     static ConcurrentLinkedQueue<HttpHost> queue = new ConcurrentLinkedQueue<>();
 
     static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36";
-
-    static final boolean userProxy = false;
 
     static final int MaxTimes = 3;
 
@@ -56,12 +55,11 @@ public class Spider {
         try {
             get = new HttpGet(url);
         } catch (Exception e) {
+            get.abort();
             return object;
         }
         HttpClientBuilder create = HttpClientBuilder.create();
         CloseableHttpClient client = create.build();
-
-//        CloseableHttpClient client = HttpClients.custom().setDefaultCookieStore(new BasicCookieStore()).build();
 
         RequestConfig.Builder config = RequestConfig.custom().setSocketTimeout(15000)
                 .setConnectTimeout(15000).setRedirectsEnabled(false);
@@ -70,7 +68,7 @@ public class Spider {
         if (headers == null || headers.size() == 0) {
             get.setHeader("Accept", "textml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
             get.setHeader("Accept-Language", "zh-cn,zh;q=0.5");
-            get.setHeader("Connection", "keep-alive");
+            get.setHeader("Connection", "close");//origin is keep-alive
             get.setHeader("Accept-Encoding", "gzip");
             get.setHeader("Proxy-Connection", "keep-alive");
         } else {
@@ -81,51 +79,34 @@ public class Spider {
         get.setHeader("Host", findHost(url));
 
         get.setHeader("Referer", refer == null ? BAIDUREFER : refer);
-        try {
 
+        try {
             HttpResponse response = client.execute(get);
+
             Header[] allHeaders = response.getAllHeaders();
             int statusCode = response.getStatusLine().getStatusCode();
             logger.debug("{} -- statusCode : {}", url, statusCode);
-            switch (statusCode) {
-                case 200:
-                    object.setStatusCode(200);
-                    String html = DefetcherUtils.toString(response);
-                    object.setHtml(html);
-                    object.setUrl(url);
-                    object.setRefer(refer);
-                    break;
-                case 301:
-                    logger.info("301 -- {}", url);
-                    object.setStatusCode(301);
-                    for (Header header : allHeaders) {
-                        if (header.getName().equalsIgnoreCase("Location")) {
-                            logger.info("redirect to {}", header.getValue());
-                            object.setRedirectUrl(header.getValue());
-                        }
+            if (statusCode == 200) {
+                String html = DefetcherUtils.toString(response);
+                object.setStatusCode(200);
+                object.setHtml(html);
+                object.setUrl(url);
+                object.setRefer(refer);
+            } else {
+                logger.info("statusCode : {} -- {}", statusCode, url);
+                object.setStatusCode(statusCode);
+                for (Header header : allHeaders) {
+                    if (header.getName().equalsIgnoreCase("Location")) {
+                        logger.info("redirect to {}", header.getValue());
+                        object.setRedirectUrl(header.getValue());
                     }
-                    break;
-                case 302:
-                    for (Header header : allHeaders) {
-                        if (header.getName().equalsIgnoreCase("Location")) {
-                            logger.info("redirect to {}", header.getValue());
-                            object.setRedirectUrl(header.getValue());
-                        }
-                    }
-                    object.setStatusCode(302);
-                    logger.info("302 -- {}", url);
-                    break;
-                case 400:
-                    object.setStatusCode(400);
-                    logger.info("400 -- {}", url);
-                    break;
-                default:
-                    logger.info("status code : {}, url :{}", statusCode, url);
-                    break;
+                }
+                EntityUtils.consumeQuietly(response.getEntity());
             }
         } catch (Exception e) {
             logger.error("can't get this url: {}, with proxy: {}", url, proxy == null ? "no proxy"
                     : proxy.toHostString());
+            get.abort();
         }
         return object;
     }

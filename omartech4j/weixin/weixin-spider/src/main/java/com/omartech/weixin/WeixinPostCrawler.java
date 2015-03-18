@@ -42,23 +42,19 @@ public class WeixinPostCrawler {
     public static void main(String[] args) {
         WeixinPostCrawler wpc = new WeixinPostCrawler();
         wpc.download();
-
-//        String s = "http://mp.weixin.qq.com/s?__biz=MzA5Mjc1MzkwOA==&mid=205634729&idx=2&sn=423ba86e3eb5e1e3ab3fb031e50c9cdf&3rd=MzA3MDU4NTYzMw==&scene=6#rd";
-//        String s1 = reformUrl(s);
-//        System.out.println(s1);
-
     }
 
     String alreadyOver = "/tmp/postOver";
 
     public void download() {
         int offset = 0;
-        int batch = 10;
+        int batch = 1000;
         Connection connection = null;
 
 //        ThreadPoolExecutor executor = new ThreadPoolExecutor(cpu, cpu, 1, TimeUnit.DAYS,
 //                new ArrayBlockingQueue<Runnable>(cpu * 2),
 //                new ThreadPoolExecutor.CallerRunsPolicy());
+        logger.info("work with {} threads", cpu);
         try {
             File postOverFile = new File(alreadyOver);
             List<WeixinAccount> accounts = null;
@@ -80,10 +76,11 @@ public class WeixinPostCrawler {
                         new PostDownloadWorker(account).run();
 //                        executor.submit(new PostDownloadWorker(account));
                         FileUtils.write(postOverFile, "times: " + times + " id: " + id + "\n", true);
-                        offset = Math.max(offset, id);
                     }
+                    offset = offset + batch;
                 } else {
                     offset = 0;
+                    times++;
                 }
             }
         } catch (SQLException e) {
@@ -135,54 +132,54 @@ public class WeixinPostCrawler {
         }
     }
 
-    //    private void fetchAllPosts(WeixinAccount account, Connection connection) {
-//        int max = 0;
-//        int current = 1;
-//        boolean jump = false;
-//        do {
-//            HtmlObject jsonList = fetchJsonList(account, current);
-//
-//            if (jsonList != null && (!StringUtils.isEmpty(jsonList.getHtml()))) {
-//                String html = jsonList.getHtml();
-//                String jsons = html;//filter json from html
-//
-//                ResultJson resultJson = gson.fromJson(jsons, ResultJson.class);
-//                max = resultJson.totalPages;
-////                logger.info("max : {}", max);
-//                try {
-//                    List<WeixinPost> weixinPosts = parsePostsFromXML(resultJson);
-//                    int already = 0;
-//                    for (WeixinPost weixinPost : weixinPosts) {
-//                        weixinPost.setOpenId(account.getOpenId());
-//                        fetchWholePost(weixinPost);
-//                        boolean flag = DBService.insertOrUpdateWeixinPost(weixinPost, connection);
-//                        if (flag == false) {//jump logic
-//                            already++;
-//                        }
-//                    }
-//                    if (already == weixinPosts.size()) {
-//                        jump = true;
-//                    }
-//                } catch (DocumentException e) {
-//                    e.printStackTrace();
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            current++;
-//        } while (current < max && (!jump));
-//    }
-    private static void fetchTodayPosts(WeixinAccount account, Connection connection) {
+    private void fetchAllPosts(WeixinAccount account, Connection connection) {
+        int max = 0;
         int current = 1;
         boolean jump = false;
+        do {
+            HtmlObject jsonList = fetchJsonList(account, current);
+
+            if (jsonList != null && (!StringUtils.isEmpty(jsonList.getHtml()))) {
+                String html = jsonList.getHtml();
+                String jsons = html;//filter json from html
+
+                ResultJson resultJson = gson.fromJson(jsons, ResultJson.class);
+                max = resultJson.totalPages;
+//                logger.info("max : {}", max);
+                try {
+                    List<WeixinPost> weixinPosts = parsePostsFromXML(resultJson);
+                    int already = 0;
+                    for (WeixinPost weixinPost : weixinPosts) {
+                        weixinPost.setOpenId(account.getOpenId());
+                        fetchWholePost(weixinPost);
+                        boolean flag = DBService.insertOrUpdateWeixinPost(weixinPost, connection);
+                        if (flag == false) {//jump logic
+                            already++;
+                        }
+                    }
+                    if (already == weixinPosts.size()) {
+                        jump = true;
+                    }
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            current++;
+        } while (current < max && (!jump));
+    }
+
+    private static void fetchTodayPosts(WeixinAccount account, Connection connection) {
+        int current = 1;
         HtmlObject jsonList = fetchJsonList(account, current);
 
         if (jsonList != null && (!StringUtils.isEmpty(jsonList.getHtml()))) {
             String html = jsonList.getHtml();
             String jsons = html;//filter json from html
 
-            ResultJson resultJson = gson.fromJson(jsons, ResultJson.class);
             try {
+                ResultJson resultJson = gson.fromJson(jsons, ResultJson.class);
                 List<WeixinPost> weixinPosts = parsePostsFromXML(resultJson);
                 for (WeixinPost weixinPost : weixinPosts) {
                     boolean postExist = DBService.isPostExist(weixinPost, connection);
@@ -190,12 +187,12 @@ public class WeixinPostCrawler {
                         weixinPost.setOpenId(account.getOpenId());
                         fetchWholePost(weixinPost);
                         weixinPost.setCreatedAt(DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
-                        DBService.insertOrUpdateWeixinPost(weixinPost, connection);
+                        DBService.insertWeixinPost(weixinPost, connection);
                     }
                 }
             } catch (DocumentException e) {
                 e.printStackTrace();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -236,18 +233,18 @@ public class WeixinPostCrawler {
         return posts;
     }
 
+    static String CONNECTIONSTATUS = "close";
+
     private static void fetchWholePost(WeixinPost weixinPost) {
         String url = weixinPost.getUrl();
-        System.err.println("befor:" + url);
         url = reformUrl(url);
-        System.err.println(url);
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
         headers.put("Accept-Encoding", "gzip, deflate, sdch");
         headers.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.6");
         headers.put("Cache-Control", "no-cache");
-        headers.put("Connection", "keep-alive");
+        headers.put("Connection", CONNECTIONSTATUS);
         headers.put("Host", "mp.weixin.qq.com");
         headers.put("Pragma", "no-cache");
         headers.put("User-Agent", UA_WEIXIN);
@@ -278,7 +275,7 @@ public class WeixinPostCrawler {
         }
     }
 
-    static String goodCookie = Crawler.readCookie();
+    static String goodCookie = WeixinAccountCrawler.readCookie();
 
     private static HtmlObject fetchJsonList(WeixinAccount account, int current) {
 
@@ -292,7 +289,7 @@ public class WeixinPostCrawler {
             header.put("Accept-Encoding", "gzip, deflate, sdch");
             header.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.6");
             header.put("Cache-Control", "no-cache");
-            header.put("Connection", "keep-alive");
+            header.put("Connection", CONNECTIONSTATUS);
             header.put("Host", "weixin.sogou.com");
             header.put("Pragma", "no-cache");
             header.put("Cookie", goodCookie);
@@ -307,8 +304,12 @@ public class WeixinPostCrawler {
             object = Spider.fetchPage(url, header, refer);
             if (object != null && (!StringUtils.isEmpty(object.getHtml()))) {
                 String html = object.getHtml();
-                String jsonStr = html.substring(html.indexOf("{"), html.lastIndexOf("}") + 1);
-                object.setHtml(jsonStr);
+                int ind = html.indexOf("{");
+                int lastIndexOf = html.lastIndexOf("}");
+                if (ind != -1 && lastIndexOf != -1) {
+                    String jsonStr = html.substring(ind, lastIndexOf + 1);
+                    object.setHtml(jsonStr);
+                }
             }
             switch (object.getStatusCode()) {
                 case 200:
@@ -316,7 +317,7 @@ public class WeixinPostCrawler {
                     break;
                 default:
                     object = null;
-                    goodCookie = Crawler.readCookie();
+                    goodCookie = WeixinAccountCrawler.readCookie();
                     break;
             }
             times++;

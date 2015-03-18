@@ -2,13 +2,9 @@ package com.omartech.weixin;
 
 import cn.techwolf.data.gen.HtmlObject;
 import cn.techwolf.data.gen.WeixinAccount;
-import cn.techwolf.data.gen.WeixinPost;
 import com.google.gson.Gson;
-import com.omartech.proxy.proxy_client.ProxyClient;
 import com.omartech.weixin.service.DBService;
 import com.techwolf.omartech_utils.DBUtils;
-import org.ansj.domain.Term;
-import org.ansj.splitWord.analysis.ToAnalysis;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -18,8 +14,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -42,11 +36,11 @@ import java.util.concurrent.TimeUnit;
  * Date: 25/10/14
  * Time: 10:58 AM
  */
-public class Crawler {
-    static Logger logger = LoggerFactory.getLogger(Crawler.class);
+public class WeixinAccountCrawler {
+    static Logger logger = LoggerFactory.getLogger(WeixinAccountCrawler.class);
 
     public static void main(String[] args) {
-        Crawler crawler = new Crawler();
+        WeixinAccountCrawler crawler = new WeixinAccountCrawler();
         crawler.downloadAccounts();
 
 //        createPairUID();

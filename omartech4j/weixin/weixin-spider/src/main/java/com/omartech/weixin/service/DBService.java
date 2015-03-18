@@ -20,7 +20,7 @@ public class DBService {
 
 
     public static List<WeixinAccount> findWeixinAccounts(int offset, int limit, Connection connection) throws SQLException {
-        String sql = "SELECT id, title, name, logo, erweima, description, weixinrenzheng, isOffical, isLive, openId FROM weixinAccount where id > ? LIMIT ? ";
+        String sql = "SELECT id, title, name, logo, erweima, description, weixinrenzheng, isOffical, isLive, openId FROM weixinAccount where isLive = 1 and isOffical = 1 LIMIT ?,? ";
         List<WeixinAccount> objects = new ArrayList<>();
         PreparedStatement psmt = connection.prepareStatement(sql);
         psmt.setInt(1, offset);
