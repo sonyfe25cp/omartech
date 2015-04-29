@@ -1,4 +1,4 @@
-package com.techwolf.omartech_utils;
+package com.omartech.utils;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -21,9 +21,9 @@ public class AutoCreateSql {
 
     public static void main(String[] args) {
         AutoCreateSql acs = new AutoCreateSql();
-        acs.createInsertFromSql("/tmp/jd.sq");
+//        acs.createInsertFromSql("/tmp/jd.sq");
 //        acs.createSelectFromBean("/tmp/jd.b", true);
-//        acs.createSelectFromSql("/tmp/r1.sql", true);
+        acs.createSelectFromSql("/tmp/ac.sql", true);
     }
 
     void createSelectFromBean(String path, boolean isBean) {

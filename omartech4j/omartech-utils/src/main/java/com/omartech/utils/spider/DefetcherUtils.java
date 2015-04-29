@@ -1,4 +1,4 @@
-package com.techwolf.omartech_utils.spider;
+package com.omartech.utils.spider;
 
 import static java.lang.Math.min;
 

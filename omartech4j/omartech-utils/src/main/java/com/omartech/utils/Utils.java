@@ -1,4 +1,4 @@
-package com.techwolf.omartech_utils;
+package com.omartech.utils;
 
 
 import org.apache.commons.io.FileUtils;

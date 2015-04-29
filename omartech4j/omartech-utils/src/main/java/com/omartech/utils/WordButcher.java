@@ -1,5 +1,5 @@
 
-package com.techwolf.omartech_utils;
+package com.omartech.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

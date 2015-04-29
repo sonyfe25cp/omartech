@@ -5,10 +5,23 @@
 
     <groupId>com.omartech</groupId>
     <artifactId>omartech-utils</artifactId>
-    <version>1.0</version>
+    <version>1.2-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>omartech-utils</name>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Internal Release Repository</name>
+            <url>http://maven.omartech.com:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Internal Snapshot Repository</name>
+            <url>http://maven.omartech.com:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -21,8 +34,13 @@
             <artifactId>httpclient</artifactId>
             <version>4.3.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.ansj</groupId>
+            <artifactId>ansj_seg</artifactId>
+            <version>2.0.7</version>
+        </dependency>
     </dependencies>
+
 
     <build>
         <plugins>
@@ -57,10 +75,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
+                <version>2.7</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

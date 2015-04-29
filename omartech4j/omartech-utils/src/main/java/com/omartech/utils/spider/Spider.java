@@ -1,4 +1,4 @@
-package com.techwolf.omartech_utils.spider;
+package com.omartech.utils.spider;
 
 import cn.techwolf.data.gen.HtmlObject;
 import org.apache.http.HttpHost;
