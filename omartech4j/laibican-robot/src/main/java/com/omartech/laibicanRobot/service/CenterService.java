@@ -1,8 +1,6 @@
 package com.omartech.laibicanRobot.service;
 
-import ch.qos.logback.core.db.dialect.DBUtil;
-import cn.techwolf.data.gen.*;
-import cn.techwolf.data.utils.DBUtils;
+import com.omartech.data.gen.*;
 import com.omartech.engine.client.ClientException;
 import com.omartech.engine.client.DataClients;
 import com.omartech.laibicanRobot.filter.Rule;
@@ -11,13 +9,13 @@ import com.omartech.laibicanRobot.model.AppEnum;
 import com.omartech.laibicanRobot.model.QueryLog;
 import com.omartech.laibicanRobot.model.ReplyEnum;
 import com.omartech.laibicanRobot.model.User;
-import com.omartech.laibicanRobot.model.message.WeixinArticleMessage;
 import com.omartech.laibicanRobot.model.message.WeixinEventMessage;
 import com.omartech.laibicanRobot.model.message.WeixinTextMessage;
 import com.omartech.laibicanRobot.model.reply.ArticleReply;
 import com.omartech.laibicanRobot.model.reply.ArticleReplyItem;
 import com.omartech.laibicanRobot.model.reply.NormalReply;
 import com.omartech.laibicanRobot.model.reply.ReplyMessage;
+import com.omartech.utils.DBUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,10 +72,12 @@ public class CenterService {
         if (query.contains("求签")) {
 //            replyMessage = fetchBakUpMsg("http://www.laibican.com/sactivity/yaoqian.html");
             replyMessage = fetchYaoqianMsg();
-        } else if (query.startsWith("没了") || query.startsWith("没有然后'")) {
+        } else if (query.startsWith("没了") || query.startsWith("没有然后'") || query.startsWith("没有了") || query.startsWith("没啦")) {
             replyMessage = fetchBakUpMsg("噢...");
-        } else if (query.startsWith("相亲宝典")) {
+        } else if (query.contains("相亲宝典")) {
             replyMessage = fetchXiangqin();
+        } else if (query.contains("自动回复")) {
+            replyMessage = fetchBakUpMsg("哎，毕竟小编不能一天到晚守在电脑前。不过你发个照片，神龙会召唤小编的~");
         } else {
             replyMessage = matchFilter(query);
             if (replyMessage == null) {
@@ -166,23 +166,22 @@ public class CenterService {
                     } else {
                         title = content;
                     }
-//                    switch (articleType) {
+                    switch (articleType) {
 //                        case Xiaohua:
 //                            title = "笑话" + article.getId();
 //                            break;
-//                        case Bican:
-//                            title = "比惨" + article.getId();
-//                            break;
+                        case Bican:
+                            title = "【我好惨啊】" + title;
+                            break;
 //                        case Shudong:
 //                            title = "树洞" + article.getId();
 //                            break;
 //                        case Jobs:
 //                            title = "招聘" + article.getId();
 //                            break;
-//                        default:
-//                            title = article.getContent();
-//                            break;
-//                    }
+                        default:
+                            title = title;
+                    }
                 }
                 articleReplyItem.setTitle(title);
                 articleReplyItem.setDescription(article.content);
@@ -598,7 +597,7 @@ public class CenterService {
         req.setLimit(limit);
         req.setCreatedAt(today);
         req.setArea(area);
-        if(intern) {
+        if (intern) {
             req.setJobType("实习");
         }
         JobResponse jobResponse = null;

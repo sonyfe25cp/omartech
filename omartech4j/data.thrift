@@ -1,4 +1,4 @@
-namespace java cn.techwolf.data.gen
+namespace java com.omartech.data.gen
 
 // thrift -gen python data.thrift
 // thrift -gen java data.thrift
@@ -25,6 +25,7 @@ struct ArticleRequest{
   3: i32 limit,
   4: list<i64> ids,
   5: ArticleType articleType,
+  6: bool random,//随机一个
 }
 
 struct ArticleResponse{

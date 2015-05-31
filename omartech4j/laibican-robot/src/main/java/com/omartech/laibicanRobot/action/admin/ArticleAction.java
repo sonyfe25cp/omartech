@@ -1,9 +1,9 @@
 package com.omartech.laibicanRobot.action.admin;
 
-import cn.techwolf.data.gen.Article;
-import cn.techwolf.data.gen.ArticleRequest;
-import cn.techwolf.data.gen.ArticleResponse;
-import cn.techwolf.data.gen.ArticleType;
+import com.omartech.data.gen.Article;
+import com.omartech.data.gen.ArticleRequest;
+import com.omartech.data.gen.ArticleResponse;
+import com.omartech.data.gen.ArticleType;
 import com.omartech.engine.client.ClientException;
 import com.omartech.engine.client.DataClients;
 import com.omartech.laibicanRobot.service.CenterService;

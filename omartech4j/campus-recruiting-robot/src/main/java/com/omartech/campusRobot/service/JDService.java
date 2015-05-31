@@ -1,6 +1,6 @@
 package com.omartech.campusRobot.service;
 
-import cn.techwolf.data.gen.Job;
+import com.omartech.data.gen.Job;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

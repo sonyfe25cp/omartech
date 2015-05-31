@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import cn.techwolf.data.gen.Job;
+import com.omartech.data.gen.Job;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +63,8 @@ public class BITUnionPoster {
             groupMap.put(site, tmpList);
         }
 
-        List<Job> qt = groupMap.get("其他");
-        logger.info("qt : {}", qt.size());
+//List<Job> qt = groupMap.get("其他");
+//logger.info("qt : {}", qt.size());
 
         List<Entry<String, List<Job>>> sortList = new ArrayList<>(groupMap.entrySet());
         Collections.sort(sortList, new Comparator<Entry<String, List<Job>>>() {

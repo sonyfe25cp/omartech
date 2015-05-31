@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import cn.techwolf.data.gen.Job;
 import com.omartech.campusRobot.bbsrobot.BITUnionRobot;
 import com.omartech.campusRobot.service.JDService;
+import com.omartech.data.gen.Job;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

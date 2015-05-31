@@ -1,27 +1,16 @@
 package com.omartech.laibicanRobot.action;
 
-import com.omartech.engine.client.ClientException;
 import com.omartech.laibicanRobot.model.AppEnum;
 import com.omartech.laibicanRobot.model.message.WeixinTextMessage;
-import com.omartech.laibicanRobot.model.reply.ArticleReply;
-import com.omartech.laibicanRobot.model.reply.ArticleReplyItem;
-import com.omartech.laibicanRobot.model.reply.NormalReply;
 import com.omartech.laibicanRobot.model.reply.ReplyMessage;
-import com.omartech.laibicanRobot.service.CenterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.cert.Certificate;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by omar on 14-12-17.

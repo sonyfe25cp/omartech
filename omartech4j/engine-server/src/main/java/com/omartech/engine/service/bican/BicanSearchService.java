@@ -1,7 +1,7 @@
 package com.omartech.engine.service.bican;
 
-import cn.techwolf.data.gen.*;
 import cn.techwolf.data.utils.DBUtils;
+import com.omartech.data.gen.*;
 import com.omartech.engine.service.ADataService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
@@ -104,6 +104,8 @@ public class BicanSearchService extends ADataService {
 
                 logger.info(master.toString());
                 TopDocs topDocs = searcher.search(master, topN);
+                int totalHits = topDocs.totalHits;
+                response.setTotal(totalHits);
                 ScoreDoc[] scoreDocs = topDocs.scoreDocs;
                 int currentLength = scoreDocs.length;
                 if (currentLength > 0) {
@@ -124,7 +126,6 @@ public class BicanSearchService extends ADataService {
         }
         response.setArticles(articles);
         response.setKeyword(keyword);
-        response.setTotal(topN);//todo:fix this bug
         logger.info("return {} articles for {}", articles.size(), keyword);
         return response;
 
@@ -284,7 +285,7 @@ public class BicanSearchService extends ADataService {
                 sql += " and jobType != '实习'";
             }
             if (!StringUtils.isEmpty(area)) {
-                sql += " and area like '%" + area+"%' ";
+                sql += " and area like '%" + area + "%' ";
             }
             sql += "order by title LIMIT ?, ?";
             System.out.println(sql);

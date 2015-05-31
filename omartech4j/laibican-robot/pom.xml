@@ -14,13 +14,13 @@
         <dependency>
             <groupId>com.omartech</groupId>
             <artifactId>engine-client</artifactId>
-            <version>${project.version}</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>cn.techwolf.data</groupId>
-            <artifactId>data-utils</artifactId>
-            <version>1.1-SNOPSHOT</version>
+            <groupId>com.omartech</groupId>
+            <artifactId>omartech-utils</artifactId>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
 
         <!-- 添加对spring框架的依赖 -->

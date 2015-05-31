@@ -1,6 +1,6 @@
 package com.omartech.utils.spider;
 
-import cn.techwolf.data.gen.HtmlObject;
+import com.omartech.data.gen.HtmlObject;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;

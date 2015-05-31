@@ -1,6 +1,7 @@
 package com.omartech.engine.client;
 
-import cn.techwolf.data.gen.DataService;
+
+import com.omartech.data.gen.DataService;
 
 public class ThriftClient {
     public DataService.Client client;

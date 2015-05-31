@@ -17,10 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by omar on 14-12-17.
@@ -92,7 +90,7 @@ public abstract class AWeixinAction {
                 logger.info("find match");
                 if (replyMessage == null) {
                     logger.info("reply with default");
-                    replyMessage = CenterService.fetchBakUpMsg("嗯，然后呢？");
+                    //replyMessage = CenterService.fetchBakUpMsg("嗯，然后呢？");
                 }
                 break;
             case WeixinMessage.MESSAGE_TYPE_EVENT://新关注
@@ -122,6 +120,16 @@ public abstract class AWeixinAction {
             case WeixinMessage.MESSAGE_EVENT_VIEW://菜单视图
                 logger.info("menu view");
                 break;
+            case WeixinMessage.MESSAGE_TYPE_IMAGE:
+                logger.info("有妹子发照片来了~~");
+                replyMessage = CenterService.fetchBakUpMsg("神龙开始召唤小编.....若小编召唤失败，请再发一张增加成功几率~");
+                break;
+            case WeixinMessage.MESSAGE_TYPE_VIDEO:
+                replyMessage = CenterService.fetchBakUpMsg("哇，视频~~赞！可机器人看不懂，不如发个照片来召唤小编大人吧~");
+                break;
+            case WeixinMessage.MESSAGE_TYPE_VOICE:
+                replyMessage = CenterService.fetchBakUpMsg("唔...听不懂..要不要发个照片来召唤小编呢？");
+                break;
             default:
                 logger.info("msg type {} is not handled", type);
                 break;
@@ -130,36 +138,47 @@ public abstract class AWeixinAction {
         return replyMessage;
     }
 
+
+    static final String bicanIntroUrl = "http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201451846&idx=1&sn=d7e0f0492352ce934bdfbc49bea6e809#rd";
+
     ReplyMessage fetchSubscribeMsg(WeixinSubscribeMessage message) {
         String url = "http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=202676955&idx=1&sn=f3d509a5b37801104a48d4c9ad7b8cdd#rd";//新年抽签
 //        String url = "www.laibican.com/sactivity/yaoqian.html";//新年抽签
         String pic = "http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbg9ziajFTlJoJ2PIlFQqAbsOibvGvkQJbeKLRaU6LvyeH5pOS4VsY1lrNACibjuV3cYTTqIwRFOkB0oA/0?tp=webp";
-        ArticleReplyItem articleReplyItem = new ArticleReplyItem();
-        articleReplyItem.setUrl(url);
-        articleReplyItem.setPicUrl(pic);
-        articleReplyItem.setTitle("为2015抽一发幸运签吧！");
-        articleReplyItem.setDescription("2015羊年到，抽一卦幸运签，好运先知道，让朋友也来卜一下吧。");
+        ArticleReplyItem newyear = new ArticleReplyItem();
+        newyear.setUrl(url);
+        newyear.setPicUrl(pic);
+        newyear.setTitle("为2015抽一发幸运签吧！");
+        newyear.setDescription("2015羊年到，抽一卦幸运签，好运先知道，让朋友也来卜一下吧。");
 
         ArticleReply articleReply = new ArticleReply();
-        articleReply.addArticleReplyItem(articleReplyItem);
+//        articleReply.addArticleReplyItem(newyear);
 
         switch (message.getAppEnum()) {
             case Bican:
                 ArticleReplyItem bicanIntro = new ArticleReplyItem();
                 bicanIntro.setTitle("比惨是个什么公众号？");
-                bicanIntro.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201453464&idx=2&sn=efa7f728eacde03f0dce2e63e601a215#rd");
+                bicanIntro.setUrl(bicanIntroUrl);
                 bicanIntro.setPicUrl("http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbgv9RJ2TDR9UDfajtZlATUpy2QS10BXzW4lHaiaJtHXicT53LAho2NKTVysaNyjpGO0as1RRtwQuhlA/640?tp=webp");
                 bicanIntro.setDescription("比惨是国内首家交流各种悲剧的平台~");
                 articleReply.addArticleReplyItem(bicanIntro);
+
+                ArticleReplyItem howtoplay = new ArticleReplyItem();
+                howtoplay.setTitle("比惨公众号的玩法和说明");
+                howtoplay.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/Q2BricGyedbj1ooQVLX1FHu8REQgjj5H0tshtfg51rDZCibz82kPv6zFA0hKFZkS67w5x7Doeodg7hZBxcbEbbrA/0");
+                howtoplay.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=203856822&idx=1&sn=1bfee7b534503e4688be4969d3263e6f#rd");
+                howtoplay.setDescription("这里告诉你怎么玩死小编~");
+                articleReply.addArticleReplyItem(howtoplay);
                 break;
             case Hero:
                 logger.info("sorry for hero");
                 ArticleReplyItem tuijian = new ArticleReplyItem();
                 tuijian.setTitle("抱歉，小编还在开发，推荐您个好玩的消消气");
-                tuijian.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201453464&idx=2&sn=efa7f728eacde03f0dce2e63e601a215#rd");
+                tuijian.setUrl(bicanIntroUrl);
                 tuijian.setPicUrl("http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbgv9RJ2TDR9UDfajtZlATUpy2QS10BXzW4lHaiaJtHXicT53LAho2NKTVysaNyjpGO0as1RRtwQuhlA/640?tp=webp");
                 tuijian.setDescription("比惨是国内首家交流各种悲剧的平台~");
                 articleReply.addArticleReplyItem(tuijian);
+                articleReply.addArticleReplyItem(newyear);
                 break;
             case Jobs://招聘模块暂时不用api了
                 logger.info("sorry for jobs");

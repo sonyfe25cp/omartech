@@ -1,7 +1,7 @@
 package com.omartech.engine.service.bican;
 
-import cn.techwolf.data.gen.Article;
-import cn.techwolf.data.gen.ArticleType;
+import com.omartech.data.gen.Article;
+import com.omartech.data.gen.ArticleType;
 import com.omartech.engine.service.AIndexService;
 
 import java.sql.*;

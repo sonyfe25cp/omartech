@@ -1,7 +1,6 @@
 package com.omartech.engine.client;
 
-import cn.techwolf.data.gen.*;
-import com.google.gson.Gson;
+import com.omartech.data.gen.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ public class DataClients {
 
     private static final String[] REQUIRED_KEYS = new String[]{"ip", "agent"};
 
-    private final Gson gson = new Gson(); // thread safe
+//    private final Gson gson = new Gson(); // thread safe
 
 
     // auto generated code, do not edit
@@ -103,6 +102,7 @@ public class DataClients {
         }
         throw new ClientException(e);
     }
+
     // auto generated code, do not edit
     public JobResponse searchJobs(JobRequest req) throws ClientException {
         ThriftClient client = null;

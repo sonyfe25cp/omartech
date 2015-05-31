@@ -1,4 +1,4 @@
-package cn.techwolf.data.utils;
+package com.omartech.engine;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -21,12 +21,12 @@ public class AutoCreateSql {
 
     public static void main(String[] args) {
         AutoCreateSql acs = new AutoCreateSql();
-        acs.createInsertFromSql("/tmp/pro.sql");
-//        acs.createSelectFromBean("/tmp/edu_th");
+//        acs.createInsertFromSql("/tmp/pro.sql");
+        acs.createSelectFromBean("/tmp/kr.sql", false);
 //        acs.createSelectFromSql("/tmp/acc.sq", false);
     }
 
-    void createSelectFromBean(String path) {
+    void createSelectFromBean(String path, boolean pub) {
         StringBuilder sb = new StringBuilder();
         sb.append("String sql = \"select ");
         try {
@@ -49,7 +49,7 @@ public class AutoCreateSql {
             System.out.println("\twhile(rs.next()){");
             for (String line : lines) {
                 if (line.trim().length() > 0) {
-                    String[] split = line.split(" ");
+                    String[] split = line.replaceAll(" ", " ").trim().split(" ");
                     String type = split[1];
                     String variable = split[2].substring(0, split[2].indexOf(";"));
                     switch (type) {
@@ -63,7 +63,12 @@ public class AutoCreateSql {
                             System.out.println("something missed");
                             break;
                     }
-                    System.out.println("\t\tobject." + variable + " = " + variable + ";");
+                    if (pub) {
+                        System.out.println("\t\tobject." + variable + " = " + variable + ";");
+                    } else {
+                        System.out.println("\t\tobject.set" + headUpperCase(variable) + "(" + variable + ");");
+                    }
+
                 }
             }
             System.out.println("}");

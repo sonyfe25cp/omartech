@@ -1,15 +1,13 @@
 package com.omartech.laibicanRobot.action;
 
-import cn.techwolf.data.gen.Job;
-import cn.techwolf.data.gen.JobResponse;
+import com.omartech.data.gen.Job;
+import com.omartech.data.gen.JobResponse;
 import com.omartech.laibicanRobot.model.AppEnum;
 import com.omartech.laibicanRobot.model.message.WeixinTextMessage;
 import com.omartech.laibicanRobot.model.reply.ArticleReply;
 import com.omartech.laibicanRobot.model.reply.ArticleReplyItem;
 import com.omartech.laibicanRobot.model.reply.NormalReply;
 import com.omartech.laibicanRobot.model.reply.ReplyMessage;
-import com.omartech.laibicanRobot.service.CenterService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

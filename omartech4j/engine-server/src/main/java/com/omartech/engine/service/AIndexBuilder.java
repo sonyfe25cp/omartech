@@ -1,10 +1,12 @@
 package com.omartech.engine.service;
 
-import cn.techwolf.data.gen.Article;
-import cn.techwolf.data.gen.ArticleType;
+import com.omartech.data.gen.Article;
+import com.omartech.data.gen.ArticleType;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;

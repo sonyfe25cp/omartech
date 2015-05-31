@@ -1,6 +1,6 @@
 package com.omartech.engine.service;
 
-import cn.techwolf.data.gen.*;
+import com.omartech.data.gen.*;
 import org.apache.thrift.TException;
 
 import java.io.IOException;

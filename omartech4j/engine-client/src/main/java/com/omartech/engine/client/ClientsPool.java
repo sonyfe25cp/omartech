@@ -1,6 +1,6 @@
 package com.omartech.engine.client;
 
-import cn.techwolf.data.gen.DataService;
+import com.omartech.data.gen.DataService;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
