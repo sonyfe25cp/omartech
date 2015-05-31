@@ -17,10 +17,8 @@ import java.util.List;
  * Time: 11:30 AM
  */
 public class DBService {
-
-
     public static List<WeixinAccount> findWeixinAccounts(int offset, int limit, Connection connection) throws SQLException {
-        String sql = "SELECT id, title, name, logo, erweima, description, weixinrenzheng, isOffical, isLive, openId FROM weixinAccount where isLive = 1 and isOffical = 1 LIMIT ?,? ";
+        String sql = "SELECT id, title, name, logo, erweima, description, weixinrenzheng, isOffical, isLive, openId FROM weixinAccount LIMIT ?,? ";
         List<WeixinAccount> objects = new ArrayList<>();
         PreparedStatement psmt = connection.prepareStatement(sql);
         psmt.setInt(1, offset);
@@ -55,7 +53,43 @@ public class DBService {
         return objects;
     }
 
-    public static boolean isPostExist(WeixinPost post, Connection connection){
+    public static List<WeixinAccount> findWeixinAccountsOfficalAndLive(int offset, int limit, Connection connection) throws SQLException {
+        String sql = "SELECT id, title, name, logo, erweima, description, weixinrenzheng, isOffical, isLive, openId FROM weixinAccount WHERE isLive = 1 AND isOffical = 1 LIMIT ?,? ";
+        List<WeixinAccount> objects = new ArrayList<>();
+        PreparedStatement psmt = connection.prepareStatement(sql);
+        psmt.setInt(1, offset);
+        psmt.setInt(2, limit);
+        ResultSet rs = psmt.executeQuery();
+        while (rs.next()) {
+            WeixinAccount object = new WeixinAccount();
+            int id = rs.getInt("id");
+            object.id = id;
+            String title = rs.getString("title");
+            object.title = title;
+            String name = rs.getString("name");
+            object.name = name;
+            String logo = rs.getString("logo");
+            object.logo = logo;
+            String erweima = rs.getString("erweima");
+            object.erweima = erweima;
+            String description = rs.getString("description");
+            object.description = description;
+            String weixinrenzheng = rs.getString("weixinrenzheng");
+            object.weixinrenzheng = weixinrenzheng;
+            boolean isOffical = rs.getBoolean("isOffical");
+            object.offical = isOffical;
+            boolean isLive = rs.getBoolean("isLive");
+            object.live = isLive;
+            String openId = rs.getString("openId");
+            object.openId = openId;
+            objects.add(object);
+        }
+        rs.close();
+        psmt.close();
+        return objects;
+    }
+
+    public static boolean isPostExist(WeixinPost post, Connection connection) {
         WeixinPost weixinPost = findWeixinPostByUrl(post.getUrl(), connection);
         if (weixinPost == null) {
             return false;

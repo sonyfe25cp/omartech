@@ -107,6 +107,8 @@ public class Spider {
             logger.error("can't get this url: {}, with proxy: {}", url, proxy == null ? "no proxy"
                     : proxy.toHostString());
             get.abort();
+        } finally {
+            get.releaseConnection();
         }
         return object;
     }

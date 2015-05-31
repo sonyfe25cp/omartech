@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.omartech</groupId>
         <artifactId>weixin</artifactId>
-        <version>1.1-SNOPSHOT</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>weixin-spider</artifactId>

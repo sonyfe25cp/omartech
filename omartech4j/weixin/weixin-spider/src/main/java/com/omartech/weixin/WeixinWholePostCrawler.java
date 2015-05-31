@@ -30,9 +30,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by OmarTech on 15-1-29.
  */
-public class WeixinPostCrawler {
+public class WeixinWholePostCrawler {
 
-    static Logger logger = LoggerFactory.getLogger(WeixinPostCrawler.class);
+    static Logger logger = LoggerFactory.getLogger(WeixinWholePostCrawler.class);
 
     private int cpu = Runtime.getRuntime().availableProcessors();
     private static String UA_COMPUTER = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";
@@ -40,20 +40,20 @@ public class WeixinPostCrawler {
 
 
     public static void main(String[] args) {
-        WeixinPostCrawler wpc = new WeixinPostCrawler();
+        WeixinWholePostCrawler wpc = new WeixinWholePostCrawler();
         wpc.download();
     }
 
-    String alreadyOver = "/tmp/postOver";
+    String alreadyOver = "postOver_whole";
 
     public void download() {
         int offset = 0;
         int batch = 1000;
         Connection connection = null;
 
-//        ThreadPoolExecutor executor = new ThreadPoolExecutor(cpu, cpu, 1, TimeUnit.DAYS,
-//                new ArrayBlockingQueue<Runnable>(cpu * 2),
-//                new ThreadPoolExecutor.CallerRunsPolicy());
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(cpu, cpu, 1, TimeUnit.DAYS,
+                new ArrayBlockingQueue<Runnable>(cpu * 2),
+                new ThreadPoolExecutor.CallerRunsPolicy());
         logger.info("work with {} threads", cpu);
         try {
             File postOverFile = new File(alreadyOver);
@@ -68,14 +68,14 @@ public class WeixinPostCrawler {
                         con.remove();
                     }
                 } while (!dbflag);
-                accounts = DBService.findWeixinAccountsOfficalAndLive(offset, batch, connection);
+                accounts = DBService.findWeixinAccounts(offset, batch, connection);
                 logger.info("offset:{}, batch:{}, results:{}", new String[]{offset + "", batch + "", accounts.size() + ""});
                 if (accounts.size() != 0) {
                     for (WeixinAccount account : accounts) {
                         int id = account.getId();
-                        new PostDownloadWorker(account).run();
-//                        executor.submit(new PostDownloadWorker(account));
-                        FileUtils.write(postOverFile, "times: " + times + " id: " + id + "\n", true);
+//                        new PostDownloadWorker(account).run();
+                        executor.submit(new PostDownloadWorker(account));
+                        FileUtils.write(postOverFile, "times: " + times + " id: " + id + " at " + DateFormatUtils.format(new Date(), "yyyy-MM-dd hh:mm:ss") + "\n", true);
                     }
                     offset = offset + batch;
                 } else {
@@ -88,6 +88,8 @@ public class WeixinPostCrawler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
     static String key = "79cf83ea5128c3e55fd058ab5c932e52dfcbbead9cb440ebe8568f144d7ee118d044ad1c3c075553e51055b941bf0b97";
@@ -125,8 +127,7 @@ public class WeixinPostCrawler {
                     con.remove();
                 }
             } while (!dbflag);
-//            fetchAllPosts(account, connection);
-            fetchTodayPosts(account, connection);
+            fetchAllPosts(account, connection);
         }
     }
 
@@ -143,7 +144,6 @@ public class WeixinPostCrawler {
 
                 ResultJson resultJson = gson.fromJson(jsons, ResultJson.class);
                 max = resultJson.totalPages;
-//                logger.info("max : {}", max);
                 try {
                     List<WeixinPost> weixinPosts = parsePostsFromXML(resultJson);
                     int already = 0;
