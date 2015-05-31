@@ -1,4 +1,4 @@
-<#include "/common/head.ftl" >
+<#include "../common/head.ftl" >
 <h3>今日
 ${area}
 <#if intern>
@@ -95,4 +95,4 @@ ${area}
 <#else>
 木有啦
 </#if>
-<#include "/common/bottom.ftl" >
+<#include "../common/bottom.ftl" >

@@ -46,17 +46,21 @@
             <p>${article.content}</p>
         </fieldset>
         <div class="praise user_behavior">
-            <a class="js_useful" href="javascript:;" rel="follow" data-url="salary/useful.json" data-sid="21672"
-               data-type="salary"><i class="i i_mark_h"></i>&nbsp;这个比较惨(<span>0</span>)</a>
+            <a class="js_useful" href="javascript:;" rel="follow" data-url="/momoArticle" data-sid="${article.id}"
+               data-type="salary"><i class="i i_mark_h"></i>&nbsp;这个比较惨(<span>${article.hot}</span>)</a>
             <a href="javascript:;"><em>分享给朋友</em></a>
         </div>
     </#list>
+    </div>
 
+    <div class="set">
+        <div><a class="bt_orange" href="/daleitai">上一组</a></div>
+        <div><a class="bt_orange green" href="/daleitai">下一组</a></div>
     </div>
 </div>
 <#include "footer.ftl" >
 
-<a class="js_floatFooter floatFooter" href="/createArticle">
+<a class="js_floatFooter floatFooter" href="/createArticle?commentType=Bican">
     <em>我来讲个悲剧！</em>
 </a>
 
@@ -69,21 +73,6 @@
 <script src="/js/wap/zepto.js"></script>
 <script src="/js/wap/iscroll-lite.js"></script>
 <script src="/js/wap/m-kanzhun.js"></script>
-<script type="text/javascript">
-    document.querySelector('span.more').addEventListener('click', function (e) {
-        var details = this.parentNode.querySelector('span.show_details');
-
-        if (details) {
-            if (details.classList.contains('hidden')) {
-                this.innerHTML = '<i class="ml10">收起</i>';
-                details.classList.remove('hidden');
-            } else {
-                this.innerHTML = '... <i>展开</i>';
-                details.classList.add('hidden');
-            }
-        }
-    }, false);
-    $.setCompanyMenu(2);
-</script>
+<#include "../common/ba.ftl">
 </body>
 </html>

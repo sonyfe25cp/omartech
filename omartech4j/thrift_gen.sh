@@ -23,6 +23,7 @@ FILE="${DIR}/data.thrift"
 (cd weixin/weixin-web&& thrift -gen java ${FILE})
 (cd weixin/weixin-spider&& thrift -gen java ${FILE})
 
+(cd python-scripts && python gen_hooks.py --file ../data.thrift --mode gen-java > ../engine-client/src/main/java/com/omartech/engine/client/DataClients.java)
 
 if [[ $# -ne 0 ]]; then
     (cd thrift-router && ./gen.sh)

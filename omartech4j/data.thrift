@@ -9,6 +9,7 @@ enum ArticleType{
   Shudong = 3,
   Other = 4,
   Jobs = 5,
+  Beauty = 6,
 }
 
 struct Article{
@@ -17,6 +18,7 @@ struct Article{
   3: string content,
   4: string createdAt,
   5: ArticleType articleType,
+  6: i32 hot,//热度
 }
 
 struct ArticleRequest{
@@ -200,6 +202,10 @@ service DataService{
   ArticleResponse searchArticle(1: ArticleRequest req) //查询文章
 
   ArticleResponse insertArticle(1: Article article) //保存文章
+  
+  ArticleResponse increaseArticleHot(1: Article article) //升温
+
+  ArticleResponse decreaseArticleHot(1: Article article) //降温
 
   BeautyResponse searchBeauty(1: BeautyRequest req)
 

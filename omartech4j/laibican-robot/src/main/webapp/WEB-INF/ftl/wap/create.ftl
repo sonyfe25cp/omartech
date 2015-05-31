@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>评公司-1</title>
+    <title>我要讲故事--来比惨</title>
     <link rel="stylesheet" href="/css/wap/base.css"/>
     <link rel="stylesheet" href="/css/wap/ugc_page.css">
 </head>
@@ -33,6 +33,7 @@
 
                 <div class="divTextarea_1 bdefault mt10 clear">
                     <textarea name="title" placeholder="详细的讲讲你的故事吧" rows="10" maxlength="64"></textarea>
+                    <input name="commentType" type="hidden" value="${commentType}"/>
                     <em class="js_error error" style="display:none">少侠，你这故事太短..重讲！</em>
                 </div>
 
@@ -45,6 +46,7 @@
     </form>
 </div>
 <#include "footer.ftl">
+<#include "../common/ba.ftl">
 <script src="/js/wap/jquery-2.1.1.min.js"></script>
 <script src="/js/wap/m-kanzhun.js"></script>
 </body>

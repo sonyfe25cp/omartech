@@ -90,7 +90,7 @@ public abstract class AWeixinAction {
                 logger.info("find match");
                 if (replyMessage == null) {
                     logger.info("reply with default");
-                    //replyMessage = CenterService.fetchBakUpMsg("嗯，然后呢？");
+                    replyMessage = CenterService.fetchBakUpMsg("唔，要不到网站上聊聊？http://laibican.com");
                 }
                 break;
             case WeixinMessage.MESSAGE_TYPE_EVENT://新关注
@@ -142,14 +142,14 @@ public abstract class AWeixinAction {
     static final String bicanIntroUrl = "http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201451846&idx=1&sn=d7e0f0492352ce934bdfbc49bea6e809#rd";
 
     ReplyMessage fetchSubscribeMsg(WeixinSubscribeMessage message) {
-        String url = "http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=202676955&idx=1&sn=f3d509a5b37801104a48d4c9ad7b8cdd#rd";//新年抽签
+//        String url = "http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=202676955&idx=1&sn=f3d509a5b37801104a48d4c9ad7b8cdd#rd";//新年抽签
 //        String url = "www.laibican.com/sactivity/yaoqian.html";//新年抽签
-        String pic = "http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbg9ziajFTlJoJ2PIlFQqAbsOibvGvkQJbeKLRaU6LvyeH5pOS4VsY1lrNACibjuV3cYTTqIwRFOkB0oA/0?tp=webp";
-        ArticleReplyItem newyear = new ArticleReplyItem();
-        newyear.setUrl(url);
-        newyear.setPicUrl(pic);
-        newyear.setTitle("为2015抽一发幸运签吧！");
-        newyear.setDescription("2015羊年到，抽一卦幸运签，好运先知道，让朋友也来卜一下吧。");
+//        String pic = "http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbg9ziajFTlJoJ2PIlFQqAbsOibvGvkQJbeKLRaU6LvyeH5pOS4VsY1lrNACibjuV3cYTTqIwRFOkB0oA/0?tp=webp";
+//        ArticleReplyItem newyear = new ArticleReplyItem();
+//        newyear.setUrl(url);
+//        newyear.setPicUrl(pic);
+//        newyear.setTitle("为2015抽一发幸运签吧！");
+//        newyear.setDescription("2015羊年到，抽一卦幸运签，好运先知道，让朋友也来卜一下吧。");
 
         ArticleReply articleReply = new ArticleReply();
 //        articleReply.addArticleReplyItem(newyear);
@@ -169,16 +169,23 @@ public abstract class AWeixinAction {
                 howtoplay.setUrl("http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=203856822&idx=1&sn=1bfee7b534503e4688be4969d3263e6f#rd");
                 howtoplay.setDescription("这里告诉你怎么玩死小编~");
                 articleReply.addArticleReplyItem(howtoplay);
+
+                ArticleReplyItem website = new ArticleReplyItem();
+                website.setTitle("比惨的官方网站");
+                website.setPicUrl("http://laibican.com/images/wap/laibican.jpg");
+                website.setUrl("http://laibican.com");
+                website.setDescription("这可是国内首家比惨平台哦！");
+                articleReply.addArticleReplyItem(website);
                 break;
             case Hero:
                 logger.info("sorry for hero");
                 ArticleReplyItem tuijian = new ArticleReplyItem();
                 tuijian.setTitle("抱歉，小编还在开发，推荐您个好玩的消消气");
-                tuijian.setUrl(bicanIntroUrl);
+                tuijian.setUrl("http://laibican.com");
                 tuijian.setPicUrl("http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbgv9RJ2TDR9UDfajtZlATUpy2QS10BXzW4lHaiaJtHXicT53LAho2NKTVysaNyjpGO0as1RRtwQuhlA/640?tp=webp");
                 tuijian.setDescription("比惨是国内首家交流各种悲剧的平台~");
                 articleReply.addArticleReplyItem(tuijian);
-                articleReply.addArticleReplyItem(newyear);
+//                articleReply.addArticleReplyItem(newyear);
                 break;
             case Jobs://招聘模块暂时不用api了
                 logger.info("sorry for jobs");

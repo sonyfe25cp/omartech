@@ -102,5 +102,6 @@
 <script src="/js/wap/utils/autocomplete.js"></script>
 <script src="/js/wap/m-kanzhun.js"></script>
 <script src="/js/wap/slide-menu.js"></script>
+<#include "../common/ba.ftl">
 </body>
 </html>

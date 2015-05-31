@@ -27,7 +27,7 @@ public class BicanDataService {
     }
 
     public static Article findById(long id, Connection connection) {
-        String sql = "SELECT title, content, createdAt, appName FROM article WHERE id = ? ";
+        String sql = "SELECT title, content, createdAt, appName, hot FROM article WHERE id = ? ";
         Article object = null;
         try {
             PreparedStatement psmt = connection.prepareStatement(sql);
@@ -44,6 +44,8 @@ public class BicanDataService {
                 String appName = rs.getString("appName");
                 ArticleType articleType = ArticleType.valueOf(appName);
                 object.setArticleType(articleType);
+                int hot = rs.getInt("hot");
+                object.setHot(hot);
                 object.setId(id);
             }
             rs.close();
@@ -54,9 +56,18 @@ public class BicanDataService {
         return object;
     }
 
+    public static void updateArticleHot(long id, int hot, Connection connection) throws SQLException {
+        String sql = "UPDATE article SET hot = ? WHERE id = ?";
+        try (PreparedStatement psmt = connection.prepareStatement(sql)) {
+            psmt.setInt(1, hot);
+            psmt.setLong(2, id);
+            psmt.executeUpdate();
+        }
+    }
+
 
     public static List<Article> findArticles(int offset, int limit, Connection connection) {
-        String sql = "SELECT id, title, content, createdAt, appName FROM article ORDER BY id desc LIMIT ?,? ";
+        String sql = "SELECT id, title, content, createdAt, appName FROM article ORDER BY id DESC LIMIT ?,? ";
         List<Article> list = new ArrayList<>();
         try {
             PreparedStatement psmt = connection.prepareStatement(sql);
@@ -76,7 +87,8 @@ public class BicanDataService {
                 String appName = rs.getString("appName");
                 ArticleType articleType = ArticleType.valueOf(appName);
                 object.setArticleType(articleType);
-
+                int hot = rs.getInt("hot");
+                object.setHot(hot);
                 list.add(object);
             }
             rs.close();

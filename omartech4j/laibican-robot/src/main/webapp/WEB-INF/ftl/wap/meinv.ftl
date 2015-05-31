@@ -34,6 +34,7 @@
         <h2 class="tt"><span>比惨君还在想下面的问题</span></h2>
         <fieldset>
             <p>你们想看什么样子的美女呢？</p>
+            <p>通过下方按钮来告诉吧。</p>
         </fieldset>
     </div>
 </div>
@@ -43,7 +44,7 @@
 <#--</div>-->
 <#--<p style="height:50px;">-->
 <#--</p>-->
-<a class="js_floatFooter floatFooter" href="/createArticle">
+<a class="js_floatFooter floatFooter" href="/createArticle?commentType=Beauty">
     <em>我来告诉你看什么美女！</em>
 </a>
 
@@ -56,21 +57,7 @@
 <script src="/js/wap/zepto.js"></script>
 <script src="/js/wap/iscroll-lite.js"></script>
 <script src="/js/wap/m-kanzhun.js"></script>
-<script type="text/javascript">
-    document.querySelector('span.more').addEventListener('click', function (e) {
-        var details = this.parentNode.querySelector('span.show_details');
 
-        if (details) {
-            if (details.classList.contains('hidden')) {
-                this.innerHTML = '<i class="ml10">收起</i>';
-                details.classList.remove('hidden');
-            } else {
-                this.innerHTML = '... <i>展开</i>';
-                details.classList.add('hidden');
-            }
-        }
-    }, false);
-    $.setCompanyMenu(2);
-</script>
+<#include "../common/ba.ftl">
 </body>
 </html>

@@ -136,7 +136,7 @@ public class CenterService {
         }
         if (replyMessage == null) {
             logger.info("reply with default");
-            replyMessage = fetchBakUpMsg("嗯，然后呢？");
+            replyMessage = fetchBakUpMsg("唔，要不然你到网站上聊聊？http://laibican.com");
         }
 
         replyMessage.setFromName(toName);

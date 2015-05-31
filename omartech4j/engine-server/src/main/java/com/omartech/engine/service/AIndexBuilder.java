@@ -3,10 +3,7 @@ package com.omartech.engine.service;
 import com.omartech.data.gen.Article;
 import com.omartech.data.gen.ArticleType;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -60,7 +57,7 @@ public class AIndexBuilder extends AIndexService {
         do {
             articles = fetchList(min, batch, sql, connection);
             for (Article article : articles) {
-                if(article == null || article.getContent().length() < 10){
+                if (article == null || article.getContent().length() < 10) {
                     continue;
                 }
                 poolExecutor.submit(new Worker(article));
@@ -111,6 +108,7 @@ public class AIndexBuilder extends AIndexService {
 
         document.add(new TextField(ID, article.getId() + "", Field.Store.YES));
         document.add(new StringField(APPNAME, article.getArticleType().toString(), Field.Store.YES));
+        document.add(new IntField(HOT, article.getHot(), Field.Store.NO));
         return document;
     }
 
@@ -126,11 +124,13 @@ public class AIndexBuilder extends AIndexService {
                     String content = resultSet.getString("content");
                     long id = resultSet.getLong("id");
                     String appName = resultSet.getString("appName");
+                    int hot = resultSet.getInt("hot");
                     Article article = new Article();
                     article.setId(id);
                     article.setContent(content);
                     article.setTitle(title);
                     article.setArticleType(ArticleType.valueOf(appName));
+                    article.setHot(hot);
                     array.add(article);
                 }
             }

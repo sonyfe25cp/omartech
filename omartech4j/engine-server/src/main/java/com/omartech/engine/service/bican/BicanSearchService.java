@@ -45,14 +45,14 @@ public class BicanSearchService extends ADataService {
         int topN = offset + limit;
         ArticleType articleType = req.getArticleType();
 
+        logger.info(req.toString());
+
         ArticleResponse response = new ArticleResponse();
         List<Article> articles = new ArrayList<>();
         Connection connection = fetchConnection("weixin");
         if (StringUtils.isEmpty(keyword)) {
             if (ids == null || ids.size() == 0) {
                 if (isRandom) {//随机选一个
-                    limit = limit > 0 ? limit : 1;
-                    logger.info(limit+"");
                     int maxDoc = searcher.getIndexReader().maxDoc();
                     do {
                         Random rand = new Random();
@@ -62,7 +62,10 @@ public class BicanSearchService extends ADataService {
                             String id = doc.get(ID);
                             Article article = BicanDataService.findById(Long.parseLong(id), connection);
                             logger.info("random choose article id : {}", id);
-                            articles.add(article);
+                            int length = article.getContent().length();
+                            if (length > 10) {
+                                articles.add(article);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -77,20 +80,24 @@ public class BicanSearchService extends ADataService {
                         TermQuery termQuery = new TermQuery(new Term("appName", articleType.toString()));
                         try {
                             TopDocs topDocs = searcher.search(termQuery, topN);
+                            int totalHits = topDocs.totalHits;
+                            logger.info("totoal : {}", totalHits);
                             ScoreDoc[] scoreDocs = topDocs.scoreDocs;
                             int currentLength = scoreDocs.length;
+                            logger.info("currentLengt:{}", currentLength);
                             if (currentLength > 0) {
                                 if (offset == -1) {//随机来一发
                                     Random random = new Random();
                                     offset = Math.round(random.nextFloat() * currentLength);
                                 }
-                                int end = currentLength > offset ? offset : currentLength;
-                                if (currentLength >= offset) {
-                                    for (int pos = offset; pos <= end; pos++) {
-                                        int docId = scoreDocs[pos].doc;
-                                        Document doc = searcher.doc(docId);
-                                        String id = doc.get(ID);
-                                        Article article = BicanDataService.findById(Long.parseLong(id), connection);
+                                int end = currentLength > (offset + limit) ? (offset + limit) : currentLength;
+                                for (int pos = offset; pos < end; pos++) {
+                                    int docId = scoreDocs[pos].doc;
+                                    Document doc = searcher.doc(docId);
+                                    String id = doc.get(ID);
+                                    Article article = BicanDataService.findById(Long.parseLong(id), connection);
+                                    String content = article.getContent();
+                                    if (content.length() > 10) {
                                         articles.add(article);
                                     }
                                 }
@@ -153,10 +160,10 @@ public class BicanSearchService extends ADataService {
 
     @Override
     public ArticleResponse insertArticle(Article article) throws TException {
-        logger.info("insert article :{}", article.toString());
         Connection connection = fetchConnection("weixin");
         article.setCreatedAt(formatTime(new Date()));
         try {
+            logger.info("insert article :{}", article.toString());
             BicanDataService.insert(article, connection);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -349,6 +356,36 @@ public class BicanSearchService extends ADataService {
         return jobResponse;
     }
 
+
+    @Override
+    public ArticleResponse increaseArticleHot(Article article) throws TException {
+        long id = article.getId();
+        try (Connection connection = fetchConnection("weixin");) {
+            article = BicanDataService.findById(id, connection);
+            int hot = article.getHot();
+            hot = hot + 1;
+            BicanDataService.updateArticleHot(id, hot, connection);
+            logger.info("update hot, id:{}, hot:{}", id, hot);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArticleResponse();
+    }
+
+    @Override
+    public ArticleResponse decreaseArticleHot(Article article) throws TException {
+        long id = article.getId();
+        try (Connection connection = fetchConnection("weixin");) {
+            article = BicanDataService.findById(id, connection);
+            int hot = article.getHot();
+            hot = hot - 1;
+            BicanDataService.updateArticleHot(id, hot, connection);
+            logger.info("update hot, id:{}, hot:{}", id, hot);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArticleResponse();
+    }
 
     public static void main(String[] args) {
         try {

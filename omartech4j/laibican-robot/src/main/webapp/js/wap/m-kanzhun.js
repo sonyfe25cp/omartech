@@ -286,6 +286,35 @@
 		//评公司第一步下一步
 		oCommentStep1.find(".js_btNext").bind("click", function() {
 			var bFlag = true;
+			var oRating = $('[name="rating"]');
+			if (oRating.val() == "0") {
+				oRating.siblings(".js_error").show();
+				bFlag = false;
+			}
+			var oRatingCeo = $('[name="ratingCeo"]');
+			if (oRatingCeo.val() == "0") {
+				oRatingCeo.siblings("span").find(".js_error").show();
+				bFlag = false;
+			}
+			var oFutureStatus = $('[name="futureStatus"]');
+			if (oFutureStatus.val() == "0") {
+				oFutureStatus.siblings("span").find(".js_error").show();
+				bFlag = false;
+			}
+			var oRecommendFriend = $('[name="recommendFriend"]');
+			if (oRecommendFriend.val() == "0") {
+				oRecommendFriend.siblings("span").find(".js_error").show();
+				bFlag = false;
+			}
+			/*
+			var oTitle=$('[name="title"]');
+			var oTitleVal=$.trim(oTitle.val());
+			if(oTitleVal.length<10){
+				oTitle.siblings(".js_error").show();
+				bFlag=false;
+			}else{
+				oTitle.siblings(".js_error").hide();
+			}	*/
 			oCommentStep1.find('textarea').each(function() {
 				var _val = $.trim($(this).val());
 				if (_val.length < 10) {
@@ -297,11 +326,8 @@
 			})
 			if (bFlag) {
 				$('[name="commentForm"]').submit();
-				//oCommentStep1.hide();
-				//oCommentStep2.show();
 			}
 		});
-		var oJobStatus = $(".js_jobStatus");
 	}
 	if ($('[name="commentForm"]')[0]) {
 		fInitComment();

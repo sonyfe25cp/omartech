@@ -28,12 +28,12 @@ public class RouteAction {
 
     @RequestMapping("/index")
     public String index() {
-        return "/index";
+        return "/wap/index";
     }
 
     @RequestMapping("")
     public String defaultPage() {
-        return "/index";
+        return "/wap/index";
     }
 
     @RequestMapping("/bican")
@@ -81,16 +81,21 @@ public class RouteAction {
 
 
     @RequestMapping("/createArticle")
-    public String create() {
-        return "/wap/create";
+    public ModelAndView create(@RequestParam String commentType) {
+        return new ModelAndView("/wap/create").addObject("commentType", commentType);
     }
 
     @RequestMapping(value = "/createArticle", method = RequestMethod.POST)
-    public ModelAndView createArticle(@RequestParam String title) {
+    public ModelAndView createArticle(@RequestParam String title, @RequestParam String commentType) {
         Article article = new Article();
-        article.setArticleType(ArticleType.Bican);
+        ArticleType articleType = ArticleType.valueOf(commentType);
+        if (articleType == null) {
+            articleType = ArticleType.Other;
+        }
+        article.setArticleType(articleType);
         article.setContent(title);
         try {
+            logger.info(article.toString());
             clients.insertArticle(article);
         } catch (ClientException e) {
             e.printStackTrace();
@@ -123,12 +128,38 @@ public class RouteAction {
 
     }
 
+    @RequestMapping("/momoArticle")
+    public void momoArticle(@RequestParam int salaryId) {
+        logger.info("momo articleId : {}", salaryId);
+        Article article = new Article();
+        article.setId(salaryId);
+        try {
+            clients.increaseArticleHot(article);
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/zhazhaArticle")
+    public void zhazhaArticle(@RequestParam int salaryId) {
+        logger.info("zhazha articleId : {}", salaryId);
+        Article article = new Article();
+        article.setId(salaryId);
+        try {
+            clients.decreaseArticleHot(article);
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @RequestMapping("/story")
     public ModelAndView story() {
 
         ArticleRequest articleRequest = new ArticleRequest();
         articleRequest.setRandom(true);
         articleRequest.setArticleType(ArticleType.Bican);
+        articleRequest.setLimit(1);
         Article article = null;
         try {
             ArticleResponse response = clients.searchArticle(articleRequest);
@@ -141,13 +172,10 @@ public class RouteAction {
     }
 
     @RequestMapping("/kanxiaohua")
-    public ModelAndView kanxiaohua(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                   @RequestParam(value = "pageSize", defaultValue = "30", required = false) int pageSize) {
-        pageNo = pageNo > 0 ? pageNo : 0;
-        int offset = (pageNo + 1) * pageSize;
+    public ModelAndView kanxiaohua() {
         ArticleRequest articleRequest = new ArticleRequest();
         articleRequest.setLimit(30);
-        articleRequest.setOffset(offset);
+        articleRequest.setRandom(true);
         articleRequest.setArticleType(ArticleType.Xiaohua);
         List<Article> articles = null;
         try {
@@ -157,8 +185,7 @@ public class RouteAction {
             e.printStackTrace();
         }
         return new ModelAndView("/wap/xiaohua")
-                .addObject("articles", articles)
-                .addObject("pageNo", pageNo);
+                .addObject("articles", articles);
     }
 
 
@@ -200,7 +227,8 @@ public class RouteAction {
                     break;
             }
         }
-        return new ModelAndView("/common/template").addObject("article", article);
+//        return new ModelAndView("/common/template").addObject("article", article);
+        return new ModelAndView("/wap/story").addObject("article", article);
     }
 
 }

@@ -37,7 +37,7 @@ public class BicanIndexer extends AIndexBuilder {
         try {
             String index = "bican";
             BicanIndexer bicanIndexer = new BicanIndexer(index);
-            String sql = "select id, title, content, appName from article where id > ? limit ?";
+            String sql = "select id, title, content, appName, hot from article where id > ? limit ?";
             Connection connection = con.get();
             bicanIndexer.build(sql, connection);
         } catch (InterruptedException e) {
