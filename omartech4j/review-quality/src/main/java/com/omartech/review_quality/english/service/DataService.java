@@ -1,8 +1,9 @@
-package com.omartech.review_quality.service;
+package com.omartech.review_quality.english.service;
 
-import com.omartech.review_quality.model.Product;
-import com.omartech.review_quality.model.Review;
-import com.omartech.review_quality.model.Reviewer;
+
+import com.omartech.review_quality.english.model.Product;
+import com.omartech.review_quality.english.model.Review;
+import com.omartech.review_quality.english.model.Reviewer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

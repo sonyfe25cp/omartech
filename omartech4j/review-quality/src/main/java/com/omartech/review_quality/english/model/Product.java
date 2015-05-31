@@ -1,4 +1,4 @@
-package com.omartech.review_quality.model;
+package com.omartech.review_quality.english.model;
 
 /**
  * Created by OmarTech on 15-1-26.

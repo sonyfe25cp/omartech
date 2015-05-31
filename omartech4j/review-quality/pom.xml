@@ -19,6 +19,11 @@
             <artifactId>omartech-parent</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.omartech</groupId>
+            <artifactId>omartech-utils</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <dependency>
             <groupId>args4j</groupId>
@@ -85,24 +90,11 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>install</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>sources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.omartech.weixin.Crawler</mainClass>
+                            <mainClass>com.omartech.review_quality.preprocessing.StructureRawData</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

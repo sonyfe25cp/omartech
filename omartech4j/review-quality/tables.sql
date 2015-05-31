@@ -4,6 +4,7 @@ CREATE DATABASE reviewquality
 USE reviewquality;
 
 CREATE TABLE review (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY ,
   productId     VARCHAR(45) COMMENT '产品id',
   reviewerId    VARCHAR(45),
   createdAt     VARCHAR(45),
@@ -19,6 +20,7 @@ ALTER TABLE review ADD INDEX productId(productId);
 ALTER TABLE review ADD INDEX reviewerId(reviewerId);
 
 CREATE TABLE product (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY ,
   productId    VARCHAR(45),
   name         VARCHAR(300),
   type         VARCHAR(300),
@@ -32,6 +34,7 @@ CREATE TABLE product (
 ALTER TABLE product ADD INDEX productId(productId);
 
 CREATE TABLE reviewer (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY ,
   reviewerId VARCHAR(45),
   name       VARCHAR(300),
   reviews    INT,
