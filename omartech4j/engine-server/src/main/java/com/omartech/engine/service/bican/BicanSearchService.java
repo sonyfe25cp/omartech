@@ -41,6 +41,7 @@ public class BicanSearchService extends ADataService {
         int limit = req.getLimit();
         limit = limit == 0 ? 30 : limit;
         List<Long> ids = req.getIds();
+        boolean isRandom = req.isRandom();
         int topN = offset + limit;
         ArticleType articleType = req.getArticleType();
 
@@ -49,35 +50,54 @@ public class BicanSearchService extends ADataService {
         Connection connection = fetchConnection("weixin");
         if (StringUtils.isEmpty(keyword)) {
             if (ids == null || ids.size() == 0) {
-                logger.info("list the articles");
-                if (articleType == null) {
-                    articles = BicanDataService.findArticles(offset, limit, connection);
+                if (isRandom) {//随机选一个
+                    limit = limit > 0 ? limit : 1;
+                    logger.info(limit+"");
+                    int maxDoc = searcher.getIndexReader().maxDoc();
+                    do {
+                        Random rand = new Random();
+                        int pos = Math.round(rand.nextFloat() * maxDoc);
+                        try {
+                            Document doc = searcher.doc(pos);
+                            String id = doc.get(ID);
+                            Article article = BicanDataService.findById(Long.parseLong(id), connection);
+                            logger.info("random choose article id : {}", id);
+                            articles.add(article);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } while (articles.size() != limit);
+                    response.setArticles(articles);
                 } else {
-
-                    TermQuery termQuery = new TermQuery(new Term("appName", articleType.toString()));
-                    try {
-                        TopDocs topDocs = searcher.search(termQuery, topN);
-                        ScoreDoc[] scoreDocs = topDocs.scoreDocs;
-                        int currentLength = scoreDocs.length;
-                        if (currentLength > 0) {
-                            if (offset == -1) {//随机来一发
-                                Random random = new Random();
-                                offset = Math.round(random.nextFloat() * currentLength);
-                            }
-
-                            int end = currentLength > offset ? offset : currentLength;
-                            if (currentLength >= offset) {
-                                for (int pos = offset; pos <= end; pos++) {
-                                    int docId = scoreDocs[pos].doc;
-                                    Document doc = searcher.doc(docId);
-                                    String id = doc.get(ID);
-                                    Article article = BicanDataService.findById(Long.parseLong(id), connection);
-                                    articles.add(article);
+                    logger.info("list the articles");
+                    if (articleType == null) {
+                        articles = BicanDataService.findArticles(offset, limit, connection);
+                        logger.info("articles,size:{}", articles.size());
+                    } else {
+                        TermQuery termQuery = new TermQuery(new Term("appName", articleType.toString()));
+                        try {
+                            TopDocs topDocs = searcher.search(termQuery, topN);
+                            ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+                            int currentLength = scoreDocs.length;
+                            if (currentLength > 0) {
+                                if (offset == -1) {//随机来一发
+                                    Random random = new Random();
+                                    offset = Math.round(random.nextFloat() * currentLength);
+                                }
+                                int end = currentLength > offset ? offset : currentLength;
+                                if (currentLength >= offset) {
+                                    for (int pos = offset; pos <= end; pos++) {
+                                        int docId = scoreDocs[pos].doc;
+                                        Document doc = searcher.doc(docId);
+                                        String id = doc.get(ID);
+                                        Article article = BicanDataService.findById(Long.parseLong(id), connection);
+                                        articles.add(article);
+                                    }
                                 }
                             }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
                 }
             } else {

@@ -60,8 +60,11 @@ public class AIndexBuilder extends AIndexService {
         do {
             articles = fetchList(min, batch, sql, connection);
             for (Article article : articles) {
-//                poolExecutor.submit(new Worker(article));
-                new Worker(article).run();
+                if(article == null || article.getContent().length() < 10){
+                    continue;
+                }
+                poolExecutor.submit(new Worker(article));
+//                new Worker(article).run();
                 long id = article.getId();
                 min = Math.max(id, min);
                 count++;
