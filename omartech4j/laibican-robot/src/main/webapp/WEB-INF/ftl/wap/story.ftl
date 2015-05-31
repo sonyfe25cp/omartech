@@ -18,38 +18,36 @@
 <div class="wrapper detail">
     <div class="content">
     <#include "subHeader.ftl" >
-
+        <section class="menu">
+            <div class="menu_wrap">
+                <div class="menu_con" id="companyMenu">
+                    <p>
+                        <a href="/story" class="current">讲悲剧</a>
+                        <a href="/daleitai">打擂台</a>
+                        <a href="/kanxiaohua">看笑话</a>
+                        <a href="/choumeinv">瞅美女</a>
+                    </p>
+                </div>
+            </div>
+            <a class="moving" href="javascript:;"><i class="arrow_green"></i></a>
+        </section>
         <h2 class="tt"><span>一位网友的真实经历</span></h2>
         <fieldset>
-            <p>“我经历过的最难的面试，不好忽悠啊”</p>
-
-            <p class="f12 mt10">面试易宝支付产品经理并通过面试</p>
-
-            <p class="grey f12">发布于 2月2日 北京</p>
-
-            <h3>面试经历</h3>
-
-            <p>
-                我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面试经历，我是面。</p>
-
-            <h3>面试官提出的问题</h3>
-
+            <p>${article.content}</p>
         </fieldset>
-
-
         <div class="praise user_behavior">
             <a class="js_useful" href="javascript:;" rel="follow" data-url="salary/useful.json" data-sid="21672"
                data-type="salary"><i class="i i_mark_h"></i>&nbsp;摸摸头(<span>0</span>)</a>
             <a href="javascript:;"><em>分享给朋友</em></a>
         </div>
     </div>
-</div>
-<div class="set">
-    <div><a class="bt_orange" href="javascript:;">上一个</a></div>
-    <div><a class="bt_orange green" href="javascript:;">下一个</a></div>
+    <div class="set">
+        <div><a class="bt_orange" href="/story">上一个</a></div>
+        <div><a class="bt_orange green" href="/story">下一个</a></div>
+    </div>
 </div>
 <p style="height:50px;"></p>
-<a class="js_floatFooter floatFooter" href="#">
+<a class="js_floatFooter floatFooter" href="/createArticle">
     <em>我也要讲个悲剧！</em>
 </a>
 

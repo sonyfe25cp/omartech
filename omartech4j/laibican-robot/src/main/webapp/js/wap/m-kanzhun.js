@@ -286,35 +286,6 @@
 		//评公司第一步下一步
 		oCommentStep1.find(".js_btNext").bind("click", function() {
 			var bFlag = true;
-			var oRating = $('[name="rating"]');
-			if (oRating.val() == "0") {
-				oRating.siblings(".js_error").show();
-				bFlag = false;
-			}
-			var oRatingCeo = $('[name="ratingCeo"]');
-			if (oRatingCeo.val() == "0") {
-				oRatingCeo.siblings("span").find(".js_error").show();
-				bFlag = false;
-			}
-			var oFutureStatus = $('[name="futureStatus"]');
-			if (oFutureStatus.val() == "0") {
-				oFutureStatus.siblings("span").find(".js_error").show();
-				bFlag = false;
-			}
-			var oRecommendFriend = $('[name="recommendFriend"]');
-			if (oRecommendFriend.val() == "0") {
-				oRecommendFriend.siblings("span").find(".js_error").show();
-				bFlag = false;
-			}
-			/*
-			var oTitle=$('[name="title"]');	
-			var oTitleVal=$.trim(oTitle.val());
-			if(oTitleVal.length<10){
-				oTitle.siblings(".js_error").show();
-				bFlag=false;
-			}else{
-				oTitle.siblings(".js_error").hide();
-			}	*/
 			oCommentStep1.find('textarea').each(function() {
 				var _val = $.trim($(this).val());
 				if (_val.length < 10) {
@@ -325,48 +296,12 @@
 				}
 			})
 			if (bFlag) {
-				oCommentStep1.hide();
-				oCommentStep2.show();
+				$('[name="commentForm"]').submit();
+				//oCommentStep1.hide();
+				//oCommentStep2.show();
 			}
 		});
 		var oJobStatus = $(".js_jobStatus");
-		//评公司第二步返回
-		oCommentStep2.find(".top_back").bind("click", function() {
-			oCommentStep2.hide();
-			oCommentStep1.show();
-		});
-		oJobStatus.find("li").bind("click", function() {
-			$(this).siblings().removeClass("on");
-			$(this).addClass("on");
-			$('[name="employeeStatus"]').val($(this).attr("node-value"));
-		});
-		//评公司第二步确定
-		oCommentStep2.find(".js_submit").bind("click", function() {
-			var oJobTitle = $('[name="jobTitle"]');
-			var oJobTitleVal = $.trim(oJobTitle.val());
-			var bFlag = true;
-			if (oJobTitleVal == "") {
-				oJobTitle.siblings(".js_error").show();
-				oJobTitle.parent().addClass("berror");
-				bFlag = false;
-			} else {
-				oJobTitle.siblings(".js_error").hide();
-				oJobTitle.parent().removeClass("berror");
-			}
-			var oCity = $('[name="city"]');
-			var oCityVal = $.trim(oCity.val());
-			if (oCityVal == "") {
-				oCity.siblings(".js_error").show();
-				oCity.parent().addClass("berror");
-				bFlag = false;
-			} else {
-				oCity.siblings(".js_error").hide();
-				oCity.parent().removeClass("berror");
-			}
-			if (bFlag) {
-				$('[name="commentForm"]').submit();
-			}
-		});
 	}
 	if ($('[name="commentForm"]')[0]) {
 		fInitComment();

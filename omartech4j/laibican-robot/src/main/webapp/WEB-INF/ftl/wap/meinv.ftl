@@ -22,42 +22,29 @@
             <div class="menu_wrap">
                 <div class="menu_con" id="companyMenu">
                     <p>
-                        <a href="/story">讲悲剧</a>
-                        <a href="/daleitai" class="current">打擂台</a>
+                        <a href="/story" >讲悲剧</a>
+                        <a href="/daleitai">打擂台</a>
                         <a href="/kanxiaohua">看笑话</a>
-                        <a href="/choumeinv">瞅美女</a>
+                        <a href="/choumeinv" class="current">瞅美女</a>
                     </p>
                 </div>
             </div>
             <a class="moving" href="javascript:;"><i class="arrow_green"></i></a>
         </section>
-
-    <#assign num = 1>
-    <#list articles as article>
-        <h2 class="tt">
-            <#if num == 1>
-                <span>擂主的悲剧</span>
-                <#assign num = 2>
-            <#else>
-                <span>挑战者的悲剧</span>
-            </#if>
-        </h2>
+        <h2 class="tt"><span>比惨君还在想下面的问题</span></h2>
         <fieldset>
-            <p>${article.content}</p>
+            <p>你们想看什么样子的美女呢？</p>
         </fieldset>
-        <div class="praise user_behavior">
-            <a class="js_useful" href="javascript:;" rel="follow" data-url="salary/useful.json" data-sid="21672"
-               data-type="salary"><i class="i i_mark_h"></i>&nbsp;这个比较惨(<span>0</span>)</a>
-            <a href="javascript:;"><em>分享给朋友</em></a>
-        </div>
-    </#list>
-
     </div>
 </div>
-<#include "footer.ftl" >
-
+<#--<div class="set">-->
+    <#--<div><a class="bt_orange" href="javascript:;">上一个</a></div>-->
+    <#--<div><a class="bt_orange green" href="javascript:;">下一个</a></div>-->
+<#--</div>-->
+<#--<p style="height:50px;">-->
+<#--</p>-->
 <a class="js_floatFooter floatFooter" href="/createArticle">
-    <em>我来讲个悲剧！</em>
+    <em>我来告诉你看什么美女！</em>
 </a>
 
 <div class="mask" id="wxMask">

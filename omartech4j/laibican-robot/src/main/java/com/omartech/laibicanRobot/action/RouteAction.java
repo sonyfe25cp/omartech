@@ -5,11 +5,13 @@ import com.omartech.engine.client.ClientException;
 import com.omartech.engine.client.DataClients;
 import com.omartech.laibicanRobot.model.AppEnum;
 import com.omartech.laibicanRobot.service.CenterService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -77,19 +79,86 @@ public class RouteAction {
         return "/wap/index";
     }
 
-    @RequestMapping("/story")
-    public String story() {
-        return "/wap/story";
+
+    @RequestMapping("/createArticle")
+    public String create() {
+        return "/wap/create";
     }
+
+    @RequestMapping(value = "/createArticle", method = RequestMethod.POST)
+    public ModelAndView createArticle(@RequestParam String title) {
+        Article article = new Article();
+        article.setArticleType(ArticleType.Bican);
+        article.setContent(title);
+        try {
+            clients.insertArticle(article);
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("/wap/story").addObject("article", article);
+    }
+
+    @RequestMapping("/choumeinv")
+    public String choumeinv() {
+        return "/wap/meinv";
+    }
+
 
     @RequestMapping("/daleitai")
-    public String leitai() {
-        return "/wap/leitai";
+    public ModelAndView leitai() {
+
+        ArticleRequest articleRequest = new ArticleRequest();
+        articleRequest.setRandom(true);
+        articleRequest.setLimit(2);
+        articleRequest.setArticleType(ArticleType.Bican);
+        List<Article> articles = null;
+        try {
+            ArticleResponse response = clients.searchArticle(articleRequest);
+            articles = response.getArticles();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("/wap/leitai")
+                .addObject("articles", articles);
+
     }
 
-    @RequestMapping("/tingxiaohua")
-    public String xiaohua() {
-        return "/wap/xiaohua";
+    @RequestMapping("/story")
+    public ModelAndView story() {
+
+        ArticleRequest articleRequest = new ArticleRequest();
+        articleRequest.setRandom(true);
+        articleRequest.setArticleType(ArticleType.Bican);
+        Article article = null;
+        try {
+            ArticleResponse response = clients.searchArticle(articleRequest);
+            List<Article> articles = response.getArticles();
+            article = articles.get(0);
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("/wap/story").addObject("article", article);
+    }
+
+    @RequestMapping("/kanxiaohua")
+    public ModelAndView kanxiaohua(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                   @RequestParam(value = "pageSize", defaultValue = "30", required = false) int pageSize) {
+        pageNo = pageNo > 0 ? pageNo : 0;
+        int offset = (pageNo + 1) * pageSize;
+        ArticleRequest articleRequest = new ArticleRequest();
+        articleRequest.setLimit(30);
+        articleRequest.setOffset(offset);
+        articleRequest.setArticleType(ArticleType.Xiaohua);
+        List<Article> articles = null;
+        try {
+            ArticleResponse response = clients.searchArticle(articleRequest);
+            articles = response.getArticles();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("/wap/xiaohua")
+                .addObject("articles", articles)
+                .addObject("pageNo", pageNo);
     }
 
 
