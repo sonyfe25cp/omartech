@@ -150,7 +150,7 @@
 </div>
 <script src="/js/wap/zepto.js"></script>
 <script src="/js/wap/iscroll-lite.js"></script>
-<script src="/js/wap/m-kanzhun.js"></script>
+<script src="/js/wap/m-laibican.js"></script>
 <script type="text/javascript">
     document.querySelector('span.more').addEventListener('click', function (e) {
         var details = this.parentNode.querySelector('span.show_details');

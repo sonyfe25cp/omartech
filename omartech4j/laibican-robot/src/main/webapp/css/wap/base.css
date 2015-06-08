@@ -762,7 +762,7 @@ ul.bt_change li.on {
   border: 0;
   color: #343434;
   width: 100%;
-  background: #ffffff url(../images/select_2.png) no-repeat right 0;
+  background: #ffffff url(/images/wap/select_2.png) no-repeat right 0;
 }
 .divInput_1 .error {
   position: absolute;
@@ -846,7 +846,7 @@ ul.bt_change li.on {
   height: 32px;
   width: 100%;
   border: 0;
-  background: url(../images/select.jpg) no-repeat right 0;
+  background: url(/images/wap/select.jpg) no-repeat right 0;
 }
 .defSelect p.err {
   clear: both;
@@ -866,7 +866,7 @@ ul.bt_change li.on {
   height: 32px;
   width: 100%;
   border: 0;
-  background: url(../images/select.jpg) no-repeat right 0;
+  background: url(/images/wap/select.jpg) no-repeat right 0;
 }
 .defSelect_3 {
   height: 32px;

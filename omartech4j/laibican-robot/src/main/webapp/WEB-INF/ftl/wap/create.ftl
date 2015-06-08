@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="divTextarea_1 bdefault mt10 clear">
-                    <textarea name="title" placeholder="详细的讲讲你的故事吧" rows="10" maxlength="64"></textarea>
+                    <textarea name="title" placeholder="详细的讲讲你的故事吧" rows="10" maxlength="1024"></textarea>
                     <input name="commentType" type="hidden" value="${commentType}"/>
                     <em class="js_error error" style="display:none">少侠，你这故事太短..重讲！</em>
                 </div>
@@ -48,7 +48,7 @@
 <#include "footer.ftl">
 <#include "../common/ba.ftl">
 <script src="/js/wap/jquery-2.1.1.min.js"></script>
-<script src="/js/wap/m-kanzhun.js"></script>
+<script src="/js/wap/m-laibican.js"></script>
 </body>
 </html>
 

@@ -20,14 +20,7 @@
     <aside class="slide_menu" style="display:none">
         <span><img src="/images/wap/laibican.jpg" width="189"/></span>
         <a ka="home" href="/newindex">首页</a>
-        <a ka="ugc" href="/createArticle" rel="nofollow">我要讲故事<i class="i i_edit_g ml10"></i></a>
-    <#--<a ka="content" href="/usercenter/content/" rel="nofollow">我发布的内容</a>-->
-    <#--<a ka="resume" href="/resume/index/" rel="nofollow">我的简历</a>-->
-    <#--<a ka="order" href="/usercenter/jobsearcher/index/" rel="nofollow">职位订阅</a>-->
-    <#--<a ka="com" href="/company/focus/" rel="nofollow">我关注的公司</a>-->
-    <#--<a ka="job" href="/usercenter/deliverjobs/" rel="nofollow">我的职位</a>-->
-    <#--<a ka="feedback" href="/contact_us.html" rel="nofollow">意见反馈</a>-->
-    <#--<a ka="login" href="/login/" rel="nofollow">登录 | 注册</a>-->
+        <a ka="ugc" href="/createArticle?commentType=Bican" rel="nofollow">我要讲故事<i class="i i_edit_g ml10"></i></a>
     </aside>
     <div id="container" class="ease">
         <div class="wrapper iphone" style="background-image:url(/images/wap/index_iphoneBg.jpg) ;">
@@ -35,20 +28,11 @@
                 <header class="page_hd">
                     <a ka="map" class="menu" href="javascript:;"><img src="/images/wap/menu.jpg" width="14"/></a>
                     <strong>来比惨网</strong>
-                <#--<a ka="city" href="/city/" class="fright">-->
-                <#--北京-->
-                <#--</a>-->
                 </header>
                 <section class="index_content">
                     <h1>来比惨网</h1>
 
                     <h2>laibican.com</h2>
-                <#--<div class="search ml20 mr20 mt10">-->
-                <#--<form action="/gs.html" method="get" id="searchForm">-->
-                <#--<input ka="search" type="text" name="q" placeholder="输入公司名称，搜索公司">-->
-                <#--<input type="submit" value="">-->
-                <#--</form>-->
-                <#--</div>-->
                     <div class="index_menu">
                         <ul>
                             <li>
@@ -73,26 +57,6 @@
                 </section>
             </div>
         </div>
-
-    <#--<div style="position: fixed;bottom: 46px;left: 0;">-->
-    <#--<a href="#">-->
-    <#--<img src="/images/wap/report_e.jpg" class="fleft" width="100%"/>-->
-    <#--</a>-->
-    <#--</div>-->
-    <#--<footer class="page_ft">-->
-    <#--<p>-->
-    <#--&lt;#&ndash;<a ka="computer" href="http://www.kanzhun.com?wytl=1">电脑版</a> |&ndash;&gt;-->
-    <#--<a ka="mobile" href="http://m.kanzhun.com">移动版</a>-->
-    <#--</p>-->
-
-    <#--<p>-->
-    <#--<a ka="aboutus" href="/about.html" rel="nofollow">关于我们</a> |-->
-    <#--<a ka="help" href="/help.html" rel="nofollow">帮助</a> |-->
-    <#--<a ka="feedback" href="/contact_us.html" rel="nofollow">反馈</a> |-->
-    <#--&lt;#&ndash;<a ka="login" href="/login" rel="nofollow">登录</a> |&ndash;&gt;-->
-    <#--&lt;#&ndash;<a ka="register" href="/register/" rel="nofollow">注册</a>&ndash;&gt;-->
-    <#--</p>-->
-    <#--</footer>-->
     <#include "footer.ftl" >
 
     </div>
@@ -100,7 +64,7 @@
 <script src="/js/wap/jquery-2.1.1.min.js"></script>
 <script src="/js/wap/common.js?v=201406171209"></script>
 <script src="/js/wap/utils/autocomplete.js"></script>
-<script src="/js/wap/m-kanzhun.js"></script>
+<script src="/js/wap/m-laibican.js"></script>
 <script src="/js/wap/slide-menu.js"></script>
 <#include "../common/ba.ftl">
 </body>

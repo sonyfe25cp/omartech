@@ -60,7 +60,7 @@
 <script src="/js/wap/jquery-2.1.1.min.js"></script>
 <script src="/js/wap/zepto.js"></script>
 <script src="/js/wap/iscroll-lite.js"></script>
-<script src="/js/wap/m-kanzhun.js"></script>
+<script src="/js/wap/m-laibican.js"></script>
 <#include "../common/ba.ftl">
 </body>
 </html>
