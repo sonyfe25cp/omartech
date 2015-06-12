@@ -33,9 +33,11 @@ public class Vocabulary {
 
     private boolean overFlag = false;
 
-    private boolean stopWords = false;//是否过滤停词
+    private boolean filterStopWords = false;//是否过滤停词
 
-    private boolean singleWord = false;//是否过滤单字
+    private boolean filterSingleWord = false;//是否过滤单字
+
+    private boolean autoFilter = true;//是否自动过滤高频和低频词
 
     private static Set<String> stopWordsSet = new HashSet<String>();
 
@@ -143,27 +145,49 @@ public class Vocabulary {
         return weightMap.size();
     }
 
-    public Map<Integer, Double> generateVectorMap(String sentence) {
+    public Map<Integer, Double> generatePositionVectionMap(String sentence) {
+        Map<Integer, Double> map = new HashMap<>();
+        Map<String, Double> stringDoubleMap = generateStringVectorMap(sentence);
+        for (Entry<String, Double> entry : stringDoubleMap.entrySet()) {
+            String key = entry.getKey();
+            Double value = entry.getValue();
+
+            Integer integer = posMap.get(key);
+            map.put(integer, value);
+        }
+        return map;
+    }
+
+    public Map<String, Double> generateStringVectorMap(String sentence) {
         if (!overFlag) {
             logger.error("先调用addOver()");
             return null;
         }
-        Map<Integer, Double> map = new HashMap<>();
+        Map<String, Double> map = new HashMap<>();
         HashMap<String, Integer> counter = wordCount(sentence);
+
+        int currentSize = 0;
+        for (Entry<String, Integer> entry : counter.entrySet()) {
+            Integer value = entry.getValue();
+            currentSize += value;
+        }
+
         for (Entry<String, Integer> entry : counter.entrySet()) {
             String word = entry.getKey();
             int count = entry.getValue();
 
-            Integer pos = posMap.get(word);
             Double weight = weightMap.get(word);
-            if (pos == null || weight == null || weight == 0) {
+
+            if (weight == null || weight == 0) {
                 continue;
             }
-            double value = count * weight;
-            map.put(pos, value);
+
+            double value = ((double) count / currentSize) * weight;
+            map.put(word, value);
         }
         return map;
     }
+
 
     public double[] generateVector(String sentence) {
         if (!overFlag) {
@@ -172,11 +196,11 @@ public class Vocabulary {
         }
         double[] vector = new double[size()];
         HashMap<String, Integer> counter = wordCount(sentence);
-        double totalWordCount = 0;//
+        double currentWordCount = 0;//
         for (Entry<String, Integer> entry : counter.entrySet()) {
             Integer value = entry.getValue();
-            totalWordCount += value;
-            totalWordCount += 0.0;
+            currentWordCount += value;
+            currentWordCount += 0.0;
         }
         for (Entry<String, Integer> entry : counter.entrySet()) {
             String word = entry.getKey();
@@ -188,7 +212,7 @@ public class Vocabulary {
                 continue;
             }
 
-            vector[pos.intValue()] = (count / totalWordCount) * weight;
+            vector[pos.intValue()] = (count / currentWordCount) * weight;
         }
         return vector;
     }
@@ -243,12 +267,12 @@ public class Vocabulary {
                 continue;
             }
 //            System.out.println(word);
-            if (singleWord) {//过滤单字
+            if (filterSingleWord) {//过滤单字
                 if (word.length() < 2) {
                     continue;
                 }
             }
-            if (stopWords) {
+            if (filterStopWords) {
                 if (stopWordsSet.contains(word)) {
                     continue;
                 }
@@ -260,16 +284,6 @@ public class Vocabulary {
             array.add(word);
         }
         return array;
-    }
-
-    public static void main(String[] args) {
-        String str = "验光师";
-//        String str = "营销副总";
-        Vocabulary voc = new Vocabulary();
-        List<String> cut = voc.cut(str);
-        for (String st : cut) {
-            System.out.println(st);
-        }
     }
 
     AtomicInteger pos = new AtomicInteger();//词序的位置
@@ -285,11 +299,11 @@ public class Vocabulary {
             overFlag = false;
         }
         fileCount.incrementAndGet();
-        Map<String, Integer> subMapForUnit = new HashMap<>();
         List<String> words = cut(text);
         if (words.size() == 0) {
             return;
         }
+        Map<String, Integer> subMapForUnit = new HashMap<>();//记录每个词在句子中的出现次数
         for (String word : words) {
             Integer subCount = subMapForUnit.get(word);
             if (subCount == null) {
@@ -298,18 +312,20 @@ public class Vocabulary {
             subCount++;
             subMapForUnit.put(word, subCount);
         }
+
         for (Entry<String, Integer> entry : subMapForUnit.entrySet()) {
             String word = entry.getKey();
             Integer count = entry.getValue();
 
-            //for unit
+            //for unit 记录包含每个词的句子数
             AtomicInteger unitCount = wordCountPerUnit.get(word);
             if (unitCount == null) {
                 unitCount = new AtomicInteger();
             }
             unitCount.incrementAndGet();
             wordCountPerUnit.put(word, unitCount);
-            //for total
+
+            //for total 记录每个词在数据集中总共出现的次数
             AtomicInteger totalCount = wordCountTotal.get(word);
             if (totalCount == null) {
                 totalCount = new AtomicInteger();
@@ -324,7 +340,46 @@ public class Vocabulary {
      */
     public void addOver() {
         overFlag = true;
-        adjust(defaultLow, defaultHigh);
+        if (autoFilter) {
+            adjust(defaultLow, defaultHigh);
+        } else {
+            computeOriginWeight();
+        }
+    }
+
+
+    private void computeOriginWeight() {
+
+        int totalSize = fileCount.get();
+        logger.info("voc filecount size:{}", totalSize);
+
+        for (Entry<String, AtomicInteger> entry : wordCountPerUnit.entrySet()) {
+            String key = entry.getKey();
+            int i = entry.getValue().get();
+            logger.info("key : {}, i : {}", key, i);
+        }
+
+
+        posMap = new ConcurrentHashMap<>();
+        //记录默认词序
+        int i = 0;
+        for (Entry<String, AtomicInteger> wordsCount : wordCountPerUnit.entrySet()) {
+            String word = wordsCount.getKey();
+            posMap.put(word, i);
+            i++;
+        }
+        //计算idf = filecount/file count with this word
+        for (Entry<String, Integer> entry : posMap.entrySet()) {
+            String word = entry.getKey();
+            double idf = 0d;
+            int unitCount = wordCountPerUnit.get(word).get();
+            double iidf = (double) fileCount.get() / (unitCount + 0);
+            idf = Math.log(iidf);
+            logger.info("word:{}, iidf:{}, idf:{}", new String[]{word, iidf + "", idf + ""});
+            weightMap.put(word, idf);
+        }
+        logger.info("voc words count is {} (after filter the low and high frequency words)", (weightMap.size()));
+        logger.info("word weight compute over");
     }
 
     private float defaultLow = 1 / 10000.0f;
@@ -363,14 +418,14 @@ public class Vocabulary {
         for (Entry<String, Integer> entry : posMap.entrySet()) {
             String word = entry.getKey();
             double idf = 0d;
-            int totalCount = wordCountTotal.get(word).get();
             int unitCount = wordCountPerUnit.get(word).get();
-            idf = Math.log((double) totalCount / unitCount + 1);
+            double iidf = (double) fileCount.get() / (unitCount + 0);
+            idf = Math.log(iidf);
+            logger.info("word:{}, iidf:{}, idf:{}", new String[]{word, iidf + "", idf + ""});
             weightMap.put(word, idf);
         }
         logger.info("voc words count is {} (after filter the low and high frequency words)", (weightMap.size()));
         logger.info("word weight compute over");
-        overFlag = true;
     }
 
     /**
@@ -411,21 +466,23 @@ public class Vocabulary {
         return wordCountPerUnit;
     }
 
-    public void setStopWords(boolean stopWords) {
-        this.stopWords = stopWords;
-        if (stopWords) {
+    public void setFilterStopWords(boolean filterStopWords) {
+        this.filterStopWords = filterStopWords;
+        if (filterStopWords) {
             loadStopwords();
         }
     }
 
-    public void setSingleWord(boolean singleWord) {
-        this.singleWord = singleWord;
+    public void setFilterSingleWord(boolean filterSingleWord) {
+        this.filterSingleWord = filterSingleWord;
     }
 
     public void addStopWords(List<String> stopwords) {
         stopWordsSet.addAll(stopwords);
-        this.stopWords = true;
+        this.filterStopWords = true;
     }
 
-
+    public void setAutoFilter(boolean autoFilter) {
+        this.autoFilter = autoFilter;
+    }
 }

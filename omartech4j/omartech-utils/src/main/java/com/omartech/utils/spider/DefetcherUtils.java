@@ -41,21 +41,6 @@ public class DefetcherUtils {
     //    private static final HttpHost[] proxies;
     private static Random rnd = new Random();
 
-//    static {
-//        String[] lines = DefetcherUtils.getResouce("http_proxies").split("\n");
-//        List<HttpHost> tmp = new ArrayList<>();
-//        for (String line : lines) {
-//            String[] parts = line.split("\t");
-//            if (parts.length > 2) {
-//                String[] proxy = parts[1].split(":");
-//                tmp.add(new HttpHost(proxy[0], Integer.parseInt(proxy[1])));
-//            }
-//        }
-//        proxies = tmp.toArray(new HttpHost[tmp.size()]);
-//        logger.info("use {} proxies", proxies.length);
-//    }
-
-
     public static final String CHARSET = "charset=";
     public static final Charset ASCII = Charset.forName("US-ASCII");
     public static final Charset UTF_8 = Charset.forName("utf8");
@@ -106,9 +91,10 @@ public class DefetcherUtils {
                 return c;
             }
         }
-        String s = new String(body, 0, min(512, body.length), ASCII);
+        String s = new String(body, 0, min(1024, body.length), ASCII);
         Charset c = guess(s, CHARSET);
-        return c == null ? UTF_8 : c;
+        Charset charset = c == null ? UTF_8 : c;
+        return charset;
     }
 
     public static String toString(HttpResponse resp) throws IOException {
@@ -219,61 +205,6 @@ public class DefetcherUtils {
         }
     }
 
-//    public static HttpGet httpGet(String url, String refer) {
-//        return httpGet(url, refer, false);
-//    }
-
-//    public static HttpGet httpGet(String url, String refer, boolean proxy) {
-//        HttpGet get = new HttpGet(url);
-//        configRequest(get, refer, proxy);
-//        return get;
-//    }
-
-
-//    public static void configRequest(HttpRequestBase base, String refer) {
-//        configRequest(base, refer, false);
-//    }
-
-//    public static void configRequest(HttpRequestBase base, String refer, boolean proxy) {
-//        RequestConfig.Builder config = RequestConfig.custom().setSocketTimeout(40000).
-//                setConnectTimeout(15000).setRedirectsEnabled(false);
-//
-//        if (proxy) {
-//            config.setProxy(proxies[rnd.nextInt(proxies.length)]);
-//        }
-//
-//        base.setConfig(config.build());
-//        base.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-//        base.setHeader("User-Agent", USER_AGENT);
-//        base.setHeader("Accept-Language", "zh-cn,zh;q=0.5");
-//        base.setHeader("Connection", "keep-alive");
-//        base.setHeader("Accept-Encoding", "gzip");
-//        base.setHeader("Proxy-Connection", "keep-alive");
-//
-//        if (refer != null && !refer.isEmpty())
-//            base.setHeader("Referer", refer);
-//    }
-
-
     private static final String[] IGNORE_TAGS = new String[]{"script", "style", "link", "#comment", "h2", "h1"};
 
-//    public static String compactHtml(String html, String baseUri) {
-//        if (html == null || html.isEmpty()) {
-//            return "";
-//        }
-//        StringBuilder sb = new StringBuilder(html.length());
-//        CompactHtmlVisitor vistor = new CompactHtmlVisitor(sb, baseUri);
-//        PartialTraversor traversor = new PartialTraversor(vistor, IGNORE_TAGS);
-//
-//        Document doc = Jsoup.parse(html, baseUri);
-//        List<Node> nodes = doc.body().childNodes();
-//        for (Node e : nodes) {
-//            traversor.traverse(e);
-//        }
-//        return sb.toString();
-//    }
-
-//    public static void main(String[] args) {
-//        System.out.println(Long.MAX_VALUE);
-//    }
 }
