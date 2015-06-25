@@ -72,6 +72,9 @@ public class DefetcherUtils {
         if (idx != -1) {
             int start = idx + patten.length();
             int end = html.indexOf('"', start);
+            if (end == -1) {
+                end = html.indexOf("'", start);
+            }
             if (end != -1) {
                 try {
                     String charset = html.substring(start, end);
@@ -94,6 +97,7 @@ public class DefetcherUtils {
         String s = new String(body, 0, min(1024, body.length), ASCII);
         Charset c = guess(s, CHARSET);
         Charset charset = c == null ? UTF_8 : c;
+        System.out.println(c + " -- " + charset);
         return charset;
     }
 
