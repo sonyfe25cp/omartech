@@ -161,7 +161,9 @@ public class BicanSearchService extends ADataService {
     @Override
     public ArticleResponse insertArticle(Article article) throws TException {
         Connection connection = fetchConnection("weixin");
-        article.setCreatedAt(formatTime(new Date()));
+        if (StringUtils.isEmpty(article.getCreatedAt())) {
+            article.setCreatedAt(formatTime(new Date()));
+        }
         try {
             logger.info("insert article :{}", article.toString());
             BicanDataService.insert(article, connection);
