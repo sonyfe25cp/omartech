@@ -10,6 +10,7 @@ enum ArticleType{
   Other = 4,
   Jobs = 5,
   Beauty = 6,
+  Hero = 7,
 }
 
 struct Article{

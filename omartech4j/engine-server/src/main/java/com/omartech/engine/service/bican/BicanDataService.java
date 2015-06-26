@@ -3,6 +3,7 @@ package com.omartech.engine.service.bican;
 import com.omartech.data.gen.Article;
 import com.omartech.data.gen.ArticleType;
 import com.omartech.engine.service.AIndexService;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,6 +39,11 @@ public class BicanDataService {
                 String title = rs.getString("title");
                 object.setTitle(title);
                 String content = rs.getString("content");
+                if (!StringUtils.isEmpty(content)) {
+                    content = content.replaceAll("\\[img\\].*?\\[/img\\]", "");
+                    content = content.replaceAll("\\[url\\]", "<a style='color:blue' target='blank' href='");
+                    content = content.replaceAll("\\[/url\\]", "'>外部链接</a>");
+                }
                 object.setContent(content);
                 Date createdAt = rs.getDate("createdAt");
                 object.setCreatedAt(AIndexService.formatTime(createdAt));
@@ -47,6 +53,8 @@ public class BicanDataService {
                 int hot = rs.getInt("hot");
                 object.setHot(hot);
                 object.setId(id);
+
+
             }
             rs.close();
             psmt.close();

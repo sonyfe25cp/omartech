@@ -1,8 +1,8 @@
 package com.omartech.engine.service.bican;
 
-import cn.techwolf.data.utils.DBUtils;
 import com.omartech.data.gen.*;
 import com.omartech.engine.service.ADataService;
+import com.omartech.utils.DBUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
@@ -61,10 +61,12 @@ public class BicanSearchService extends ADataService {
                             Document doc = searcher.doc(pos);
                             String id = doc.get(ID);
                             Article article = BicanDataService.findById(Long.parseLong(id), connection);
-                            logger.info("random choose article id : {}", id);
-                            int length = article.getContent().length();
-                            if (length > 10) {
-                                articles.add(article);
+                            if (article != null) {
+                                logger.info("random choose article id : {}", id);
+                                int length = article.getContent().length();
+                                if (length > 10) {
+                                    articles.add(article);
+                                }
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -96,9 +98,11 @@ public class BicanSearchService extends ADataService {
                                     Document doc = searcher.doc(docId);
                                     String id = doc.get(ID);
                                     Article article = BicanDataService.findById(Long.parseLong(id), connection);
-                                    String content = article.getContent();
-                                    if (content.length() > 10) {
-                                        articles.add(article);
+                                    if (article != null) {
+                                        String content = article.getContent();
+                                        if (content.length() > 10) {
+                                            articles.add(article);
+                                        }
                                     }
                                 }
                             }
@@ -110,8 +114,10 @@ public class BicanSearchService extends ADataService {
             } else {
                 logger.info("find articles by ids ");
                 for (long id : ids) {
-                    Article art = BicanDataService.findById(id, connection);
-                    articles.add(art);
+                    Article article = BicanDataService.findById(id, connection);
+                    if (article != null) {
+                        articles.add(article);
+                    }
                 }
             }
         } else {
@@ -143,7 +149,9 @@ public class BicanSearchService extends ADataService {
                             Document doc = searcher.doc(docId);
                             String id = doc.get(ID);
                             Article article = BicanDataService.findById(Long.parseLong(id), connection);
-                            articles.add(article);
+                            if (article != null) {
+                                articles.add(article);
+                            }
                         }
                     }
                 }

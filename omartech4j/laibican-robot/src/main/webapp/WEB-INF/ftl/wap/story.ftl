@@ -31,7 +31,13 @@
             </div>
             <a class="moving" href="javascript:;"><i class="arrow_green"></i></a>
         </section>
-        <h2 class="tt"><span>一位网友的真实经历</span></h2>
+        <h2 class="tt">
+        <#if article.title??>
+            <span>${article.title}</span>
+        <#else>
+            <span>一位网友的真实经历</span>
+        </#if>
+        </h2>
         <fieldset>
             <p>${article.content}</p>
         </fieldset>

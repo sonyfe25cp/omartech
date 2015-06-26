@@ -39,6 +39,7 @@ public class FetchShudong {
             if (file.exists()) {
                 List<String> strings = FileUtils.readLines(file);
                 set.addAll(strings);
+                System.out.println("已有链接：" + set.size());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,10 +50,11 @@ public class FetchShudong {
     public static void run() {
         Set<String> alreadyCrawled = loadUrls();
         try (CloseableHttpClient client = init();) {
-            for (int i = 0; i < 200; i++) {
+            for (int i = 1; i < 200; i++) {
                 try {
                     Map<String, String> threadUrls = fetchThreadUrls(client, alreadyCrawled, i);
                     if (threadUrls.size() == 0) {
+                        System.out.println("链接全抓完了");
                         break;
                     } else {
                         writeUrls(threadUrls);
@@ -103,12 +105,10 @@ public class FetchShudong {
 
     static Map<String, String> fetchThreadUrls(CloseableHttpClient client, Set<String> alreadyCrawled, int pageNo) throws IOException {
         String url = "http://bbs.ngacn.cc/thread.php?key=%E6%A0%91%E6%B4%9E&page=" + pageNo;
-
-
+        System.out.println("开始抓取:" + pageNo + "页面");
         HttpGet get = new HttpGet(url);
         CloseableHttpResponse response = client.execute(get);
         String string = DefetcherUtils.toString(response);
-
         Document document = Jsoup.parse(string);
         Elements elements = document.select(".posticon");
 
@@ -131,7 +131,6 @@ public class FetchShudong {
             }
         }
         return threads;
-
     }
 
     static void fetchThread(HttpClient client, Map<String, String> threads) throws IOException {

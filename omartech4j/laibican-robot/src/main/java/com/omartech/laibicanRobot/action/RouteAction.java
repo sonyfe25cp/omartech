@@ -3,9 +3,7 @@ package com.omartech.laibicanRobot.action;
 import com.omartech.data.gen.*;
 import com.omartech.engine.client.ClientException;
 import com.omartech.engine.client.DataClients;
-import com.omartech.laibicanRobot.model.AppEnum;
 import com.omartech.laibicanRobot.service.CenterService;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -198,13 +196,13 @@ public class RouteAction {
         Article article = null;
         if (split.length == 2) {
             String app = split[0];
-            AppEnum appEnum = AppEnum.valueOf(app);
+            ArticleType appEnum = ArticleType.valueOf(app);
             String id = split[1];
 
+            ArticleRequest req = new ArticleRequest();
+            List<Long> ids = new ArrayList<>();
             switch (appEnum) {
                 case Bican:
-                    ArticleRequest req = new ArticleRequest();
-                    List<Long> ids = new ArrayList<>();
                     ids.add(Long.parseLong(id));
                     req.setIds(ids);
                     try {
@@ -222,6 +220,19 @@ public class RouteAction {
                 case Jobs:
                     break;
                 case Other:
+                    break;
+                case Shudong:
+                    ids.add(Long.parseLong(id));
+                    req.setIds(ids);
+                    try {
+                        ArticleResponse articleResponse = clients.searchArticle(req);
+                        List<Article> articles = articleResponse.getArticles();
+                        for (Article art : articles) {
+                            article = art;
+                        }
+                    } catch (ClientException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     break;
