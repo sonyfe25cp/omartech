@@ -94,7 +94,7 @@ public class DefetcherUtils {
                 return c;
             }
         }
-        String s = new String(body, 0, min(1024, body.length), ASCII);
+        String s = new String(body, 0, min(4096, body.length), ASCII);
         Charset c = guess(s, CHARSET);
         Charset charset = c == null ? UTF_8 : c;
         System.out.println(c + " -- " + charset);

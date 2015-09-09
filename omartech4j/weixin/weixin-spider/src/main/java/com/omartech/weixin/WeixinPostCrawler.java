@@ -5,10 +5,17 @@ import cn.techwolf.data.gen.WeixinAccount;
 import cn.techwolf.data.gen.WeixinPost;
 import com.google.gson.Gson;
 import com.omartech.weixin.service.DBService;
+import com.omartech.weixin.service.SogouEncrypt;
 import com.techwolf.omartech_utils.DBUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.jsoup.Jsoup;
@@ -42,21 +49,28 @@ public class WeixinPostCrawler {
     public static void main(String[] args) {
         WeixinPostCrawler wpc = new WeixinPostCrawler();
         wpc.download();
+//
+//        WeixinAccount acc = new WeixinAccount();
+//        acc.setOpenId("oIWsFtyI7gottu7fXSIwXIt2uHQw");
+//        fetchJsonList(acc, 1);
     }
 
-    String alreadyOver = "/tmp/postOver";
+    String alreadyOver = "post-over-crawled";
 
     public void download() {
         int offset = 0;
         int batch = 1000;
         Connection connection = null;
 
-//        ThreadPoolExecutor executor = new ThreadPoolExecutor(cpu, cpu, 1, TimeUnit.DAYS,
-//                new ArrayBlockingQueue<Runnable>(cpu * 2),
-//                new ThreadPoolExecutor.CallerRunsPolicy());
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(cpu, cpu, 1, TimeUnit.DAYS,
+                new ArrayBlockingQueue<Runnable>(cpu * 2),
+                new ThreadPoolExecutor.CallerRunsPolicy());
         logger.info("work with {} threads", cpu);
         try {
             File postOverFile = new File(alreadyOver);
+            if (postOverFile.exists()) {
+                postOverFile.delete();
+            }
             List<WeixinAccount> accounts = null;
             int times = 0;
             while (true) {
@@ -73,8 +87,8 @@ public class WeixinPostCrawler {
                 if (accounts.size() != 0) {
                     for (WeixinAccount account : accounts) {
                         int id = account.getId();
-                        new PostDownloadWorker(account).run();
-//                        executor.submit(new PostDownloadWorker(account));
+//                        new PostDownloadWorker(account, connection).run();
+                        executor.submit(new PostDownloadWorker(account));
                         FileUtils.write(postOverFile, "times: " + times + " id: " + id + "\n", true);
                     }
                     offset = offset + batch;
@@ -113,19 +127,17 @@ public class WeixinPostCrawler {
         public PostDownloadWorker(WeixinAccount account) {
             this.account = account;
         }
+//        public PostDownloadWorker(WeixinAccount account, Connection connection) {
+//            this.account = account;
+//            this.connection = connection;
+//        }
+
+//        Connection connection = null;
 
         @Override
         public void run() {
-            Connection connection = null;
-            boolean dbflag = true;
-            do {
-                connection = con.get();
-                dbflag = DBUtils.verifyConnection(connection, "select id from weixinAccount limit 1");
-                if (!dbflag) {
-                    con.remove();
-                }
-            } while (!dbflag);
 //            fetchAllPosts(account, connection);
+            Connection connection = con.get();
             fetchTodayPosts(account, connection);
         }
     }
@@ -168,7 +180,7 @@ public class WeixinPostCrawler {
         } while (current < max && (!jump));
     }
 
-    private static void fetchTodayPosts(WeixinAccount account, Connection connection) {
+    private final static void fetchTodayPosts(WeixinAccount account, Connection connection) {
         int current = 1;
         HtmlObject jsonList = fetchJsonList(account, current);
 
@@ -276,11 +288,194 @@ public class WeixinPostCrawler {
         }
     }
 
-    static String goodCookie = WeixinAccountCrawler.readCookie();
+    static String goodCookie = readCookie();
 
-    private static HtmlObject fetchJsonList(WeixinAccount account, int current) {
+    public static String readCookie() {
+        boolean f = true;
+        do {
+            goodCookie = flushCookie(null);
+            if (!goodCookie.contains("SNUID")) {
+                logger.info("又不给注册id了..");
+                try {
+                    Thread.sleep(1000 * 5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                f = false;
+            }
+        } while (f);
+        return goodCookie;
+    }
 
-        String url = "http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid=" + account.getOpenId() + "&t=1421541945093&page=" + current;
+    static String flushCookie(HttpHost proxy) {
+        logger.info("重新获取Cookie!!!!!");
+        Set<String> newCookieSet = new HashSet<>();
+        HttpClientBuilder create = HttpClientBuilder.create();
+        CloseableHttpClient client = create.build();
+
+        String url0 = "http://weixin.sogou.com/gzh?openid=oIWsFtyI7gottu7fXSIwXIt2uHQw";
+        Map<String, String> headers0 = new HashMap<>();
+        headers0.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        headers0.put("Accept-Encoding", "gzip, deflate, sdch");
+        headers0.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.6");
+        headers0.put("Cache-Control", "no-cache");
+        headers0.put("Connection", CONNECTIONSTATUS);
+        headers0.put("Cookie", "SUV=00AA640672F73890559CF2F155C3A321; LSTMV=971%2C288; LCLKINT=291634");
+        headers0.put("Host", "weixin.sogou.com");
+        headers0.put("Pragma", "no-cache");
+        headers0.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.0.2; en-us; Galaxy Nexus Build/ICL53F) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
+        HttpGet weixinwap = new HttpGet(url0);
+        for (Map.Entry<String, String> entry : headers0.entrySet()) {
+            weixinwap.setHeader(entry.getKey(), entry.getValue());
+        }
+        String abtest = "";
+        try {
+            CloseableHttpResponse response = client.execute(weixinwap);
+            Header[] headers = response.getHeaders("Set-Cookie");
+            logger.info("***************cookies in the first req***************");
+            for (Header header : headers) {
+                String suvCookie = header.getValue();
+                abtest = suvCookie.substring(0, suvCookie.indexOf(";") + 1);
+                logger.info("name : {}, value: {}", header.getName(), abtest);
+                newCookieSet.add(abtest + " ");
+            }
+            logger.info("***************cookies in the first req over***************");
+
+            response.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        String url = "http://pb.sogou.com/pv.gif?uigs_productid=weixin&type=encrypt&stype=1&wxtest=1&openid=oIWsFtyI7gottu7fXSIwXIt2uHQw&hdq=sogou&wxsuv=00AA640672F73890559CF2F155C3A321&eqs=XusfoDygsdi3occZAaP0puC2Py3Xfl6bmFeQQKfiiZiA7NkFoBGAkqCidB%2BJLWcEhNO%2F9&ekv=7";
+        Map<String, String> headers1 = new HashMap<>();
+        headers1.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        headers1.put("Accept-Encoding", "gzip, deflate, sdch");
+        headers1.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.6");
+        headers1.put("Cache-Control", "no-cache");
+        headers1.put("Connection", CONNECTIONSTATUS);
+        headers1.put("Host", "pb.sogou.com");
+        headers1.put("Pragma", "no-cache");
+        headers1.put("Referer", url0);
+        headers1.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.0.2; en-us; Galaxy Nexus Build/ICL53F) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
+
+        HttpGet clgif = new HttpGet(url);
+        for (Map.Entry<String, String> entry : headers1.entrySet()) {
+            clgif.setHeader(entry.getKey(), entry.getValue());
+        }
+        String suv = "";
+        try {
+            CloseableHttpResponse response = client.execute(clgif);
+            Header[] headers = response.getHeaders("Set-Cookie");
+            logger.info("***************cookies in the second req***************");
+            for (Header header : headers) {
+                String suvCookie = header.getValue();
+                suv = suvCookie.substring(0, suvCookie.indexOf(";") + 1);
+                logger.info("name : {}, value: {}", header.getName(), suv);
+                newCookieSet.add(suv + " ");
+            }
+            logger.info("***************cookies in the second req over***************");
+            response.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        newCookieSet.add("IPLOC=CN1100; ");
+        newCookieSet.add("ABTEST=2|1422281335|v1;");
+
+
+        String url2 = "http://weixin.sogou.com/weixinwap?ie=utf8&query=%E7%94%B5%E5%BD%B1&type=1";
+        Map<String, String> headers2 = new HashMap<>();
+        headers2.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        headers2.put("Accept-Encoding", "gzip, deflate, sdch");
+        headers2.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.6");
+        headers2.put("Cache-Control", "no-cache");
+        headers2.put("Connection", CONNECTIONSTATUS);
+        headers2.put("Host", "weixin.sogou.com");
+        headers2.put("Pragma", "no-cache");
+        headers2.put("Cookie", suv + " IPLOC=CN1100;");
+        headers2.put("Referer", "http://weixin.sogou.com/wap");
+        headers2.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.0.2; en-us; Galaxy Nexus Build/ICL53F) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
+
+        HttpGet wap = new HttpGet(url2);
+        for (Map.Entry<String, String> entry : headers2.entrySet()) {
+            wap.setHeader(entry.getKey(), entry.getValue());
+        }
+        try {
+            CloseableHttpResponse response = client.execute(wap);
+            Header[] headers = response.getHeaders("Set-Cookie");
+            logger.info("***************cookies in the third req***************");
+            for (Header header : headers) {
+                String suvCookie = header.getValue();
+                String tmp = suvCookie.substring(0, suvCookie.indexOf(";") + 1);
+                logger.info("name : {}, value: {}", header.getName(), tmp);
+                newCookieSet.add(tmp + " ");
+            }
+            logger.info("***************cookies in the third req over***************");
+            response.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        String url3 = "http://weixin.sogou.com/antispider/?from=%2fweixinwap%3Fie%3dutf8%26w%3d%26type%3d1%26t%3d1422281320143%26s_t%3d%26fr%3dsgsearch%26query%3d%E7%94%B5%E5%BD%B1%26pg%3dwebSearchList";
+        Map<String, String> headers3 = new HashMap<>();
+        headers3.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        headers3.put("Accept-Encoding", "gzip, deflate, sdch");
+        headers3.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.6");
+        headers3.put("Cache-Control", "no-cache");
+        headers3.put("Connection", CONNECTIONSTATUS);
+        headers3.put("Host", "weixin.sogou.com");
+//        headers2.put("Cookie", suv + " IPLOC=CN1100;");
+        headers2.put("Cookie", suv + " ABTEST=2|1422281335|v1");
+        headers3.put("Pragma", "no-cache");
+        headers3.put("Referer", "http://weixin.sogou.com/weixinwap?ie=utf8&w=&type=2&t=1422281315519&s_t=&fr=sgsearch&query=%E7%94%B5%E5%BD%B1&pg=webSearchList");
+        headers3.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.0.2; en-us; Galaxy Nexus Build/ICL53F) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
+
+        HttpGet anti = new HttpGet(url3);
+        for (Map.Entry<String, String> entry : headers3.entrySet()) {
+            anti.setHeader(entry.getKey(), entry.getValue());
+        }
+        try {
+            CloseableHttpResponse response = client.execute(anti);
+            Header[] headers = response.getHeaders("Set-Cookie");
+            logger.info("***************cookies in the fourth req over***************");
+            for (Header header : headers) {
+                String suvCookie = header.getValue();
+                String tmp = suvCookie.substring(0, suvCookie.indexOf(";") + 1);
+                logger.info("name : {}, value: {}", header.getName(), tmp);
+                newCookieSet.add(tmp + " ");
+            }
+            logger.info("***************cookies in the fourth req over***************");
+            response.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        StringBuilder newCookie = new StringBuilder();
+        for (String tmp : newCookieSet) {
+            newCookie.append(tmp);
+        }
+        String cookie = newCookie.toString();
+        logger.info("new Cookie : {}", cookie);
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cookie;
+    }
+
+
+    private final static HtmlObject fetchJsonList(WeixinAccount account, int current) {
+
+//        String url = "http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid=" + account.getOpenId() + "&t=1421541945093&page=" + current;
+
+        String s = SogouEncrypt.generatePostAjaxUrl(account.getOpenId());
+        String url = s + "&page=" + current;
+
         boolean flag = false;
         HtmlObject object = null;
         int times = 0;
@@ -296,7 +491,7 @@ public class WeixinPostCrawler {
             header.put("Cookie", goodCookie);
             String refer = "";
             if (current == 1) {
-
+                refer = "http://weixin.sogou.com";
             } else {
                 refer = "http://weixin.sogou.com/gzh?openid=" + account.getOpenId();
             }
@@ -327,6 +522,7 @@ public class WeixinPostCrawler {
                 break;
             }
         } while (!flag);
+        System.out.println(object);
         return object;
     }
 
@@ -345,7 +541,7 @@ public class WeixinPostCrawler {
             Connection conn = null;
             try {
                 Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/weixin", "root", "123123");
+                conn = DriverManager.getConnection("jdbc:mysql://10.1.0.171:3306/weixin", "root", "123123");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {

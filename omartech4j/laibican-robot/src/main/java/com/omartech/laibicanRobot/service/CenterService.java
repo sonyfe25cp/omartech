@@ -38,7 +38,7 @@ public class CenterService {
     }
 
 
-    Connection fetchConnection() {
+    public Connection fetchConnection() {
         Connection connection;
         boolean flag = false;
         do {
@@ -64,10 +64,7 @@ public class CenterService {
         if (appEnum == null) {
             logger.error("some app miss appEnum");
         }
-        insertQueryLog(fromName, query, appEnum.toString(), fetchConnection());
-
         ReplyMessage replyMessage = null;
-
 
         if (query.contains("求签")) {
 //            replyMessage = fetchBakUpMsg("http://www.laibican.com/sactivity/yaoqian.html");
@@ -120,7 +117,6 @@ public class CenterService {
         if (appEnum == null) {
             logger.error("some app miss appEnum");
         }
-        insertQueryLog(uid, query, appEnum.toString(), fetchConnection());
         ReplyMessage replyMessage = null;
 
         replyMessage = matchFilter(query);

@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.omartech</groupId>
             <artifactId>omartech-utils</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>1.5-SNAPSHOT</version>
         </dependency>
 
         <!-- 添加对spring框架的依赖 -->
@@ -111,8 +111,12 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-        </dependency>
-
+          </dependency>
+          <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.21</version>
+          </dependency>
     </dependencies>
     <build>
         <resources>

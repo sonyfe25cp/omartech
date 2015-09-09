@@ -73,18 +73,16 @@ public class BITUnionRobot {
         CloseableHttpClient httpclient = createLoginClient();
         String threadPage = "";
         try {
-
-
-            logger.info("--------------------------------------------------------------------------");
-            logger.info(content);
-            logger.info("--------------------------------------------------------------------------");
+//            logger.info("--------------------------------------------------------------------------");
+//            logger.info(content);
+//            logger.info("--------------------------------------------------------------------------");
             List<String> pieces = cutContentIntoPiecesNew(content);
             if (pieces.size() > 1) {
                 String lz = pieces.get(0);
                 logger.info("*********************************************************");
                 lz = lz + "共 " + pieces.size() + " 楼，麻烦不要抢哦~~" +
                         "\n[size=5][color=Red]请扫描头像的二维码 或者 公众号搜 job-seeker[/color][/size]";
-                logger.info(lz);
+//                logger.info(lz);
                 threadPage = createPost(httpclient, title, lz, moduleId);
                 int threadId = findTid(threadPage);
                 for (int i = 1; i < pieces.size(); i++) {
@@ -95,7 +93,7 @@ public class BITUnionRobot {
                         e.printStackTrace();
                     }
                     String other = pieces.get(i);
-                    logger.info("*********************************************************");
+                    logger.info("*************************第 " + i + " 帖子结束*****************************");
                     logger.info(other);
                     replayPost(httpclient, title, other, moduleId, threadId, threadPage);
                 }
@@ -260,10 +258,19 @@ public class BITUnionRobot {
             int code = res.getStatusLine().getStatusCode();
             String html = EntityUtils.toString(res.getEntity(), "gbk");
             logger.info("html: {}", html);
-            Header[] t = res.getHeaders("Location");
-            threadPage += t[0].getValue();
-            logger.info("code: {}, {}", code, t[0]);
-            logger.info("threadpage：{}", threadPage);
+            Header[] headers = res.getHeaders("Location");
+            try {
+                threadPage += headers[0].getValue();
+                logger.info("code: {}, {}", code, headers[0]);
+                logger.info("threadpage：{}", threadPage);
+            } catch (Exception e) {
+                logger.info("show headers");
+                for (Header header : headers) {
+                    logger.info("header: " + header.getName() + " -- " + header.getValue());
+                }
+                logger.info("show headers over");
+                System.exit(0);
+            }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -323,10 +330,19 @@ public class BITUnionRobot {
             int code = res.getStatusLine().getStatusCode();
             String html = EntityUtils.toString(res.getEntity(), "gbk");
             logger.info("html: {}", html);
-            Header[] t = res.getHeaders("Location");
-            threadPage += t[0].getValue();
-            logger.info("code: {}, {}", code, t[0]);
-            logger.info("threadpage：{}", threadPage);
+            Header[] headers = res.getHeaders("Location");
+            try {
+                threadPage += headers[0].getValue();
+                logger.info("code: {}, {}", code, headers[0]);
+                logger.info("threadpage：{}", threadPage);
+            } catch (Exception e) {
+                logger.info("show headers");
+                for (Header header : headers) {
+                    logger.info("header: " + header.getName() + " -- " + header.getValue());
+                }
+                logger.info("show headers oover");
+                System.exit(0);
+            }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {

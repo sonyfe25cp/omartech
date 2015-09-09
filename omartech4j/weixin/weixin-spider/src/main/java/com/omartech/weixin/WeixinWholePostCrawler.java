@@ -73,8 +73,8 @@ public class WeixinWholePostCrawler {
                 if (accounts.size() != 0) {
                     for (WeixinAccount account : accounts) {
                         int id = account.getId();
-//                        new PostDownloadWorker(account).run();
-                        executor.submit(new PostDownloadWorker(account));
+                        new PostDownloadWorker(account).run();
+//                        executor.submit(new PostDownloadWorker(account));
                         FileUtils.write(postOverFile, "times: " + times + " id: " + id + " at " + DateFormatUtils.format(new Date(), "yyyy-MM-dd hh:mm:ss") + "\n", true);
                     }
                     offset = offset + batch;
@@ -281,6 +281,7 @@ public class WeixinWholePostCrawler {
     private static HtmlObject fetchJsonList(WeixinAccount account, int current) {
 
         String url = "http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid=" + account.getOpenId() + "&t=1421541945093&page=" + current;
+                      //http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid=oIWsFt8c8RruLevR9oxm6wTspsmQ&eqs=SAsMoE%2BgcJ%2Feo0NmyHV3UuqfFo5v1%2BhFUouRGby68Y0bteFU4zv4YDaqxv9Ytav%2FhBuTB&ekv=4&page=2&t=1434445505929
         boolean flag = false;
         HtmlObject object = null;
         int times = 0;

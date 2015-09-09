@@ -1,9 +1,9 @@
 package com.omartech.proxy.proxy_client;
 
-import cn.techwolf.data.gen.Proxy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.techwolf.omartech_utils.spider.DefetcherUtils;
+import com.omartech.data.gen.Proxy;
+import com.omartech.utils.spider.DefetcherUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.client.methods.CloseableHttpResponse;

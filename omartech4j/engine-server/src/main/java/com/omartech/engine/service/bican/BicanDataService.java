@@ -41,6 +41,7 @@ public class BicanDataService {
                 String content = rs.getString("content");
                 if (!StringUtils.isEmpty(content)) {
                     content = content.replaceAll("\\[img\\].*?\\[/img\\]", "");
+                    content = content.replaceAll("\\[flash\\].*?\\[/flash\\]", "");
                     content = content.replaceAll("\\[url\\]", "<a style='color:blue' target='blank' href='");
                     content = content.replaceAll("\\[/url\\]", "'>外部链接</a>");
                 }

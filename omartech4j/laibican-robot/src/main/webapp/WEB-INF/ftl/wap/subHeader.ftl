@@ -7,7 +7,7 @@
 <dl class="co_info">
     <dt><img src="/images/bican_logo.png"/></dt>
     <dd>
-        <h1>比惨公众账号</h1>
+        <h1><span style="color:red">比惨</span>公众账号</h1>
     <#--<p><span class="grade_star"><i class="s_4"></i></span> 4.0分</p>-->
         <p>每天发布网友各式各样的悲催故事</p>
     </dd>

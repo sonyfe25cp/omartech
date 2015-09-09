@@ -201,8 +201,7 @@ public class RouteAction {
 
             ArticleRequest req = new ArticleRequest();
             List<Long> ids = new ArrayList<>();
-            switch (appEnum) {
-                case Bican:
+            if(appEnum == ArticleType.Bican || appEnum == ArticleType.Shudong){
                     ids.add(Long.parseLong(id));
                     req.setIds(ids);
                     try {
@@ -214,31 +213,9 @@ public class RouteAction {
                     } catch (ClientException e) {
                         e.printStackTrace();
                     }
-                    break;
-                case Hero:
-                    break;
-                case Jobs:
-                    break;
-                case Other:
-                    break;
-                case Shudong:
-                    ids.add(Long.parseLong(id));
-                    req.setIds(ids);
-                    try {
-                        ArticleResponse articleResponse = clients.searchArticle(req);
-                        List<Article> articles = articleResponse.getArticles();
-                        for (Article art : articles) {
-                            article = art;
-                        }
-                    } catch (ClientException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                default:
-                    break;
+
             }
         }
-//        return new ModelAndView("/common/template").addObject("article", article);
         return new ModelAndView("/wap/story").addObject("article", article);
     }
 

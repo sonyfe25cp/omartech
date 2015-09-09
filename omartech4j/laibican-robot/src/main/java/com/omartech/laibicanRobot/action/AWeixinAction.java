@@ -142,14 +142,6 @@ public abstract class AWeixinAction {
     static final String bicanIntroUrl = "http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=201451846&idx=1&sn=d7e0f0492352ce934bdfbc49bea6e809#rd";
 
     ReplyMessage fetchSubscribeMsg(WeixinSubscribeMessage message) {
-//        String url = "http://mp.weixin.qq.com/s?__biz=MzAxNTA5MTc1NQ==&mid=202676955&idx=1&sn=f3d509a5b37801104a48d4c9ad7b8cdd#rd";//新年抽签
-//        String url = "www.laibican.com/sactivity/yaoqian.html";//新年抽签
-//        String pic = "http://mmbiz.qpic.cn/mmbiz/Q2BricGyedbg9ziajFTlJoJ2PIlFQqAbsOibvGvkQJbeKLRaU6LvyeH5pOS4VsY1lrNACibjuV3cYTTqIwRFOkB0oA/0?tp=webp";
-//        ArticleReplyItem newyear = new ArticleReplyItem();
-//        newyear.setUrl(url);
-//        newyear.setPicUrl(pic);
-//        newyear.setTitle("为2015抽一发幸运签吧！");
-//        newyear.setDescription("2015羊年到，抽一卦幸运签，好运先知道，让朋友也来卜一下吧。");
 
         ArticleReply articleReply = new ArticleReply();
 //        articleReply.addArticleReplyItem(newyear);
@@ -240,6 +232,7 @@ public abstract class AWeixinAction {
 
         logger.info("from:{} to:{} at:{} content:{}, id:{}", new String[]{fromName, toName, date10 + "", content, messageId + ""});
         try {
+            centerService.insertQueryLog(textMessage.getFromName(), content, textMessage.getAppEnum().toString(), centerService.fetchConnection());
             ReplyMessage replyMessage = customeredReplay(textMessage);
             if (replyMessage == null) {
                 replyMessage = centerService.findAnswer(textMessage);

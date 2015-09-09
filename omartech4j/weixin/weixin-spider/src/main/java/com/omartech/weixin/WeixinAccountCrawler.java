@@ -44,7 +44,7 @@ public class WeixinAccountCrawler {
         crawler.downloadAccounts();
 
 //        createPairUID();
-        readCookie();
+//        readCookie();
     }
 
 
@@ -67,41 +67,6 @@ public class WeixinAccountCrawler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //version 1
-//        String characters = Utils.getResouce("characters");
-//        for (char ch : characters.toCharArray()) {
-//            String tmp = ch + "";
-//            if (!StringUtils.isEmpty(StringUtils.deleteWhitespace(tmp))) {
-//                if (!already.contains(tmp)) {
-//                    wordsList.add(ch + "");
-//                }
-//            }
-//        }
-
-        //version2
-//        try {
-//            List<String> strings = FileUtils.readLines(new File("/tmp/company_names"));
-//            for (String tmp : strings) {
-//                tmp = StringUtils.deleteWhitespace(tmp);
-//                tmp = tmp.replaceAll("[\"';,.，。\\.\\|\\-\\^\\~\\+]", "");
-//                tmp = tmp.replaceAll("[\\[\\(（].+[\\)）\\]]", "");
-//                if (!StringUtils.isEmpty(tmp)) {
-//                    List<Term> terms = ToAnalysis.parse(tmp);
-//                    for(Term term : terms){
-//                        String name = term.getName();
-//                        if(name.length() > 1) {
-//                            wordsList.add(name);
-//                        }
-//                    }
-//                    wordsList.add(tmp);
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
-        //version3
         try {
             List<String> strings = FileUtils.readLines(new File("/tmp/1and2"));
             for (String tmp : strings) {

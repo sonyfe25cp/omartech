@@ -73,7 +73,7 @@ public class BicanAction extends AWeixinAction {
             return CenterService.fetchBakUpMsg("手机号：13975550774，请自行联系，本公众号免费帮忙征友。");
         } else if (content.startsWith("征友")) {
             return CenterService.fetchBakUpMsg("征友的话，请发照片，联系方式，城市，年龄给我哦~");
-        } else if (content.startsWith("【比惨】") || content.startsWith("[比惨]")) {
+        } else if (content.startsWith("【比惨】") || content.startsWith("[比惨]") || content.startsWith("比惨")) {
             return CenterService.fetchBakUpMsg("少侠不哭，虽然很惨，但还有人更惨，我先帮你记下来了。");
         } else if (content.startsWith("【树洞】") || content.startsWith("[树洞]")) {
             return CenterService.fetchBakUpMsg("秘密说出来就好了，我会认真听的。");

@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="/css/wap/base.css"/>
     <link rel="stylesheet" href="/css/wap/main.css"/>
     <link rel="stylesheet" href="/css/wap/salary.css"/>
+
+
 </head>
 
 <body>
@@ -39,7 +41,7 @@
         </#if>
         </h2>
         <fieldset>
-            <p>${article.content}</p>
+            <p class="ac-smiles">${article.content}</p>
         </fieldset>
         <div class="praise user_behavior">
             <a class="js_useful" href="javascript:;" rel="follow" data-url="/momoArticle" data-sid="${article.id}"
@@ -67,6 +69,44 @@
 <script src="/js/wap/zepto.js"></script>
 <script src="/js/wap/iscroll-lite.js"></script>
 <script src="/js/wap/m-laibican.js"></script>
+
+<script type="text/javascript">
+    function contains(string, substr, isIgnoreCase) {
+        if (isIgnoreCase) {
+            string = string.toLowerCase();
+            substr = substr.toLowerCase();
+        }
+
+        var startChar = substr.substring(0, 1);
+        var strLen = substr.length;
+
+        for (var j = 0; j < string.length - strLen + 1; j++) {
+            if (string.charAt(j) == startChar)  //如果匹配起始字符,开始查找
+            {
+                if (string.substring(j, j + strLen) == substr)  //如果从j开始的字符与str匹配，那ok
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    $(document).ready(function () {
+        $.getJSON("/js/ac-smiles.json", function (data) {
+            text = $(".ac-smiles").text();
+            $.each(data, function (name, path) {
+                flag = contains(text, name, true);
+                if (flag) {
+                    text = text.replace(new RegExp("\\[s:ac:" + name + "\\]", "gm"), "<img src='/images/ac-smiles/" + path + "'/>");
+                }
+            });
+            $(".ac-smiles").html(text);
+        });
+    });
+
+</script>
+
+
 <#include "../common/ba.ftl">
 </body>
 </html>
