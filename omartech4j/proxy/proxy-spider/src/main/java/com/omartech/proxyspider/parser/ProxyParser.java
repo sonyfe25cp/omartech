@@ -1,7 +1,7 @@
 package com.omartech.proxyspider.parser;
 
 
-import cn.techwolf.data.gen.Proxy;
+import com.omartech.data.gen.Proxy;
 
 import java.util.List;
 

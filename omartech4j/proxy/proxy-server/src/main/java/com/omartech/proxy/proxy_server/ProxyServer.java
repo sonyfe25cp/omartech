@@ -1,7 +1,7 @@
 package com.omartech.proxy.proxy_server;
 
-import cn.techwolf.data.gen.Proxy;
 import com.google.gson.Gson;
+import com.omartech.data.gen.Proxy;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;

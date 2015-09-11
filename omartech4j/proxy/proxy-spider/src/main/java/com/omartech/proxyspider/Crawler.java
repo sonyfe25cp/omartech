@@ -1,10 +1,10 @@
 package com.omartech.proxyspider;
 
-import cn.techwolf.data.gen.HtmlObject;
-import cn.techwolf.data.gen.Proxy;
+import com.omartech.data.gen.HtmlObject;
+import com.omartech.data.gen.Proxy;
 import com.omartech.proxyspider.parser.*;
 import com.omartech.proxyspider.service.DBService;
-import com.techwolf.omartech_utils.spider.Spider;
+import com.omartech.utils.spider.Spider;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.impl.client.CloseableHttpClient;

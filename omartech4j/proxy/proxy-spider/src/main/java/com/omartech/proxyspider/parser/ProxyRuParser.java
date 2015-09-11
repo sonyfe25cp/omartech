@@ -1,6 +1,6 @@
 package com.omartech.proxyspider.parser;
 
-import cn.techwolf.data.gen.Proxy;
+import com.omartech.data.gen.Proxy;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
