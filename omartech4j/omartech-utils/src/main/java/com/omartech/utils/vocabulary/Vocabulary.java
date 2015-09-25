@@ -17,6 +17,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 20150925：已验证tfidf准确性
+ */
 public class Vocabulary {
 
     static Logger logger = LoggerFactory.getLogger(Vocabulary.class);
@@ -65,7 +68,7 @@ public class Vocabulary {
         }
         Gson gson = new Gson();
         String json = gson.toJson(this);
-        String output = "/tmp/" + fileName + ".voc";
+        String output = fileName + ".voc";
         try {
             FileUtils.write(new File(output), json);
         } catch (IOException e) {
@@ -116,15 +119,14 @@ public class Vocabulary {
     }
 
     public static Vocabulary loadFromDB() {
-        String defaultName = Vocabulary.class.getName();
+        String defaultName = Vocabulary.class.getName()+".voc";
         return loadFromDB(defaultName);
     }
 
-    public static Vocabulary loadFromDB(String fileName) {
-        String input = "/tmp/" + fileName + ".voc";
-        File file = new File(input);
+    public static Vocabulary loadFromDB(String path) {
+        File file = new File(path);
         if (!file.exists()) {
-            logger.error("词典文件不存在, {}", input);
+            logger.error("词典文件不存在, {}", path);
         }
         String text;
         ToAnalysis.parse("hello world for acc load speed");
