@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import static java.lang.Math.min;
@@ -97,6 +98,34 @@ public class Utils {
                     return res;
                 } else {
                     return 0 - res;
+                }
+            }
+        });
+    }
+
+    /**
+     * flag 为true, 升序；flase，逆序
+     * @param relationList
+     * @param flag
+     */
+    public static void sortMapIntegerAndDouble(List<Entry<Integer, Double>> relationList, final boolean flag) {
+        Collections.sort(relationList, new Comparator<Entry<Integer, Double>>() {
+            @Override
+            public int compare(Entry<Integer, Double> o1, Entry<Integer, Double> o2) {
+                Integer key1 = o1.getKey();
+                Integer key2 = o2.getKey();
+                int res = 0;
+                if (key1 > key2) {
+                    res = 1;
+                } else if (key1 == key2) {
+                    res = 0;
+                } else {
+                    res = -1;
+                }
+                if (flag) {
+                    return res;
+                } else {
+                    return -res;
                 }
             }
         });
