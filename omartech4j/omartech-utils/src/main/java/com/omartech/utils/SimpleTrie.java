@@ -29,7 +29,8 @@ public class SimpleTrie {
         }
         Node node = root;
         for (int i = 0; i < str.length(); i++) {
-            String curr = str.charAt(i) + "";
+            //String curr = str.charAt(i) + "";
+            char curr = str.charAt(i);
             boolean containsKey = node.son.containsKey(curr);
             if (containsKey) {
 
@@ -49,7 +50,8 @@ public class SimpleTrie {
         }
         Node node = root;
         for (int i = 0; i < word.length(); i++) {
-            String curr = word.charAt(i) + "";
+            //String curr = word.charAt(i) + "";
+            char curr = word.charAt(i);
             boolean containsKey = node.son.containsKey(curr);
             if (containsKey) {
                 node = node.son.get(curr);
@@ -74,7 +76,8 @@ public class SimpleTrie {
             Node node = root;
             StringBuilder sb = null;
             for (int j = i; j < sentence.length(); j++) {
-                String curr = sentence.charAt(j) + "";
+                //String curr = sentence.charAt(j) + "";
+                char curr = sentence.charAt(j);
                 boolean containsKey = node.son.containsKey(curr);
                 if (containsKey) {
                     if (sb == null) {
@@ -120,11 +123,11 @@ public class SimpleTrie {
 
     class Node {
 
-        Map<String, Node> son;
+        Map<Character, Node> son;
 
         boolean isEnd;
 
-        String value;
+        char value;
 
         public Node() {
             super();

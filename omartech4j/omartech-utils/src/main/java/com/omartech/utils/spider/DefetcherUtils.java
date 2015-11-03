@@ -44,6 +44,7 @@ public class DefetcherUtils {
     public static final String CHARSET = "charset=";
     public static final Charset ASCII = Charset.forName("US-ASCII");
     public static final Charset UTF_8 = Charset.forName("utf8");
+    public static final Charset GBK= Charset.forName("gbk");
 
     public static Charset parseCharset(String type) {
         if (type != null) {
@@ -104,6 +105,24 @@ public class DefetcherUtils {
     public static String toString(HttpResponse resp) throws IOException {
         byte[] bytes = EntityUtils.toByteArray(resp.getEntity());
         return new String(bytes, 0, bytes.length, detectCharset(resp, bytes));
+    }
+    public static String toString(HttpResponse resp, String contentType) throws IOException {
+        byte[] bytes = EntityUtils.toByteArray(resp.getEntity());
+        Charset charset = UTF_8;
+        switch (contentType){
+          case "UTF_8":
+            charset = UTF_8;
+            break;
+          case "GB2312":
+            charset = GBK;
+            break;
+          case "GBK":
+            charset = GBK;
+            break;
+          default:
+            break;
+        }
+        return new String(bytes, 0, bytes.length, charset);
     }
 
 

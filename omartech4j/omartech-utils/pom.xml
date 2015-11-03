@@ -5,7 +5,7 @@
 
     <groupId>com.omartech</groupId>
     <artifactId>omartech-utils</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>omartech-utils</name>
