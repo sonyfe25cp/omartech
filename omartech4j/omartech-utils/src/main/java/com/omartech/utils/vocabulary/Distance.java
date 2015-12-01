@@ -17,6 +17,29 @@ public class Distance {
 
     static Logger logger = LoggerFactory.getLogger(Distance.class);
 
+    public static int editDistance(String word1, String word2) {
+      int row = word1.length()+1;
+      int col = word2.length()+1;
+      int[][] matrix = new int[row][col];
+      for(int i = 0; i < row; i ++){
+        matrix[i][0] = i;
+      }
+      for(int j = 0; j < col; j ++){
+        matrix[0][j] = j;
+      }
+      for(int i = 1; i < row; i ++){
+        for(int j = 1; j < col; j ++){
+          if(word1.charAt(i-1) == word2.charAt(j-1)){
+            matrix[i][j] = matrix[i-1][j-1];
+          }else{
+            matrix[i][j] = matrix[i-1][j-1]+1;
+          }
+          matrix[i][j] = Math.min(matrix[i][j], Math.min(matrix[i-1][j] + 1, matrix[i][j-1] + 1 ));
+        }
+      }
+      return matrix[row-1][col-1];
+    }
+
     public static double cosine(double[] a, double[] b) {
         if (a.length != b.length) {
             logger.error("length not match");
