@@ -2,34 +2,45 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.omartech</groupId>
-        <artifactId>omartech4j</artifactId>
-        <version>1.0</version>
-    </parent>
+    <properties>
+        <omartech.utils.version>1.51</omartech.utils.version>
+        <engine.version>1.10</engine.version>
+        <omartech.parent.version>1.0</omartech.parent.version>
+    </properties>
 
+    <groupId>com.omartech</groupId>
     <artifactId>engine-server</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
+
+    <name>engine-server</name>
+
     <dependencies>
         <dependency>
-            <groupId>args4j</groupId>
-            <artifactId>args4j</artifactId>
+            <groupId>com.omartech</groupId>
+            <artifactId>omartech-parent</artifactId>
+            <version>${omartech.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.omartech</groupId>
             <artifactId>engine-client</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>${engine.version}</version>
         </dependency>
         <dependency>
             <groupId>com.omartech</groupId>
             <artifactId>omartech-utils</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>${omartech.utils.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
                     <artifactId>httpclient</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+            <version>2.0.26</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -44,11 +55,12 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.0.1</version>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>2.4</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -63,27 +75,33 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.31</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+            <version>2.2.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.thrift</groupId>
             <artifactId>libthrift</artifactId>
+            <version>0.9.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
+            <version>4.8.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-common</artifactId>
+            <version>4.8.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-queries</artifactId>
+            <version>4.8.0</version>
         </dependency>
 
     </dependencies>

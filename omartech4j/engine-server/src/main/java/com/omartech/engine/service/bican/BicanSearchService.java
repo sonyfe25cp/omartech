@@ -274,7 +274,7 @@ public class BicanSearchService extends ADataService {
         if (query != null) {
             sql += " and tags like '%" + query + "%' ";
         }
-        sql += " limit ?,?";
+        sql += " order by rand() limit ?,?";
         List<Beauty> beauties = new ArrayList<>();
         Connection connection = fetchConnection("beauty");
         try (PreparedStatement psmt = connection.prepareStatement(sql)) {
@@ -315,7 +315,7 @@ public class BicanSearchService extends ADataService {
         List<Job> jobs = new ArrayList<>();
         if (!StringUtils.isEmpty(createdAt)) {//按日期查找
             Connection connection = fetchConnection(CAMPUS);
-            String sql = "SELECT id, title, url, siteName, industry, hrEmail, company FROM jd WHERE date(createdAt) = ? ";
+            String sql = "SELECT id, title, url, siteName, industry, hrEmail, company FROM jd WHERE createdAt >= ? ";
             if (!StringUtils.isEmpty(jobType)) {
                 sql += " and jobType = '实习'";
             } else {
@@ -325,7 +325,7 @@ public class BicanSearchService extends ADataService {
                 sql += " and area like '%" + area + "%' ";
             }
             sql += "order by title LIMIT ?, ?";
-            System.out.println(sql);
+            logger.info("jobs sql: {}", sql);
             try (
                     PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ) {

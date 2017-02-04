@@ -1,9 +1,10 @@
 package com.omartech.proxyspider.service;
 
-import com.omartech.proxyspider.model.Image;
 import com.omartech.proxyspider.model.MokoUser;
 import org.apache.commons.lang3.StringUtils;
-
+import com.omartech.proxyspider.model.BeautyModel;
+import com.omartech.proxyspider.model.HtmlObject;
+import com.omartech.proxyspider.model.Image;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -143,14 +143,7 @@ public class Utils {
             public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
                 Double c1 = o1.getValue();
                 Double c2 = o2.getValue();
-                int res = 0;
-                if (c1 > c2) {
-                    res = 1;
-                } else if (c1 == c2) {
-                    return 0;
-                } else {
-                    res = -1;
-                }
+                int res = Double.compare(c1,c2);
                 if (flag) {
                     return res;
                 } else {

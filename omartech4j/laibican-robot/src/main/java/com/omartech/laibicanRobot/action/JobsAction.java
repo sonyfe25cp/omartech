@@ -101,16 +101,20 @@ public class JobsAction extends AWeixinAction {
         int offset = (pageNo - 1) * limit;
         String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
         JobResponse jobsToday = centerService.findJobsToday(today, intern, area, offset, limit);
+
         ModelAndView modelAndView = new ModelAndView("/jobs/list");
         if (jobsToday != null && jobsToday.getJobs() != null) {
             List<Job> jobs = jobsToday.getJobs();
             modelAndView.addObject("jobs", jobs);
+        } else {
+            logger.error("centerService return null jobs");
         }
         modelAndView.addObject("area", area);
         modelAndView.addObject("pageNo", pageNo);
         modelAndView.addObject("pageSize", limit);
         modelAndView.addObject("today", today);
         modelAndView.addObject("intern", intern);
+        logger.info("pn:{}, area:{}, intern:{}, jobsize:{}", pageNo, area, intern, jobsToday.getJobs().size());
         return modelAndView;
     }
 }
