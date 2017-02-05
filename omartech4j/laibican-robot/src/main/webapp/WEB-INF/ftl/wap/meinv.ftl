@@ -37,6 +37,10 @@
             <p>通过下方按钮来告诉吧。</p>
         </fieldset>
     </div>
+    <div class="set">
+        <div><a class="bt_orange" href="/story">上一页</a></div>
+        <div><a class="bt_orange green" href="/story">下一页</a></div>
+    </div>
 </div>
 <#--<div class="set">-->
     <#--<div><a class="bt_orange" href="javascript:;">上一个</a></div>-->

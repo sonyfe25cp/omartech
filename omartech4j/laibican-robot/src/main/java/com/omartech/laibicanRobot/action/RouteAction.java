@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by omar on 14/11/12.
@@ -102,8 +103,12 @@ public class RouteAction {
     }
 
     @RequestMapping("/choumeinv")
-    public String choumeinv() {
-        return "/wap/meinv";
+    public ModelAndView choumeinv() {
+
+        Beauty beauty = new Beauty();
+
+        return new ModelAndView("/wap/meinv")
+                .addObject("beauty", beauty);
     }
 
 
@@ -166,6 +171,9 @@ public class RouteAction {
         } catch (ClientException e) {
             e.printStackTrace();
         }
+        Random random = new Random(article.getId());
+        int fakeHot = random.nextInt(300);//随机一些hot值
+        article.setHot(article.getHot() + fakeHot);
         return new ModelAndView("/wap/story").addObject("article", article);
     }
 
@@ -201,18 +209,18 @@ public class RouteAction {
 
             ArticleRequest req = new ArticleRequest();
             List<Long> ids = new ArrayList<>();
-            if(appEnum == ArticleType.Bican || appEnum == ArticleType.Shudong){
-                    ids.add(Long.parseLong(id));
-                    req.setIds(ids);
-                    try {
-                        ArticleResponse articleResponse = clients.searchArticle(req);
-                        List<Article> articles = articleResponse.getArticles();
-                        for (Article art : articles) {
-                            article = art;
-                        }
-                    } catch (ClientException e) {
-                        e.printStackTrace();
+            if (appEnum == ArticleType.Bican || appEnum == ArticleType.Shudong) {
+                ids.add(Long.parseLong(id));
+                req.setIds(ids);
+                try {
+                    ArticleResponse articleResponse = clients.searchArticle(req);
+                    List<Article> articles = articleResponse.getArticles();
+                    for (Article art : articles) {
+                        article = art;
                     }
+                } catch (ClientException e) {
+                    e.printStackTrace();
+                }
 
             }
         }

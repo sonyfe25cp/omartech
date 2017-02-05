@@ -67,6 +67,8 @@ struct Beauty{//美女图
   4: string thumbnailUrl,
   5: string thumbLargeUrl,
   6: string thumbLargeTnUrl
+  7: optional i32 subId, //套图中的id
+  8: optional i32 subTota, //套图总数
 }
 struct BeautyRequest{
   1: string query,
@@ -213,5 +215,5 @@ service DataService{
   QieyexinxiResponse searchQiyexinxi(1: QiyexinxiRequest req)// 查询企业信息
 
   JobResponse searchJobs(1: JobRequest req)//查询招聘
-  
+
 }
